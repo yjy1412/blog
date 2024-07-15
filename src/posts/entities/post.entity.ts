@@ -1,10 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseModel } from 'src/common/entities/base-model.entity';
+import { Column, Entity } from 'typeorm';
 
 @Entity()
-export class PostModel {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class PostModel extends BaseModel {
   @Column()
   title: string;
 
