@@ -14,8 +14,8 @@ export class PostsService {
     private readonly usersService: UsersService,
   ) {}
 
-  async create(createPostDto: CreatePostDto) {
-    const author = await this.usersService.findOne(createPostDto.authorId);
+  async createPost(createPostDto: CreatePostDto) {
+    const author = await this.usersService.getUserById(createPostDto.authorId);
 
     if (!author) {
       throw new NotFoundException(
@@ -33,11 +33,11 @@ export class PostsService {
     return this.postsRepository.save(post);
   }
 
-  findAll() {
+  getPostsAll() {
     return this.postsRepository.find();
   }
 
-  async findOne(postId: number) {
+  async getPostById(postId: number) {
     const post = await this.postsRepository.findOne({
       where: {
         id: postId,
@@ -51,7 +51,7 @@ export class PostsService {
     return post;
   }
 
-  async update(postId: number, updatePostDto: UpdatePostDto) {
+  async updatePostById(postId: number, updatePostDto: UpdatePostDto) {
     const post = await this.postsRepository.findOne({
       where: {
         id: postId,
@@ -68,7 +68,7 @@ export class PostsService {
     });
   }
 
-  remove(postId: number) {
+  deletePostById(postId: number) {
     return this.postsRepository.delete(postId);
   }
 }

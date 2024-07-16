@@ -12,17 +12,17 @@ export class UsersService {
     private readonly usersRepository: Repository<UserModel>,
   ) {}
 
-  create(createUserDto: CreateUserDto) {
+  createUser(createUserDto: CreateUserDto) {
     const users = this.usersRepository.create(createUserDto);
 
     return this.usersRepository.save(users);
   }
 
-  findAll() {
+  getUsersAll() {
     return this.usersRepository.find();
   }
 
-  async findOne(userId: number) {
+  async getUserById(userId: number) {
     const user = await this.usersRepository.findOne({
       where: {
         id: userId,
@@ -36,7 +36,7 @@ export class UsersService {
     return user;
   }
 
-  async update(userId: number, updateUserDto: UpdateUserDto) {
+  async updateUserById(userId: number, updateUserDto: UpdateUserDto) {
     const user = await this.usersRepository.findOne({
       where: {
         id: userId,
@@ -53,7 +53,7 @@ export class UsersService {
     });
   }
 
-  remove(userId: number) {
+  deleteUserById(userId: number) {
     return this.usersRepository.delete(userId);
   }
 }
