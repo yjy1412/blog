@@ -7,7 +7,7 @@ import { PostModel } from './entities/post.entity';
 import { UserModel } from 'src/users/entities/user.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 
-describe('🎯🎯🎯 테스트를 시작합니다!', () => {
+describe('\n🎯🎯🎯 테스트를 시작합니다 ===================================================================================================================================\n', () => {
   let postsService: PostsService;
   let usersService: UsersService;
 
