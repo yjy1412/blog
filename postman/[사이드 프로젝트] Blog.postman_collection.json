@@ -15,29 +15,13 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "title",
-									"value": "AESPA Concert",
-									"type": "text"
-								},
-								{
-									"key": "content",
-									"value": "Karina",
-									"type": "text"
-								},
-								{
-									"key": "likeCount",
-									"value": "100",
-									"type": "text"
-								},
-								{
-									"key": "commentCount",
-									"value": "100",
-									"type": "text"
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Typescript NestJS\",\n    \"content\": \"This is about NestJS side project\",\n    \"likeCount\": 100,\n    \"commentCount\": 100,\n    \"authorId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							]
+							}
 						},
 						"url": {
 							"raw": "http://localhost:3000/posts",
