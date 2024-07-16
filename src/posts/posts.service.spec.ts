@@ -14,7 +14,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
   let postsRepository: Repository<PostModel>;
 
   // 테스트 전 실행
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PostsService,
@@ -38,37 +38,9 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
     );
   });
 
-  const mockCreatePostDto: CreatePostDto = {
-    title: 'Test Post',
-    content: 'Test Content',
-    likeCount: 0,
-    commentCount: 0,
-    authorId: 1,
-  };
-
-  const mockUser: UserModel = {
-    id: 1,
-    email: 'tester@test.com',
-    password: 'testPassword',
-    name: {
-      first: 'Hong',
-      last: 'Gil-Dong',
-    },
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    posts: [],
-  };
-
-  const mockPost: PostModel = {
-    id: 1,
-    title: 'Test Post',
-    content: 'Test Content',
-    likeCount: 0,
-    commentCount: 0,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    author: mockUser,
-  };
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
   // 테스트 케이스 작성
   describe('✅ PostsService >> createPost: 게시물 생성요청', () => {
@@ -144,4 +116,37 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       await expect(postsService.deletePostById(1)).resolves.toEqual(true);
     });
   });
+
+  // Mock Data
+  const mockCreatePostDto: CreatePostDto = {
+    title: 'Test Post',
+    content: 'Test Content',
+    likeCount: 0,
+    commentCount: 0,
+    authorId: 1,
+  };
+
+  const mockUser: UserModel = {
+    id: 1,
+    email: 'tester@test.com',
+    password: 'testPassword',
+    name: {
+      first: 'Hong',
+      last: 'Gil-Dong',
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    posts: [],
+  };
+
+  const mockPost: PostModel = {
+    id: 1,
+    title: 'Test Post',
+    content: 'Test Content',
+    likeCount: 0,
+    commentCount: 0,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    author: mockUser,
+  };
 });
