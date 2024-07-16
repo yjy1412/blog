@@ -14,7 +14,7 @@ export class PostsService {
     private readonly usersService: UsersService,
   ) {}
 
-  async createPost(createPostDto: CreatePostDto) {
+  async createPost(createPostDto: CreatePostDto): Promise<PostModel> {
     const author = await this.usersService.getUserById(createPostDto.authorId);
 
     if (!author) {
@@ -33,11 +33,11 @@ export class PostsService {
     return this.postsRepository.save(post);
   }
 
-  getPostsAll() {
+  getPostsAll(): Promise<PostModel[]> {
     return this.postsRepository.find();
   }
 
-  async getPostById(postId: number) {
+  async getPostById(postId: number): Promise<PostModel> {
     const post = await this.postsRepository.findOne({
       where: {
         id: postId,
@@ -51,7 +51,10 @@ export class PostsService {
     return post;
   }
 
-  async updatePostById(postId: number, updatePostDto: UpdatePostDto) {
+  async updatePostById(
+    postId: number,
+    updatePostDto: UpdatePostDto,
+  ): Promise<PostModel> {
     const post = await this.postsRepository.findOne({
       where: {
         id: postId,
@@ -68,7 +71,7 @@ export class PostsService {
     });
   }
 
-  async deletePostById(postId: number) {
+  async deletePostById(postId: number): Promise<boolean> {
     await this.postsRepository.delete(postId);
 
     return true;

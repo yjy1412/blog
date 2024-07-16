@@ -12,17 +12,17 @@ export class UsersService {
     private readonly usersRepository: Repository<UserModel>,
   ) {}
 
-  createUser(createUserDto: CreateUserDto) {
+  createUser(createUserDto: CreateUserDto): Promise<UserModel> {
     const users = this.usersRepository.create(createUserDto);
 
     return this.usersRepository.save(users);
   }
 
-  getUsersAll() {
+  getUsersAll(): Promise<UserModel[]> {
     return this.usersRepository.find();
   }
 
-  async getUserById(userId: number) {
+  async getUserById(userId: number): Promise<UserModel> {
     const user = await this.usersRepository.findOne({
       where: {
         id: userId,
@@ -36,7 +36,10 @@ export class UsersService {
     return user;
   }
 
-  async updateUserById(userId: number, updateUserDto: UpdateUserDto) {
+  async updateUserById(
+    userId: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserModel> {
     const user = await this.usersRepository.findOne({
       where: {
         id: userId,
@@ -53,7 +56,7 @@ export class UsersService {
     });
   }
 
-  async deleteUserById(userId: number) {
+  async deleteUserById(userId: number): Promise<boolean> {
     await this.usersRepository.delete(userId);
 
     return true;
