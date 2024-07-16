@@ -1,17 +1,24 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PostsService } from './posts.service';
+import { PostsService } from '../posts.service';
 import { UsersService } from 'src/users/users.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { PostModel } from './entities/post.entity';
+import { PostModel } from '../entities/post.entity';
 import { UserModel } from 'src/users/entities/user.entity';
-import { CreatePostDto } from './dto/create-post.dto';
+import { PostsMock } from './posts.mock';
 
 describe('\n🎯🎯🎯 테스트를 시작합니다 ===================================================================================================================================\n', () => {
   let postsService: PostsService;
   let usersService: UsersService;
 
   let postsRepository: Repository<PostModel>;
+
+  const {
+    mockCreatePostDto,
+    mockUpadatePostDto,
+    mockUser,
+    mockPost,
+  }: Partial<PostsMock> = new PostsMock();
 
   // 테스트 전 실행
   beforeAll(async () => {
@@ -95,7 +102,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       postsRepository.findOne = jest.fn().mockResolvedValue(null);
 
       await expect(
-        postsService.updatePostById(1, mockCreatePostDto),
+        postsService.updatePostById(1, mockUpadatePostDto),
       ).rejects.toThrow('Post with id 1 not found');
     });
 
@@ -104,7 +111,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       postsRepository.save = jest.fn().mockResolvedValue(mockPost);
 
       await expect(
-        postsService.updatePostById(1, mockCreatePostDto),
+        postsService.updatePostById(1, mockUpadatePostDto),
       ).resolves.toEqual(mockPost);
     });
   });
@@ -116,37 +123,4 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       await expect(postsService.deletePostById(1)).resolves.toEqual(true);
     });
   });
-
-  // Mock Data
-  const mockCreatePostDto: CreatePostDto = {
-    title: 'Test Post',
-    content: 'Test Content',
-    likeCount: 0,
-    commentCount: 0,
-    authorId: 1,
-  };
-
-  const mockUser: UserModel = {
-    id: 1,
-    email: 'tester@test.com',
-    password: 'testPassword',
-    name: {
-      first: 'Hong',
-      last: 'Gil-Dong',
-    },
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    posts: [],
-  };
-
-  const mockPost: PostModel = {
-    id: 1,
-    title: 'Test Post',
-    content: 'Test Content',
-    likeCount: 0,
-    commentCount: 0,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    author: mockUser,
-  };
 });
