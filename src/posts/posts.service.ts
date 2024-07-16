@@ -68,7 +68,9 @@ export class PostsService {
     });
   }
 
-  deletePostById(postId: number) {
-    return this.postsRepository.delete(postId);
+  async deletePostById(postId: number) {
+    await this.postsRepository.delete(postId);
+
+    return true;
   }
 }

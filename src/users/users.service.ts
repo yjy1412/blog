@@ -53,7 +53,9 @@ export class UsersService {
     });
   }
 
-  deleteUserById(userId: number) {
-    return this.usersRepository.delete(userId);
+  async deleteUserById(userId: number) {
+    await this.usersRepository.delete(userId);
+
+    return true;
   }
 }
