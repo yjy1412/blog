@@ -12,7 +12,9 @@ class Name {
 
 @Entity()
 export class UserModel extends BaseModel {
-  @Column()
+  @Column({
+    unique: true,
+  })
   email: string;
 
   @Column()
