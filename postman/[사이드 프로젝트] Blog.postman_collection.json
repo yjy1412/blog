@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "posts",
+			"name": "Posts",
 			"item": [
 				{
 					"name": "posts",
@@ -129,36 +129,8 @@
 			]
 		},
 		{
-			"name": "users",
+			"name": "Users",
 			"item": [
-				{
-					"name": "users",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"test@blog.com\",\n    \"password\": \"test\",\n    \"name\": {\n        \"first\": \"yang\",\n        \"last\": \"jinyeong\"\n    }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:3000/users",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"users"
-							]
-						}
-					},
-					"response": []
-				},
 				{
 					"name": "users",
 					"request": {
@@ -251,6 +223,71 @@
 							"path": [
 								"users",
 								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth-JWT",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@test.com\",\n    \"password\": \"testPassword\",\n    \"name\": {\n        \"first\": \"Hong\",\n        \"last\": \"Gil-Dong\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/jwt/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"jwt",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@test.com\",\n    \"password\": \"testPassword\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/jwt/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"jwt",
+								"login"
 							]
 						}
 					},
