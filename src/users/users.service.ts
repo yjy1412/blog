@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,7 +16,17 @@ export class UsersService {
     private readonly usersRepository: Repository<UserModel>,
   ) {}
 
-  createUser(createUserDto: CreateUserDto): Promise<UserModel> {
+  async createUser(createUserDto: CreateUserDto): Promise<UserModel> {
+    const isExistEmail = await this.usersRepository.exists({
+      where: {
+        email: createUserDto.email,
+      },
+    });
+
+    if (isExistEmail) {
+      throw new BadRequestException('이미 존재하는 이메일입니다.');
+    }
+
     const users = this.usersRepository.create(createUserDto);
 
     return this.usersRepository.save(users);
@@ -60,5 +74,13 @@ export class UsersService {
     await this.usersRepository.delete(userId);
 
     return true;
+  }
+
+  getUserByEmail(user: Pick<UserModel, 'email'>): Promise<UserModel> {
+    return this.usersRepository.findOne({
+      where: {
+        email: user.email,
+      },
+    });
   }
 }
