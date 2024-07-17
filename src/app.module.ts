@@ -4,6 +4,7 @@ import { PostsModule } from './posts/posts.module';
 import { PostModel } from './posts/entities/post.entity';
 import { UsersModule } from './users/users.module';
 import { UserModel } from './users/entities/user.entity';
+import { AuthJwtModule } from './auth-jwt/auth-jwt.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { UserModel } from './users/entities/user.entity';
     }),
     PostsModule,
     UsersModule,
+    AuthJwtModule,
   ],
 })
 export class AppModule {}
