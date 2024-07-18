@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PostsController } from '../posts.controller';
 import { PostsService } from '../posts.service';
-import { PostsMock } from './posts.mock';
+import { PostsMock } from './posts.mock.spec';
 
 describe('\n🎯🎯🎯 테스트를 시작합니다 ===================================================================================================================================\n', () => {
   let controller: PostsController;
