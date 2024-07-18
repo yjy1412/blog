@@ -267,10 +267,16 @@
 					"name": "login",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "authorization",
+								"value": "Basic dGVzdEB0ZXN0LmNvbTp0ZXN0UGFzc3dvcmQ=",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"test@test.com\",\n    \"password\": \"testPassword\"\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
