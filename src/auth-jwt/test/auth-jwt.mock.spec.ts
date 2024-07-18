@@ -1,22 +1,26 @@
 import { JwtService } from '@nestjs/jwt';
 import { AuthJwtService } from '../auth-jwt.service';
-import { JWT_SECRET } from '../const/auth-jwt.const';
+import { JWT_SECRET } from '../const/auth-jwt.common.const';
 import { Injectable } from '@nestjs/common';
+import { UserModel } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AuthJwtMock {
   constructor(private readonly jwtService: JwtService) {}
 
-  public readonly mockNewUser = {
-    email: 'test@test.com',
-    password: 'testPassword',
-    name: {
-      first: 'Hong',
-      last: 'Gil-Dong',
-    },
-  };
+  public readonly mockNewUser: Pick<UserModel, 'email' | 'password' | 'name'> =
+    {
+      email: 'test@test.com',
+      password: 'testPassword',
+      name: {
+        first: 'Hong',
+        last: 'Gil-Dong',
+      },
+    };
 
-  public readonly mockToken = this.jwtService.sign(
+  public readonly mockBasicToken = 'dGVzdEB0ZXN0LmNvbTp0ZXN0UGFzc3dvcmQ=';
+
+  public readonly mockBearerToken = this.jwtService.sign(
     { ...this.mockNewUser, id: 1 },
     {
       secret: JWT_SECRET,
@@ -25,10 +29,18 @@ export class AuthJwtMock {
   );
 
   public readonly mockAuthJwtService: Partial<AuthJwtService> = {
-    login: jest.fn(),
+    login: jest.fn().mockResolvedValue({
+      accessToken: this.mockBearerToken,
+      refreshToken: this.mockBearerToken,
+    }),
     register: jest.fn().mockResolvedValue({
-      accessToken: this.mockToken,
-      refreshToken: this.mockToken,
+      accessToken: this.mockBearerToken,
+      refreshToken: this.mockBearerToken,
+    }),
+    extractTokenFromHeader: jest.fn().mockReturnValue(this.mockBasicToken),
+    decodeBasicToken: jest.fn().mockReturnValue({
+      email: this.mockNewUser.email,
+      password: this.mockNewUser.password,
     }),
   };
 }

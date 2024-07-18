@@ -9,7 +9,8 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
   let controller: AuthJwtController;
   let authMockJwt: AuthJwtMock;
   let mockNewUser: Pick<UserModel, 'email' | 'password' | 'name'>;
-  let mockToken: string;
+  let mockBasicToken: string;
+  let mockBearerToken: string;
   let mockAuthJwtService: Partial<AuthJwtService>;
 
   beforeAll(async () => {
@@ -21,7 +22,8 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
     authMockJwt = module.get<AuthJwtMock>(AuthJwtMock);
 
     mockNewUser = authMockJwt.mockNewUser;
-    mockToken = authMockJwt.mockToken;
+    mockBasicToken = authMockJwt.mockBasicToken;
+    mockBearerToken = authMockJwt.mockBearerToken;
     mockAuthJwtService = authMockJwt.mockAuthJwtService;
   });
 
@@ -49,19 +51,49 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
     });
 
     it('회원가입 요청 시 관련 서비스가 호출되어야 합니다.', async () => {
-      await controller.register(authMockJwt.mockNewUser);
+      await controller.register(mockNewUser);
 
-      expect(authMockJwt.mockAuthJwtService.register).toHaveBeenCalledWith(
-        mockNewUser,
-      );
+      expect(mockAuthJwtService.register).toHaveBeenCalledWith(mockNewUser);
     });
 
     it('회원가입 요청 시 액세스/리프레쉬 토큰이 반환되어야 합니다.', async () => {
       const response = await controller.register(mockNewUser);
 
       expect(response).toEqual({
-        accessToken: mockToken,
-        refreshToken: mockToken,
+        accessToken: mockBearerToken,
+        refreshToken: mockBearerToken,
+      });
+    });
+  });
+
+  describe('✅ AuthJwtController >> login: 로그인 요청', () => {
+    it('로그인 요청 컨트롤러 메서드가 정의되어 있습니다.', () => {
+      expect(controller.login).toBeDefined();
+    });
+
+    it('로그인 요청 시, 요청 헤더의 authorization 값이 "Basic email:password(Base64 encoded)" 형식이어야 합니다.', async () => {
+      await controller.login(`Basic ${mockBasicToken}`);
+
+      expect(
+        authMockJwt.mockAuthJwtService.extractTokenFromHeader,
+      ).toHaveBeenCalledWith(`Basic ${mockBasicToken}`, false);
+    });
+
+    it('로그인 요청 시 관련 서비스가 호출되어야 합니다.', async () => {
+      await controller.login(`Basic ${mockBasicToken}`);
+
+      expect(authMockJwt.mockAuthJwtService.login).toHaveBeenCalledWith({
+        email: mockNewUser.email,
+        password: mockNewUser.password,
+      });
+    });
+
+    it('로그인 요청 시 액세스/리프레쉬 토큰이 반환되어야 합니다.', async () => {
+      const response = await controller.login(`Basic ${mockBasicToken}`);
+
+      expect(response).toEqual({
+        accessToken: mockBearerToken,
+        refreshToken: mockBearerToken,
       });
     });
   });
