@@ -2,8 +2,12 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserModel } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
-import { JWT_SECRET } from './const/auth-jwt.const';
+import { JWT_SECRET } from './const/auth-jwt.common.const';
 import * as bcrypt from 'bcrypt';
+import {
+  BasicTokenHeaderType,
+  BearerTokenHeaderType,
+} from './const/auth-jwt.type.const';
 
 @Injectable()
 export class AuthJwtService {
@@ -75,5 +79,51 @@ export class AuthJwtService {
       accessToken,
       refreshToken,
     };
+  }
+
+  /**
+   * 요청 헤더 authorization에서 토큰 추출
+   */
+  extractTokenFromHeader(
+    headerAuthorizationValue: BasicTokenHeaderType | BearerTokenHeaderType,
+    isBearerToken: boolean,
+  ) {
+    if (!headerAuthorizationValue) {
+      throw new UnauthorizedException('authrorization 값이 누락되었습니다.');
+    }
+
+    const splitValue = headerAuthorizationValue.split(' ');
+
+    if (splitValue.length !== 2) {
+      throw new UnauthorizedException(
+        'authorization 형식이 올바르지 않습니다.',
+      );
+    }
+
+    const [prefix, token] = splitValue;
+    const expectedPrefix = isBearerToken ? 'Bearer' : 'Basic';
+
+    if (prefix !== expectedPrefix) {
+      throw new UnauthorizedException('authorization 값이 올바르지 않습니다.');
+    }
+
+    return token;
+  }
+
+  /**
+   * base64로 인코딩된 basicToken('email:password')에서 email과 password를 추출
+   */
+  decodeBasicToken(basicToken: string) {
+    const decodedToken = Buffer.from(basicToken, 'base64')
+      .toString('utf-8')
+      .split(':');
+
+    if (decodedToken.length !== 2) {
+      throw new UnauthorizedException('토큰 형식이 올바르지 않습니다.');
+    }
+
+    const [email, password] = decodedToken;
+
+    return { email, password };
   }
 }
