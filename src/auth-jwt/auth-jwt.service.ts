@@ -83,6 +83,9 @@ export class AuthJwtService {
 
   /**
    * 요청 헤더 authorization에서 토큰 추출
+   *
+   * BasicTokenHeaderType: { "authorization": "Basic ${token}"}
+   * BearerTokenHeaderType: { "authorization": "Bearer ${token}"}
    */
   extractTokenFromHeader(
     headerAuthorizationValue: BasicTokenHeaderType | BearerTokenHeaderType,
