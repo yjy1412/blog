@@ -9,6 +9,7 @@ import {
   BearerTokenHeaderType,
 } from './const/auth-jwt.type.const';
 import { BearerTokenTypeEnum } from './const/auth-jwt.enum.const';
+import * as _ from 'lodash';
 
 @Injectable()
 export class AuthJwtService {
@@ -153,7 +154,7 @@ export class AuthJwtService {
       throw new UnauthorizedException('토큰이 유효하지 않습니다.');
     }
 
-    if (decodedToken.type !== BearerTokenTypeEnum) {
+    if (_.hasIn(BearerTokenTypeEnum, decodedToken.type)) {
       throw new UnauthorizedException('토큰 형식이 올바르지 않습니다.');
     }
 
