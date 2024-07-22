@@ -2,7 +2,6 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserModel } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
-import { JWT_SECRET } from './const/auth-jwt.common.const';
 import * as bcrypt from 'bcrypt';
 import {
   BasicTokenHeaderType,
@@ -34,7 +33,6 @@ export class AuthJwtService {
     };
 
     return this.jwtService.sign(payload, {
-      secret: JWT_SECRET,
       expiresIn: isRefreshToken ? '1d' : '1h',
     });
   }
@@ -147,9 +145,7 @@ export class AuthJwtService {
   verifyBearerToken(token: string, isRefreshToken: boolean) {
     let decodedToken: any;
     try {
-      decodedToken = this.jwtService.verify(token, {
-        secret: JWT_SECRET,
-      });
+      decodedToken = this.jwtService.verify(token);
     } catch (error) {
       throw new UnauthorizedException('토큰이 유효하지 않습니다.');
     }
