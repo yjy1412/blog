@@ -17,10 +17,17 @@ export class AuthJwtService {
   ) {}
 
   /**
-   * 유저의 email과 id를 받아 토큰을 발급
+   * 유저의 email과 id를 받아 Bearer token을 발급
    */
-  signToken(user: Pick<UserModel, 'email' | 'id'>, isRefreshToken: boolean) {
-    const payload = { email: user.email, sub: user.id };
+  signBearerToken(
+    user: Pick<UserModel, 'email' | 'id'>,
+    isRefreshToken: boolean,
+  ) {
+    const payload = {
+      email: user.email,
+      sub: user.id,
+      type: isRefreshToken ? 'refresh' : 'access',
+    };
 
     return this.jwtService.sign(payload, {
       secret: JWT_SECRET,
@@ -56,8 +63,8 @@ export class AuthJwtService {
     const existUser = await this.authenticate(user);
 
     return {
-      accessToken: this.signToken(existUser, false),
-      refreshToken: this.signToken(existUser, true),
+      accessToken: this.signBearerToken(existUser, false),
+      refreshToken: this.signBearerToken(existUser, true),
     };
   }
 
