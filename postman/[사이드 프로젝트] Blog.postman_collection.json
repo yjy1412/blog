@@ -266,14 +266,23 @@
 				{
 					"name": "login",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "testPassword",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "test@test.com",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
-						"header": [
-							{
-								"key": "authorization",
-								"value": "Basic dGVzdEB0ZXN0LmNvbTp0ZXN0UGFzc3dvcmQ=",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "raw",
 							"raw": "",
@@ -294,6 +303,46 @@
 								"auth",
 								"jwt",
 								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "access",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJzdWIiOjEsInR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNzIxNjM0MTg3LCJleHAiOjE3MjE3MjA1ODd9.VpB7iZTEzf3duwduX3DJgzPxpXI4RMyzo2Or3h8EnBM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/jwt/access",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"jwt",
+								"access"
 							]
 						}
 					},
