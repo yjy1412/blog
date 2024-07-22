@@ -13,6 +13,5 @@ export class CreatePostDto {
   @IsNumber()
   commentCount: number;
 
-  @IsNumber()
   authorId: number;
 }

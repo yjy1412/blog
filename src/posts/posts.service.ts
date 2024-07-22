@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,23 +13,26 @@ export class PostsService {
     private readonly usersService: UsersService,
   ) {}
 
-  async createPost(createPostDto: CreatePostDto): Promise<PostModel> {
-    const author = await this.usersService.getUserById(createPostDto.authorId);
+  async createPost(
+    post: Pick<
+      PostModel,
+      'title' | 'content' | 'likeCount' | 'commentCount' | 'authorId'
+    >,
+  ): Promise<PostModel> {
+    const author = await this.usersService.getUserById(post.authorId);
 
     if (!author) {
-      throw new NotFoundException(
-        `User with id ${createPostDto.authorId} not found`,
-      );
+      throw new NotFoundException(`User with id ${post.authorId} not found`);
     }
 
-    const post = this.postsRepository.create({
-      ...createPostDto,
+    const createdPost = this.postsRepository.create({
+      ...post,
       author: {
-        id: createPostDto.authorId,
+        id: post.authorId,
       },
     });
 
-    return this.postsRepository.save(post);
+    return this.postsRepository.save(createdPost);
   }
 
   getPostsAll(): Promise<PostModel[]> {

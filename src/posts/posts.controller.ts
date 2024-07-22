@@ -11,14 +11,20 @@ import {
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { AuthenticatedUser } from 'src/common/common.decorator';
+import { UserModel } from 'src/users/entities/user.entity';
 
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Post()
-  createPost(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.createPost(createPostDto);
+  createPost(
+    @AuthenticatedUser() user: Pick<UserModel, 'id' | 'email'>,
+    @Body() post: CreatePostDto,
+  ) {
+    post.authorId = user.id;
+    return this.postsService.createPost(post);
   }
 
   @Get()

@@ -22,4 +22,6 @@ export class PostModel extends BaseModel {
     onDelete: 'CASCADE',
   })
   author: UserModel;
+
+  authorId: number;
 }
