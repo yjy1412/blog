@@ -9,5 +9,6 @@ import { JWT_SECRET } from './const/auth-jwt.common.const';
   imports: [JwtModule.register({ secret: JWT_SECRET }), UsersModule],
   controllers: [AuthJwtController],
   providers: [AuthJwtService],
+  exports: [AuthJwtService],
 })
 export class AuthJwtModule {}

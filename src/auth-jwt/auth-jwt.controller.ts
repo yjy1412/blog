@@ -5,16 +5,19 @@ import {
   BasicTokenHeaderType,
   BearerTokenHeaderType,
 } from './const/auth-jwt.type.const';
+import { Public } from 'src/common/common.decorator';
 
 @Controller('auth/jwt')
 export class AuthJwtController {
   constructor(private readonly authJwtService: AuthJwtService) {}
 
+  @Public()
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
     return this.authJwtService.register(registerDto);
   }
 
+  @Public()
   @Post('login')
   async login(
     @Headers('authorization') headerAuthorizationValue: BasicTokenHeaderType,
@@ -30,6 +33,7 @@ export class AuthJwtController {
     return this.authJwtService.login({ email, password });
   }
 
+  @Public()
   @Post('access')
   async access(
     @Headers('authorization') headerAuthorizationValue: BearerTokenHeaderType,
