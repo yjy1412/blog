@@ -1,6 +1,6 @@
 import { PostModel } from 'src/posts/entities/post.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
-import { BaseModel } from 'src/common/entities/base-model.entity';
+import { BaseModel } from 'src/common/entities/base.entity';
 
 class Name {
   @Column()

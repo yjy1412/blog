@@ -4,7 +4,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-export class BaseModel {
+export abstract class BaseModel {
   @PrimaryGeneratedColumn()
   id: number;
 
