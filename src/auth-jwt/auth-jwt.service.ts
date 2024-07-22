@@ -144,7 +144,7 @@ export class AuthJwtService {
   /**
    * Bearer 토큰을 받아 토큰 검증
    */
-  decodeBearerToken(token: string, isRefreshToken: boolean) {
+  verifyBearerToken(token: string, isRefreshToken: boolean) {
     let decodedToken: any;
     try {
       decodedToken = this.jwtService.verify(token, {
@@ -172,10 +172,13 @@ export class AuthJwtService {
    * 리프레쉬 토큰을 받아 액세스 토큰 재발급
    */
   async refreshAccessTokenUsingRefreshToken(refreshToken: string) {
-    const decodedToken = this.decodeBearerToken(refreshToken, true);
+    const user: Pick<UserModel, 'email' | 'id'> = this.verifyBearerToken(
+      refreshToken,
+      true,
+    );
 
     return {
-      accessToken: this.signBearerToken(decodedToken, false),
+      accessToken: this.signBearerToken(user, false),
     };
   }
 }
