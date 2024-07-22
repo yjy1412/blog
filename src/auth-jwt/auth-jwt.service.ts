@@ -8,6 +8,7 @@ import {
   BasicTokenHeaderType,
   BearerTokenHeaderType,
 } from './const/auth-jwt.type.const';
+import { BearerTokenTypeEnum } from './const/auth-jwt.enum.const';
 
 @Injectable()
 export class AuthJwtService {
@@ -26,7 +27,9 @@ export class AuthJwtService {
     const payload = {
       email: user.email,
       sub: user.id,
-      type: isRefreshToken ? 'refresh' : 'access',
+      type: isRefreshToken
+        ? BearerTokenTypeEnum.REFRESH
+        : BearerTokenTypeEnum.ACCESS,
     };
 
     return this.jwtService.sign(payload, {
@@ -135,5 +138,43 @@ export class AuthJwtService {
     const [email, password] = decodedToken;
 
     return { email, password };
+  }
+
+  /**
+   * Bearer 토큰을 받아 토큰 검증
+   */
+  decodeBearerToken(token: string, isRefreshToken: boolean) {
+    let decodedToken: any;
+    try {
+      decodedToken = this.jwtService.verify(token, {
+        secret: JWT_SECRET,
+      });
+    } catch (error) {
+      throw new UnauthorizedException('토큰이 유효하지 않습니다.');
+    }
+
+    if (decodedToken.type !== BearerTokenTypeEnum) {
+      throw new UnauthorizedException('토큰 형식이 올바르지 않습니다.');
+    }
+
+    const expectedDecodedTokenType = isRefreshToken
+      ? BearerTokenTypeEnum.REFRESH
+      : BearerTokenTypeEnum.ACCESS;
+    if (decodedToken.type !== expectedDecodedTokenType) {
+      throw new UnauthorizedException('토큰의 정보가 유효하지 않습니다.');
+    }
+
+    return decodedToken;
+  }
+
+  /**
+   * 리프레쉬 토큰을 받아 액세스 토큰 재발급
+   */
+  async refreshAccessTokenUsingRefreshToken(refreshToken: string) {
+    const decodedToken = this.decodeBearerToken(refreshToken, true);
+
+    return {
+      accessToken: this.signBearerToken(decodedToken, false),
+    };
   }
 }

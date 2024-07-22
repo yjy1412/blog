@@ -1,7 +1,10 @@
 import { Body, Controller, Headers, Post } from '@nestjs/common';
 import { AuthJwtService } from './auth-jwt.service';
 import { RegisterDto } from './dto/register.dto';
-import { BasicTokenHeaderType } from './const/auth-jwt.type.const';
+import {
+  BasicTokenHeaderType,
+  BearerTokenHeaderType,
+} from './const/auth-jwt.type.const';
 
 @Controller('auth/jwt')
 export class AuthJwtController {
@@ -25,5 +28,19 @@ export class AuthJwtController {
       this.authJwtService.decodeBasicToken(basicToken);
 
     return this.authJwtService.login({ email, password });
+  }
+
+  @Post('access')
+  async access(
+    @Headers('authorization') headerAuthorizationValue: BearerTokenHeaderType,
+  ) {
+    const refreshToken = this.authJwtService.extractTokenFromHeader(
+      headerAuthorizationValue,
+      true,
+    );
+
+    return this.authJwtService.refreshAccessTokenUsingRefreshToken(
+      refreshToken,
+    );
   }
 }
