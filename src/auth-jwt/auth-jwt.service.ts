@@ -21,12 +21,12 @@ export class AuthJwtService {
    * 유저의 email과 id를 받아 Bearer token을 발급
    */
   signBearerToken(
-    user: Pick<UserModel, 'email' | 'id'>,
+    user: Pick<UserModel, 'id' | 'email'>,
     isRefreshToken: boolean,
   ) {
     const payload = {
+      id: user.id,
       email: user.email,
-      sub: user.id,
       type: isRefreshToken
         ? BearerTokenTypeEnum.REFRESH
         : BearerTokenTypeEnum.ACCESS,
@@ -168,7 +168,7 @@ export class AuthJwtService {
    * 리프레쉬 토큰을 받아 액세스 토큰 재발급
    */
   async refreshAccessTokenUsingRefreshToken(refreshToken: string) {
-    const user: Pick<UserModel, 'email' | 'id'> = this.verifyBearerToken(
+    const user: Pick<UserModel, 'id' | 'email'> = this.verifyBearerToken(
       refreshToken,
       true,
     );
