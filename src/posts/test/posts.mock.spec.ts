@@ -1,8 +1,8 @@
-import { CreatePostDto } from '../dto/create-post.dto';
+import { CreatePostDto } from '../dtos/create-post.dto';
 import { PostModel } from '../entities/post.entity';
 import { UserModel } from '../../users/entities/user.entity';
 import { PostsService } from '../posts.service';
-import { UpdatePostDto } from '../dto/update-post.dto';
+import { UpdatePostDto } from '../dtos/update-post.dto';
 
 export class PostsMock {
   public readonly mockCreatePostDto: CreatePostDto = {

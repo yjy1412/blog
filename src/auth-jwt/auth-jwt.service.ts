@@ -6,8 +6,8 @@ import * as bcrypt from 'bcrypt';
 import {
   BasicTokenHeaderType,
   BearerTokenHeaderType,
-} from './const/auth-jwt.type.const';
-import { BearerTokenTypeEnum } from './const/auth-jwt.enum.const';
+} from './constants/auth-jwt.type.constant';
+import { BearerTokenTypeEnum } from './constants/auth-jwt.enum.constant';
 import * as _ from 'lodash';
 
 @Injectable()

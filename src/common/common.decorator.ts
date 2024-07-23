@@ -4,7 +4,7 @@ import {
   SetMetadata,
   createParamDecorator,
 } from '@nestjs/common';
-import { IS_PUBLIC_KEY } from './common.const';
+import { IS_PUBLIC_KEY } from './common.constant';
 
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 export const AuthenticatedUser = createParamDecorator(
