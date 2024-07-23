@@ -6,8 +6,6 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { CreateUserDto } from './dtos/create-user.dto';
-import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserModel } from './entities/user.entity';
 
 @Injectable()
@@ -20,10 +18,12 @@ export class UsersService {
   /**
    * 유저 생성
    */
-  async createUser(createUserDto: CreateUserDto): Promise<UserModel> {
+  async createUser(
+    newUser: Pick<UserModel, 'email' | 'password' | 'name'>,
+  ): Promise<UserModel> {
     const isExistEmail = await this.usersRepository.exists({
       where: {
-        email: createUserDto.email,
+        email: newUser.email,
       },
     });
 
@@ -31,9 +31,9 @@ export class UsersService {
       throw new BadRequestException('이미 존재하는 이메일입니다.');
     }
 
-    const users = this.usersRepository.create(createUserDto);
+    const user = this.usersRepository.create(newUser);
 
-    return this.usersRepository.save(users);
+    return this.usersRepository.save(user);
   }
 
   /**
@@ -43,6 +43,9 @@ export class UsersService {
     return this.usersRepository.find();
   }
 
+  /**
+   * 유저 조회
+   */
   async getUserById(userId: number): Promise<UserModel> {
     const user = await this.usersRepository.findOne({
       where: {
@@ -62,7 +65,7 @@ export class UsersService {
    */
   async updateUserById(
     userId: number,
-    updateUserDto: UpdateUserDto,
+    updateUser: Partial<UserModel>,
   ): Promise<UserModel> {
     const user = await this.usersRepository.findOne({
       where: {
@@ -76,7 +79,7 @@ export class UsersService {
 
     return this.usersRepository.save({
       ...user,
-      ...updateUserDto,
+      ...updateUser,
     });
   }
 
@@ -89,6 +92,9 @@ export class UsersService {
     return true;
   }
 
+  /**
+   * 이메일로 유저 조회
+   */
   getUserByEmail(user: Pick<UserModel, 'email'>): Promise<UserModel> {
     return this.usersRepository.findOne({
       where: {

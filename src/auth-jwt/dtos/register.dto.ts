@@ -1,3 +1,22 @@
-import { CreateUserDto } from '../../users/dtos/create-user.dto';
+import { Type } from 'class-transformer';
+import { IsEmail, IsString, ValidateNested } from 'class-validator';
 
-export class RegisterDto extends CreateUserDto {}
+class Name {
+  @IsString()
+  first: string;
+
+  @IsString()
+  last: string;
+}
+
+export class RegisterDto {
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  password: string;
+
+  @ValidateNested()
+  @Type(() => Name)
+  name: Name;
+}
