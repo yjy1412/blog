@@ -1,6 +1,8 @@
+import { PartialType } from '@nestjs/mapped-types';
 import { IsNumber, IsString } from 'class-validator';
+import { PostModel } from '../entities/post.entity';
 
-export class CreatePostDto {
+export class CreatePostDto extends PartialType(PostModel) {
   @IsString()
   title: string;
 
@@ -12,6 +14,4 @@ export class CreatePostDto {
 
   @IsNumber()
   commentCount: number;
-
-  authorId: number;
 }

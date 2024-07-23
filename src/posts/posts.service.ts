@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 
 import { UsersService } from '../users/users.service';
 
-import { UpdatePostDto } from './dtos/update-post.dto';
 import { PostModel } from './entities/post.entity';
 
 @Injectable()
@@ -19,21 +18,21 @@ export class PostsService {
    * 게시물 생성
    */
   async createPost(
-    post: Pick<
+    newPost: Pick<
       PostModel,
       'title' | 'content' | 'likeCount' | 'commentCount' | 'authorId'
     >,
   ): Promise<PostModel> {
-    const author = await this.usersService.getUserById(post.authorId);
+    const author = await this.usersService.getUserById(newPost.authorId);
 
     if (!author) {
-      throw new NotFoundException(`User with id ${post.authorId} not found`);
+      throw new NotFoundException(`User with id ${newPost.authorId} not found`);
     }
 
     const createdPost = this.postsRepository.create({
-      ...post,
+      ...newPost,
       author: {
-        id: post.authorId,
+        id: newPost.authorId,
       },
     });
 
@@ -47,6 +46,9 @@ export class PostsService {
     return this.postsRepository.find();
   }
 
+  /**
+   * 게시물 조회
+   */
   async getPostById(postId: number): Promise<PostModel> {
     const post = await this.postsRepository.findOne({
       where: {
@@ -66,7 +68,7 @@ export class PostsService {
    */
   async updatePostById(
     postId: number,
-    updatePostDto: UpdatePostDto,
+    updatePost: Partial<PostModel>,
   ): Promise<PostModel> {
     const post = await this.postsRepository.findOne({
       where: {
@@ -80,7 +82,7 @@ export class PostsService {
 
     return this.postsRepository.save({
       ...post,
-      ...updatePostDto,
+      ...updatePost,
     });
   }
 
