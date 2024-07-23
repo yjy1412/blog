@@ -18,19 +18,24 @@ export class AuthJwtMock {
         last: 'Gil-Dong',
       },
     };
+
   public readonly mockBasicToken = 'dGVzdEB0ZXN0LmNvbTp0ZXN0UGFzc3dvcmQ=';
+
   public readonly mockBearerTokenForAccess = this.mockSignBearerToken(
     BearerTokenTypeEnum.ACCESS,
     '10m',
   );
+
   public readonly mockBearerTokenForRefresh = this.mockSignBearerToken(
     BearerTokenTypeEnum.REFRESH,
     '10m',
   );
+
   public readonly mockExpiredBearerTokenForRefesh = this.mockSignBearerToken(
     BearerTokenTypeEnum.REFRESH,
     '0s',
   );
+
   public readonly mockAuthJwtService: Partial<AuthJwtService> = {
     login: jest.fn().mockResolvedValue({
       accessToken: this.mockBearerTokenForAccess,

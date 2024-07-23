@@ -8,7 +8,7 @@ import { UnauthorizedException } from '@nestjs/common';
 
 describe('\n🎯🎯🎯 테스트를 시작합니다 ===================================================================================================================================\n', () => {
   let controller: AuthJwtController;
-  let authMockJwt: AuthJwtMock;
+
   let mockNewUser: Pick<UserModel, 'email' | 'password' | 'name'>;
   let mockBasicToken: string;
   let mockBearerTokenForAccess: string;
@@ -22,15 +22,15 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       providers: [AuthJwtMock],
     }).compile();
 
-    authMockJwt = module.get<AuthJwtMock>(AuthJwtMock);
+    const mockAuthJwt = module.get<AuthJwtMock>(AuthJwtMock);
 
-    mockNewUser = authMockJwt.mockNewUser;
-    mockBasicToken = authMockJwt.mockBasicToken;
-    mockBearerTokenForAccess = authMockJwt.mockBearerTokenForAccess;
-    mockBearerTokenForRefresh = authMockJwt.mockBearerTokenForRefresh;
-    mockAuthJwtService = authMockJwt.mockAuthJwtService;
+    mockNewUser = mockAuthJwt.mockNewUser;
+    mockBasicToken = mockAuthJwt.mockBasicToken;
+    mockBearerTokenForAccess = mockAuthJwt.mockBearerTokenForAccess;
+    mockBearerTokenForRefresh = mockAuthJwt.mockBearerTokenForRefresh;
+    mockAuthJwtService = mockAuthJwt.mockAuthJwtService;
     mockExpiredBearerTokenForRefesh =
-      authMockJwt.mockExpiredBearerTokenForRefesh;
+      mockAuthJwt.mockExpiredBearerTokenForRefesh;
   });
 
   beforeEach(async () => {
@@ -80,15 +80,16 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
     it('로그인 요청 시, 요청 헤더의 authorization 값이 "Basic email:password(Base64 encoded)" 형식이어야 합니다.', async () => {
       await controller.login(`Basic ${mockBasicToken}`);
 
-      expect(
-        authMockJwt.mockAuthJwtService.extractTokenFromHeader,
-      ).toHaveBeenCalledWith(`Basic ${mockBasicToken}`, false);
+      expect(mockAuthJwtService.extractTokenFromHeader).toHaveBeenCalledWith(
+        `Basic ${mockBasicToken}`,
+        false,
+      );
     });
 
     it('로그인 요청 시 관련 서비스가 호출되어야 합니다.', async () => {
       await controller.login(`Basic ${mockBasicToken}`);
 
-      expect(authMockJwt.mockAuthJwtService.login).toHaveBeenCalledWith({
+      expect(mockAuthJwtService.login).toHaveBeenCalledWith({
         email: mockNewUser.email,
         password: mockNewUser.password,
       });
