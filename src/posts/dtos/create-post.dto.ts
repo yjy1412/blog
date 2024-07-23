@@ -1,8 +1,6 @@
-import { PartialType } from '@nestjs/mapped-types';
 import { IsNumber, IsString } from 'class-validator';
-import { PostModel } from '../entities/post.entity';
 
-export class CreatePostDto extends PartialType(PostModel) {
+export class CreatePostDto {
   @IsString()
   title: string;
 
