@@ -15,6 +15,9 @@ export class PostsService {
     private readonly usersService: UsersService,
   ) {}
 
+  /**
+   * 게시물 생성
+   */
   async createPost(
     post: Pick<
       PostModel,
@@ -37,6 +40,9 @@ export class PostsService {
     return this.postsRepository.save(createdPost);
   }
 
+  /**
+   * 모든 게시물 조회
+   */
   getPostsAll(): Promise<PostModel[]> {
     return this.postsRepository.find();
   }
@@ -55,6 +61,9 @@ export class PostsService {
     return post;
   }
 
+  /**
+   * 게시물 수정
+   */
   async updatePostById(
     postId: number,
     updatePostDto: UpdatePostDto,
@@ -75,6 +84,9 @@ export class PostsService {
     });
   }
 
+  /**
+   * 게시물 삭제
+   */
   async deletePostById(postId: number): Promise<boolean> {
     await this.postsRepository.delete(postId);
 

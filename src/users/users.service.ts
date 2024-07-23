@@ -17,6 +17,9 @@ export class UsersService {
     private readonly usersRepository: Repository<UserModel>,
   ) {}
 
+  /**
+   * 유저 생성
+   */
   async createUser(createUserDto: CreateUserDto): Promise<UserModel> {
     const isExistEmail = await this.usersRepository.exists({
       where: {
@@ -33,6 +36,9 @@ export class UsersService {
     return this.usersRepository.save(users);
   }
 
+  /**
+   * 모든 유저 조회
+   */
   getUsersAll(): Promise<UserModel[]> {
     return this.usersRepository.find();
   }
@@ -51,6 +57,9 @@ export class UsersService {
     return user;
   }
 
+  /**
+   * 유저 정보 수정
+   */
   async updateUserById(
     userId: number,
     updateUserDto: UpdateUserDto,
@@ -71,6 +80,9 @@ export class UsersService {
     });
   }
 
+  /**
+   * 유저 삭제
+   */
   async deleteUserById(userId: number): Promise<boolean> {
     await this.usersRepository.delete(userId);
 
