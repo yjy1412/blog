@@ -24,9 +24,10 @@ export class PostsController {
   @Post()
   createPost(
     @AuthenticatedUser() user: Pick<UserModel, 'id' | 'email'>,
-    @Body() post: CreatePostDto,
+    @Body() body: CreatePostDto,
   ) {
-    post.authorId = user.id;
+    const post = { ...body, authorId: user.id };
+
     return this.postsService.createPost(post);
   }
 

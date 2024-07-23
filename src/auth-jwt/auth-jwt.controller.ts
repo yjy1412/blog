@@ -15,8 +15,8 @@ export class AuthJwtController {
 
   @Public()
   @Post('register')
-  async register(@Body() registerDto: RegisterDto) {
-    return this.authJwtService.register(registerDto);
+  async register(@Body() body: RegisterDto) {
+    return this.authJwtService.register(body);
   }
 
   @Public()
