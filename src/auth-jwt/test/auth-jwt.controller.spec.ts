@@ -3,7 +3,7 @@ import { AuthJwtController } from '../auth-jwt.controller';
 import { AuthJwtService } from '../auth-jwt.service';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthJwtMock } from './auth-jwt.mock.spec';
-import { UserModel } from 'src/users/entities/user.entity';
+import { UserModel } from '../../users/entities/user.entity';
 import { UnauthorizedException } from '@nestjs/common';
 
 describe('\n🎯🎯🎯 테스트를 시작합니다 ===================================================================================================================================\n', () => {

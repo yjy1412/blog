@@ -1,8 +1,8 @@
 import { JwtService } from '@nestjs/jwt';
 import { AuthJwtService } from '../auth-jwt.service';
-import { JWT_SECRET } from '../constants/auth-jwt.common.constant';
+import { JWT_SECRET } from '../constants/auth-jwt.constant';
 import { Injectable } from '@nestjs/common';
-import { UserModel } from 'src/users/entities/user.entity';
+import { UserModel } from '../../users/entities/user.entity';
 import { BearerTokenTypeEnum } from '../constants/auth-jwt.enum.constant';
 
 @Injectable()

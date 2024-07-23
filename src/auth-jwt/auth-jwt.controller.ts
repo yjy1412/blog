@@ -1,11 +1,13 @@
 import { Body, Controller, Headers, Post } from '@nestjs/common';
+
+import { Public } from '../common/decorators/public.decorator';
+
 import { AuthJwtService } from './auth-jwt.service';
 import { RegisterDto } from './dtos/register.dto';
 import {
   BasicTokenHeaderType,
   BearerTokenHeaderType,
 } from './constants/auth-jwt.type.constant';
-import { Public } from 'src/common/common.decorator';
 
 @Controller('auth/jwt')
 export class AuthJwtController {

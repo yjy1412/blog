@@ -7,6 +7,7 @@ import {
   Delete,
   ParseIntPipe,
 } from '@nestjs/common';
+
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
 

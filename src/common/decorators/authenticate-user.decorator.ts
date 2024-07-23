@@ -1,12 +1,9 @@
 import {
   ExecutionContext,
   InternalServerErrorException,
-  SetMetadata,
   createParamDecorator,
 } from '@nestjs/common';
-import { IS_PUBLIC_KEY } from './common.constant';
 
-export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 export const AuthenticatedUser = createParamDecorator(
   (data, context: ExecutionContext) => {
     const request = context.switchToHttp().getRequest();

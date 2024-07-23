@@ -1,14 +1,16 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserModel } from 'src/users/entities/user.entity';
-import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
+import * as _ from 'lodash';
+
+import { UserModel } from '../users/entities/user.entity';
+import { UsersService } from '../users/users.service';
+
 import {
   BasicTokenHeaderType,
   BearerTokenHeaderType,
 } from './constants/auth-jwt.type.constant';
 import { BearerTokenTypeEnum } from './constants/auth-jwt.enum.constant';
-import * as _ from 'lodash';
 
 @Injectable()
 export class AuthJwtService {

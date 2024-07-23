@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PostsService } from '../posts.service';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../../users/users.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PostModel } from '../entities/post.entity';
-import { UserModel } from 'src/users/entities/user.entity';
+import { UserModel } from '../../users/entities/user.entity';
 import { PostsMock } from './posts.mock.spec';
 
 describe('\n🎯🎯🎯 테스트를 시작합니다 ===================================================================================================================================\n', () => {
