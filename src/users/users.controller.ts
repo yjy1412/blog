@@ -28,9 +28,9 @@ export class UsersController {
   @Patch(':id')
   updateUserById(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateUserDto: UpdateUserDto,
+    @Body() body: UpdateUserDto,
   ) {
-    return this.usersService.updateUserById(id, updateUserDto);
+    return this.usersService.updateUserById(id, body);
   }
 
   @Delete(':id')
