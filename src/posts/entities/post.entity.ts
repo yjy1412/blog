@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 import { BaseModel } from '../../common/entities/base.entity';
 
@@ -18,12 +18,14 @@ export class PostModel extends BaseModel {
   @Column()
   commentCount: number;
 
+  @Column()
+  authorId: number;
+
   @ManyToOne(() => UserModel, (user) => user.posts, {
     nullable: false,
     cascade: true,
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'authorId' })
   author: UserModel;
-
-  authorId: number;
 }
