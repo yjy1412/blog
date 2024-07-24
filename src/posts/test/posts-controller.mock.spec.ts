@@ -1,16 +1,18 @@
-import { CreatePostDto } from '../dtos/create-post.dto';
-import { PostModel } from '../entities/post.entity';
+import { Injectable } from '@nestjs/common';
+
 import { UserModel } from '../../users/entities/user.entity';
 import { PostsService } from '../posts.service';
+import { CreatePostDto } from '../dtos/create-post.dto';
 import { UpdatePostDto } from '../dtos/update-post.dto';
+import { PostsBaseMock } from './posts-base.mock.spec';
 
-export class PostsMock {
+@Injectable()
+export class PostsControllerMock extends PostsBaseMock {
   public readonly mockCreatePostDto: CreatePostDto = {
     title: 'Test Post',
     content: 'Test Content',
     likeCount: 0,
     commentCount: 0,
-    authorId: 1,
   };
 
   public readonly mockUpadatePostDto: UpdatePostDto = {
@@ -18,28 +20,9 @@ export class PostsMock {
     content: 'Test Update Content',
   };
 
-  public readonly mockUser: UserModel = {
+  public readonly mockAuthenticatedUser: Pick<UserModel, 'id' | 'email'> = {
     id: 1,
     email: 'tester@test.com',
-    password: 'testPassword',
-    name: {
-      first: 'Hong',
-      last: 'Gil-Dong',
-    },
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    posts: [],
-  };
-
-  public readonly mockPost: PostModel = {
-    id: 1,
-    title: 'Test Post',
-    content: 'Test Content',
-    likeCount: 0,
-    commentCount: 0,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    author: this.mockUser,
   };
 
   public readonly mockPostsService: Partial<PostsService> = {
