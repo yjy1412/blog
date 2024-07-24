@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthJwtController } from '../auth-jwt.controller';
 import { AuthJwtService } from '../auth-jwt.service';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthJwtMock } from './auth-jwt.mock.spec';
+import { AuthJwtMock } from './auth-jwt-controller.mock.spec';
 import { UserModel } from '../../users/entities/user.entity';
 import { UnauthorizedException } from '@nestjs/common';
 
@@ -22,15 +22,15 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       providers: [AuthJwtMock],
     }).compile();
 
-    const mockAuthJwt = module.get<AuthJwtMock>(AuthJwtMock);
+    const authJwtMock = module.get<AuthJwtMock>(AuthJwtMock);
 
-    mockNewUser = mockAuthJwt.mockNewUser;
-    mockBasicToken = mockAuthJwt.mockBasicToken;
-    mockBearerTokenForAccess = mockAuthJwt.mockBearerTokenForAccess;
-    mockBearerTokenForRefresh = mockAuthJwt.mockBearerTokenForRefresh;
-    mockAuthJwtService = mockAuthJwt.mockAuthJwtService;
+    mockNewUser = authJwtMock.mockNewUser;
+    mockBasicToken = authJwtMock.mockBasicToken;
+    mockBearerTokenForAccess = authJwtMock.mockBearerTokenForAccess;
+    mockBearerTokenForRefresh = authJwtMock.mockBearerTokenForRefresh;
+    mockAuthJwtService = authJwtMock.mockAuthJwtService;
     mockExpiredBearerTokenForRefesh =
-      mockAuthJwt.mockExpiredBearerTokenForRefesh;
+      authJwtMock.mockExpiredBearerTokenForRefesh;
   });
 
   beforeEach(async () => {
