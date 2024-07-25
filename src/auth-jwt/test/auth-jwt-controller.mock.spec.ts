@@ -18,11 +18,21 @@ export class AuthJwtControllerMock extends AuthJwtBaseMock {
       accessToken: this.mockBearerTokenForAccess,
       refreshToken: this.mockBearerTokenForRefresh,
     }),
-    extractTokenFromHeader: jest.fn((_, isBearerToken) => {
-      return isBearerToken
-        ? this.mockBearerTokenForAccess
-        : this.mockBasicToken;
-    }),
+    extractTokenFromHeader: jest.fn(
+      (authorizationHeaderValue, isBearerToken) => {
+        const isRefreshToken =
+          authorizationHeaderValue ===
+          `Bearer ${this.mockBearerTokenForRefresh}`;
+
+        if (isRefreshToken) {
+          return this.mockBearerTokenForRefresh;
+        }
+
+        return isBearerToken
+          ? this.mockBearerTokenForAccess
+          : this.mockBasicToken;
+      },
+    ),
     decodeBasicToken: jest.fn().mockReturnValue({
       email: this.mockNewUser.email,
       password: this.mockNewUser.password,

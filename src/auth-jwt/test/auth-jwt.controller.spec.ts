@@ -5,6 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthJwtControllerMock } from './auth-jwt-controller.mock.spec';
 import { UserModel } from '../../users/entities/user.entity';
 import { UnauthorizedException } from '@nestjs/common';
+import { JWT_SECRET } from '../constants/auth-jwt.constant';
 
 describe('\n🎯🎯🎯 테스트를 시작합니다 ===================================================================================================================================\n', () => {
   let controller: AuthJwtController;
@@ -18,7 +19,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [JwtModule.register({})],
+      imports: [JwtModule.register({ secret: JWT_SECRET })],
       providers: [AuthJwtControllerMock],
     }).compile();
 
@@ -58,13 +59,13 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       expect(controller.register).toBeDefined();
     });
 
-    it('회원가입 요청 시 관련 서비스가 호출되어야 합니다.', async () => {
+    it('관련 서비스가 호출되어야 합니다.', async () => {
       await controller.register(mockNewUser);
 
       expect(mockAuthJwtService.register).toHaveBeenCalledWith(mockNewUser);
     });
 
-    it('회원가입 요청 시 액세스/리프레쉬 토큰이 반환되어야 합니다.', async () => {
+    it('액세스/리프레쉬 토큰이 반환되어야 합니다.', async () => {
       const response = await controller.register(mockNewUser);
 
       expect(response).toEqual({
@@ -79,7 +80,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       expect(controller.login).toBeDefined();
     });
 
-    it('로그인 요청 시, 요청 헤더의 authorization 값이 "Basic email:password(Base64 encoded)" 형식이어야 합니다.', async () => {
+    it('요청 헤더의 authorization 값이 "Basic email:password(Base64 encoded)" 형식이어야 합니다.', async () => {
       await controller.login(`Basic ${mockBasicToken}`);
 
       expect(mockAuthJwtService.extractTokenFromHeader).toHaveBeenCalledWith(
@@ -88,7 +89,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       );
     });
 
-    it('로그인 요청 시 관련 서비스가 호출되어야 합니다.', async () => {
+    it('관련 서비스가 호출되어야 합니다.', async () => {
       await controller.login(`Basic ${mockBasicToken}`);
 
       expect(mockAuthJwtService.login).toHaveBeenCalledWith({
@@ -97,7 +98,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       });
     });
 
-    it('로그인 요청 시 액세스/리프레쉬 토큰이 반환되어야 합니다.', async () => {
+    it('액세스/리프레쉬 토큰이 반환되어야 합니다.', async () => {
       const response = await controller.login(`Basic ${mockBasicToken}`);
 
       expect(response).toEqual({
@@ -120,7 +121,15 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       expect(controller.access).toBeDefined();
     });
 
-    it('리프레쉬 토큰이 만료된 경우, 401 Unauthorized가 반환되어야 합니다.', async () => {
+    it('관련 서비스가 호출되어야 합니다.', async () => {
+      await controller.access(`Bearer ${mockBearerTokenForRefresh}`);
+
+      expect(
+        mockAuthJwtService.refreshAccessTokenUsingRefreshToken,
+      ).toHaveBeenCalledWith(mockBearerTokenForRefresh);
+    });
+
+    it('인증에 실패한 경우, 401 Unauthorized가 반환되어야 합니다.', async () => {
       jest
         .spyOn(mockAuthJwtService, 'refreshAccessTokenUsingRefreshToken')
         .mockImplementationOnce(() => {
@@ -129,18 +138,6 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
 
       await expect(
         controller.access(`Bearer ${mockExpiredBearerTokenForRefesh}`),
-      ).rejects.toThrow(UnauthorizedException);
-    });
-
-    it('리프레쉬 토큰에 담긴 type 정보가 "refresh"가 아닌 경우, 401 Unauthorized가 반환되어야 합니다.', async () => {
-      jest
-        .spyOn(mockAuthJwtService, 'refreshAccessTokenUsingRefreshToken')
-        .mockImplementationOnce(() => {
-          throw new UnauthorizedException();
-        });
-
-      await expect(
-        controller.access(`Bearer ${mockBearerTokenForAccess}`),
       ).rejects.toThrow(UnauthorizedException);
     });
 
