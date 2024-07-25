@@ -34,8 +34,8 @@ export class AuthJwtControllerMock extends AuthJwtBaseMock {
       },
     ),
     decodeBasicToken: jest.fn().mockReturnValue({
-      email: this.mockNewUser.email,
-      password: this.mockNewUser.password,
+      email: this.mockUser.email,
+      password: this.mockUser.password,
     }),
     refreshAccessTokenUsingRefreshToken: jest.fn().mockResolvedValue({
       accessToken: this.mockBearerTokenForAccess,

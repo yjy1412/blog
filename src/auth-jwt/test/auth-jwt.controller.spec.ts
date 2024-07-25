@@ -10,7 +10,7 @@ import { JWT_SECRET } from '../constants/auth-jwt.constant';
 describe('\n🎯🎯🎯 테스트를 시작합니다 ===================================================================================================================================\n', () => {
   let controller: AuthJwtController;
 
-  let mockNewUser: Pick<UserModel, 'email' | 'password' | 'name'>;
+  let mockUser: Pick<UserModel, 'id' | 'email' | 'password' | 'name'>;
   let mockBasicToken: string;
   let mockBearerTokenForAccess: string;
   let mockBearerTokenForRefresh: string;
@@ -27,7 +27,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       AuthJwtControllerMock,
     );
 
-    mockNewUser = authJwtControllerMock.mockNewUser;
+    mockUser = authJwtControllerMock.mockUser;
     mockBasicToken = authJwtControllerMock.mockBasicToken;
     mockBearerTokenForAccess = authJwtControllerMock.mockBearerTokenForAccess;
     mockBearerTokenForRefresh = authJwtControllerMock.mockBearerTokenForRefresh;
@@ -55,18 +55,30 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
   });
 
   describe('✅ AuthJwtController >> register: 회원가입 요청', () => {
-    it('회원가입 요청 컨트롤러 메서드가 정의되어 있습니다.', () => {
+    test('회원가입 요청 컨트롤러 메서드가 정의되어 있습니다.', () => {
       expect(controller.register).toBeDefined();
     });
 
-    it('관련 서비스가 호출되어야 합니다.', async () => {
-      await controller.register(mockNewUser);
+    test('관련 서비스가 호출되어야 합니다.', async () => {
+      await controller.register({
+        email: mockUser.email,
+        password: mockUser.password,
+        name: mockUser.name,
+      });
 
-      expect(mockAuthJwtService.register).toHaveBeenCalledWith(mockNewUser);
+      expect(mockAuthJwtService.register).toHaveBeenCalledWith({
+        email: mockUser.email,
+        password: mockUser.password,
+        name: mockUser.name,
+      });
     });
 
-    it('액세스/리프레쉬 토큰이 반환되어야 합니다.', async () => {
-      const response = await controller.register(mockNewUser);
+    test('액세스/리프레쉬 토큰이 반환되어야 합니다.', async () => {
+      const response = await controller.register({
+        email: mockUser.email,
+        password: mockUser.password,
+        name: mockUser.name,
+      });
 
       expect(response).toEqual({
         accessToken: mockBearerTokenForAccess,
@@ -76,11 +88,11 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
   });
 
   describe('✅ AuthJwtController >> login: 로그인 요청', () => {
-    it('로그인 요청 컨트롤러 메서드가 정의되어 있습니다.', () => {
+    test('로그인 요청 컨트롤러 메서드가 정의되어 있습니다.', () => {
       expect(controller.login).toBeDefined();
     });
 
-    it('요청 헤더의 authorization 값이 "Basic email:password(Base64 encoded)" 형식이어야 합니다.', async () => {
+    test('요청 헤더의 authorization 값이 "Basic email:password(Base64 encoded)" 형식이어야 합니다.', async () => {
       await controller.login(`Basic ${mockBasicToken}`);
 
       expect(mockAuthJwtService.extractTokenFromHeader).toHaveBeenCalledWith(
@@ -89,16 +101,16 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       );
     });
 
-    it('관련 서비스가 호출되어야 합니다.', async () => {
+    test('관련 서비스가 호출되어야 합니다.', async () => {
       await controller.login(`Basic ${mockBasicToken}`);
 
       expect(mockAuthJwtService.login).toHaveBeenCalledWith({
-        email: mockNewUser.email,
-        password: mockNewUser.password,
+        email: mockUser.email,
+        password: mockUser.password,
       });
     });
 
-    it('액세스/리프레쉬 토큰이 반환되어야 합니다.', async () => {
+    test('액세스/리프레쉬 토큰이 반환되어야 합니다.', async () => {
       const response = await controller.login(`Basic ${mockBasicToken}`);
 
       expect(response).toEqual({
