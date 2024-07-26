@@ -1,22 +1,9 @@
-import { Type } from 'class-transformer';
-import { IsEmail, IsString, ValidateNested } from 'class-validator';
+import { PickType } from '@nestjs/mapped-types';
 
-class Name {
-  @IsString()
-  first: string;
+import { UserModel } from '../../users/entities/user.entity';
 
-  @IsString()
-  last: string;
-}
-
-export class RegisterDto {
-  @IsEmail()
-  email: string;
-
-  @IsString()
-  password: string;
-
-  @ValidateNested()
-  @Type(() => Name)
-  name: Name;
-}
+export class RegisterDto extends PickType(UserModel, [
+  'email',
+  'password',
+  'name',
+]) {}

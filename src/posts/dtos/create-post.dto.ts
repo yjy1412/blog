@@ -1,15 +1,10 @@
-import { IsNumber, IsString } from 'class-validator';
+import { PickType } from '@nestjs/mapped-types';
 
-export class CreatePostDto {
-  @IsString()
-  title: string;
+import { PostModel } from '../entities/post.entity';
 
-  @IsString()
-  content: string;
-
-  @IsNumber()
-  likeCount: number;
-
-  @IsNumber()
-  commentCount: number;
-}
+export class CreatePostDto extends PickType(PostModel, [
+  'title',
+  'content',
+  'likeCount',
+  'commentCount',
+]) {}
