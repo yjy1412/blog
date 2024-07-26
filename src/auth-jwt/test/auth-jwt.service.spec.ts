@@ -6,13 +6,13 @@ import { UsersService } from 'src/users/users.service';
 import { UserModel } from 'src/users/entities/user.entity';
 
 describe('AuthJwtService', () => {
-  let authJwtService: AuthJwtService;
-
   let mockUser: UserModel;
   let mockJwtService: Partial<JwtService>;
   let mockUsersService: Partial<UsersService>;
   let mockUserRegistrationInfo: Pick<UserModel, 'email' | 'password' | 'name'>;
   let mockBearerTokenPayloadWithoutType: Pick<UserModel, 'id' | 'email'>;
+
+  let authJwtService: AuthJwtService;
 
   beforeAll(async () => {
     const mockModule: TestingModule = await Test.createTestingModule({

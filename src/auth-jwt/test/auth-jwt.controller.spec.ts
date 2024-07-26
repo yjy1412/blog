@@ -6,13 +6,13 @@ import { UserModel } from '../../users/entities/user.entity';
 import { UnauthorizedException } from '@nestjs/common';
 
 describe('\n🎯🎯🎯 테스트를 시작합니다 ===================================================================================================================================\n', () => {
-  let controller: AuthJwtController;
-
   let mockUserRegistrationInfo: Pick<UserModel, 'email' | 'password' | 'name'>;
   let mockBasicToken: string;
   let mockRefreshToken: string;
   let mockExiredRefreshToken: string;
   let mockAuthJwtService: Partial<AuthJwtService>;
+
+  let authJwtController: AuthJwtController;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -41,7 +41,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       ],
     }).compile();
 
-    controller = module.get<AuthJwtController>(AuthJwtController);
+    authJwtController = module.get<AuthJwtController>(AuthJwtController);
   });
 
   afterEach(() => {
@@ -50,11 +50,11 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
 
   describe('✅ AuthJwtController >> register: 회원가입 요청', () => {
     test('회원가입 요청 컨트롤러 메서드가 정의되어 있습니다.', () => {
-      expect(controller.register).toBeDefined();
+      expect(authJwtController.register).toBeDefined();
     });
 
     test('관련 서비스가 호출되어야 합니다.', async () => {
-      await controller.register(mockUserRegistrationInfo);
+      await authJwtController.register(mockUserRegistrationInfo);
 
       expect(mockAuthJwtService.register).toHaveBeenCalledWith(
         mockUserRegistrationInfo,
@@ -62,7 +62,9 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
     });
 
     test('액세스/리프레쉬 토큰이 반환되어야 합니다.', async () => {
-      const response = await controller.register(mockUserRegistrationInfo);
+      const response = await authJwtController.register(
+        mockUserRegistrationInfo,
+      );
 
       expect(response).toHaveProperty('accessToken');
       expect(response).toHaveProperty('refreshToken');
@@ -71,11 +73,11 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
 
   describe('✅ AuthJwtController >> login: 로그인 요청', () => {
     test('로그인 요청 컨트롤러 메서드가 정의되어 있습니다.', () => {
-      expect(controller.login).toBeDefined();
+      expect(authJwtController.login).toBeDefined();
     });
 
     test('요청 헤더의 authorization 값이 "Basic email:password(Base64 encoded)" 형식이어야 합니다.', async () => {
-      await controller.login(`Basic ${mockBasicToken}`);
+      await authJwtController.login(`Basic ${mockBasicToken}`);
 
       expect(mockAuthJwtService.extractTokenFromHeader).toHaveBeenCalledWith(
         `Basic ${mockBasicToken}`,
@@ -84,7 +86,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
     });
 
     test('관련 서비스가 호출되어야 합니다.', async () => {
-      await controller.login(`Basic ${mockBasicToken}`);
+      await authJwtController.login(`Basic ${mockBasicToken}`);
 
       expect(mockAuthJwtService.login).toHaveBeenCalledWith({
         email: mockUserRegistrationInfo.email,
@@ -93,7 +95,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
     });
 
     test('액세스/리프레쉬 토큰이 반환되어야 합니다.', async () => {
-      const response = await controller.login(`Basic ${mockBasicToken}`);
+      const response = await authJwtController.login(`Basic ${mockBasicToken}`);
 
       expect(response).toHaveProperty('accessToken');
       expect(response).toHaveProperty('refreshToken');
@@ -110,11 +112,11 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
    */
   describe(`✅ AuthJwtController >> access: 액세스 토큰 재발급 요청`, () => {
     it('액세스 토큰 재발급 요청 컨트롤러 메서드가 정의되어 있습니다.', () => {
-      expect(controller.access).toBeDefined();
+      expect(authJwtController.access).toBeDefined();
     });
 
     it('관련 서비스가 호출되어야 합니다.', async () => {
-      await controller.access(`Bearer ${mockRefreshToken}`);
+      await authJwtController.access(`Bearer ${mockRefreshToken}`);
 
       expect(
         mockAuthJwtService.refreshAccessTokenUsingRefreshToken,
@@ -129,12 +131,14 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
         });
 
       await expect(
-        controller.access(`Bearer ${mockExiredRefreshToken}`),
+        authJwtController.access(`Bearer ${mockExiredRefreshToken}`),
       ).rejects.toThrow(UnauthorizedException);
     });
 
     it('액세스 토큰 재발급 요청 시 액세스 토큰이 반환되어야 합니다.', async () => {
-      const response = await controller.access(`Bearer ${mockRefreshToken}`);
+      const response = await authJwtController.access(
+        `Bearer ${mockRefreshToken}`,
+      );
 
       expect(response).toHaveProperty('accessToken');
     });
