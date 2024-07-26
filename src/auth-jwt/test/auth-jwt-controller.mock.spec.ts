@@ -1,36 +1,35 @@
 import { AuthJwtService } from '../auth-jwt.service';
 import { Injectable } from '@nestjs/common';
-import { AuthJwtBaseMock } from './auth-jwt-base.mock.spec';
-import { JwtService } from '@nestjs/jwt';
+import { BaseMock } from '../../common/test/base.mock.spec';
 
 @Injectable()
-export class AuthJwtControllerMock extends AuthJwtBaseMock {
-  constructor(jwtService: JwtService) {
-    super(jwtService);
-  }
+export class AuthJwtControllerMock extends BaseMock {
+  public readonly mockAccessToken = 'accessToken';
+  public readonly mockRefreshToken = 'refreshToken';
+  public readonly mockExiredRefreshToken = 'expiredRefreshToken';
+  public readonly mockBasicToken = Buffer.from(
+    `${this.mockUserRegistrationInfo.email}:${this.mockUserRegistrationInfo.password}`,
+  ).toString('base64');
 
   public readonly mockAuthJwtService: Partial<AuthJwtService> = {
     login: jest.fn().mockResolvedValue({
-      accessToken: this.mockBearerTokenForAccess,
-      refreshToken: this.mockBearerTokenForRefresh,
+      accessToken: this.mockAccessToken,
+      refreshToken: this.mockRefreshToken,
     }),
     register: jest.fn().mockResolvedValue({
-      accessToken: this.mockBearerTokenForAccess,
-      refreshToken: this.mockBearerTokenForRefresh,
+      accessToken: this.mockAccessToken,
+      refreshToken: this.mockRefreshToken,
     }),
     extractTokenFromHeader: jest.fn(
       (authorizationHeaderValue, isBearerToken) => {
-        const isRefreshToken =
-          authorizationHeaderValue ===
-          `Bearer ${this.mockBearerTokenForRefresh}`;
-
-        if (isRefreshToken) {
-          return this.mockBearerTokenForRefresh;
+        if (!isBearerToken) {
+          return this.mockBasicToken;
         }
 
-        return isBearerToken
-          ? this.mockBearerTokenForAccess
-          : this.mockBasicToken;
+        const isRefreshToken =
+          authorizationHeaderValue === `Bearer ${this.mockRefreshToken}`;
+
+        return isRefreshToken ? this.mockRefreshToken : this.mockAccessToken;
       },
     ),
     decodeBasicToken: jest.fn().mockReturnValue({
@@ -38,7 +37,7 @@ export class AuthJwtControllerMock extends AuthJwtBaseMock {
       password: this.mockUserRegistrationInfo.password,
     }),
     refreshAccessTokenUsingRefreshToken: jest.fn().mockResolvedValue({
-      accessToken: this.mockBearerTokenForAccess,
+      accessToken: this.mockAccessToken,
     }),
   };
 }

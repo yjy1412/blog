@@ -1,8 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthJwtService } from '../auth-jwt.service';
 import { AuthJwtServiceMock } from './auth-jwt-service.mock.spec';
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { JWT_SECRET } from '../constants/auth-jwt.constant';
+import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import { UserModel } from 'src/users/entities/user.entity';
 
@@ -13,10 +12,10 @@ describe('AuthJwtService', () => {
   let mockJwtService: Partial<JwtService>;
   let mockUsersService: Partial<UsersService>;
   let mockUserRegistrationInfo: Pick<UserModel, 'email' | 'password' | 'name'>;
+  let mockBearerTokenPayloadWithoutType: Pick<UserModel, 'id' | 'email'>;
 
   beforeAll(async () => {
     const mockModule: TestingModule = await Test.createTestingModule({
-      imports: [JwtModule.register({ secret: JWT_SECRET })],
       providers: [AuthJwtServiceMock],
     }).compile();
 
@@ -27,11 +26,12 @@ describe('AuthJwtService', () => {
     mockJwtService = authJwtServiceMock.mockJwtService;
     mockUsersService = authJwtServiceMock.mockUsersService;
     mockUserRegistrationInfo = authJwtServiceMock.mockUserRegistrationInfo;
+    mockBearerTokenPayloadWithoutType =
+      authJwtServiceMock.mockBearerTokenPayloadWithoutType;
   });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [JwtModule.register({ secret: JWT_SECRET })],
       providers: [
         AuthJwtService,
         {
@@ -50,18 +50,11 @@ describe('AuthJwtService', () => {
 
   describe('✅ AuthJwtService >> signBearerToken: 유저의 정보를 기반으로 Bearer Token을 생성합니다.', () => {
     test('Bearer Token에는 유저의 id, email, type 정보가 포함되어야 합니다.', async () => {
-      authJwtService.signBearerToken(
-        {
-          id: mockUser.id,
-          email: mockUser.email,
-        },
-        false,
-      );
+      authJwtService.signBearerToken(mockBearerTokenPayloadWithoutType, false);
 
       expect(mockJwtService.sign).toHaveBeenCalledWith(
         {
-          id: mockUser.id,
-          email: mockUser.email,
+          ...mockBearerTokenPayloadWithoutType,
           type: 'access',
         },
         { expiresIn: '1d' },
@@ -69,13 +62,7 @@ describe('AuthJwtService', () => {
     });
 
     test('Refresh 토큰의 경우, 만료시간은 1시간이어야 합니다.', async () => {
-      authJwtService.signBearerToken(
-        {
-          id: mockUser.id,
-          email: mockUser.email,
-        },
-        true,
-      );
+      authJwtService.signBearerToken(mockBearerTokenPayloadWithoutType, true);
 
       expect(mockJwtService.sign).toHaveBeenCalledWith(
         expect.any(Object),

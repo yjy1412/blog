@@ -1,24 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthJwtController } from '../auth-jwt.controller';
 import { AuthJwtService } from '../auth-jwt.service';
-import { JwtModule } from '@nestjs/jwt';
 import { AuthJwtControllerMock } from './auth-jwt-controller.mock.spec';
 import { UserModel } from '../../users/entities/user.entity';
 import { UnauthorizedException } from '@nestjs/common';
-import { JWT_SECRET } from '../constants/auth-jwt.constant';
 
 describe('\n🎯🎯🎯 테스트를 시작합니다 ===================================================================================================================================\n', () => {
   let controller: AuthJwtController;
 
   let mockUserRegistrationInfo: Pick<UserModel, 'email' | 'password' | 'name'>;
   let mockBasicToken: string;
-  let mockBearerTokenForRefresh: string;
+  let mockRefreshToken: string;
+  let mockExiredRefreshToken: string;
   let mockAuthJwtService: Partial<AuthJwtService>;
-  let mockExpiredBearerTokenForRefesh: string;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [JwtModule.register({ secret: JWT_SECRET })],
       providers: [AuthJwtControllerMock],
     }).compile();
 
@@ -28,10 +25,9 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
 
     mockUserRegistrationInfo = authJwtControllerMock.mockUserRegistrationInfo;
     mockBasicToken = authJwtControllerMock.mockBasicToken;
-    mockBearerTokenForRefresh = authJwtControllerMock.mockBearerTokenForRefresh;
+    mockRefreshToken = authJwtControllerMock.mockRefreshToken;
+    mockExiredRefreshToken = authJwtControllerMock.mockExiredRefreshToken;
     mockAuthJwtService = authJwtControllerMock.mockAuthJwtService;
-    mockExpiredBearerTokenForRefesh =
-      authJwtControllerMock.mockExpiredBearerTokenForRefesh;
   });
 
   beforeEach(async () => {
@@ -118,11 +114,11 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
     });
 
     it('관련 서비스가 호출되어야 합니다.', async () => {
-      await controller.access(`Bearer ${mockBearerTokenForRefresh}`);
+      await controller.access(`Bearer ${mockRefreshToken}`);
 
       expect(
         mockAuthJwtService.refreshAccessTokenUsingRefreshToken,
-      ).toHaveBeenCalledWith(mockBearerTokenForRefresh);
+      ).toHaveBeenCalledWith(mockRefreshToken);
     });
 
     it('인증에 실패한 경우, 401 Unauthorized가 반환되어야 합니다.', async () => {
@@ -133,14 +129,12 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
         });
 
       await expect(
-        controller.access(`Bearer ${mockExpiredBearerTokenForRefesh}`),
+        controller.access(`Bearer ${mockExiredRefreshToken}`),
       ).rejects.toThrow(UnauthorizedException);
     });
 
     it('액세스 토큰 재발급 요청 시 액세스 토큰이 반환되어야 합니다.', async () => {
-      const response = await controller.access(
-        `Bearer ${mockBearerTokenForRefresh}`,
-      );
+      const response = await controller.access(`Bearer ${mockRefreshToken}`);
 
       expect(response).toHaveProperty('accessToken');
     });
