@@ -1,3 +1,4 @@
+import { PostModel } from '../../posts/entities/post.entity';
 import { UserModel } from '../../users/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 
@@ -22,5 +23,17 @@ export abstract class BaseMock {
     createdAt: new Date(),
     updatedAt: new Date(),
     posts: [],
+  };
+
+  public readonly mockPost: PostModel = {
+    id: 1,
+    title: 'Test Post',
+    content: 'Test Content',
+    likeCount: 0,
+    commentCount: 0,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    authorId: 1,
+    author: this.mockUser,
   };
 }

@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 
 import { PostModel } from '../entities/post.entity';
-import { PostsBaseMock } from './posts-base.mock.spec';
+import { BaseMock } from '../../common/test/base.mock.spec';
+import { UsersService } from '../../users/users.service';
 
 @Injectable()
-export class PostsServiceMock extends PostsBaseMock {
+export class PostsServiceMock extends BaseMock {
   public readonly mockNewPost: Pick<
     PostModel,
     'title' | 'content' | 'likeCount' | 'commentCount' | 'authorId'
@@ -19,5 +20,9 @@ export class PostsServiceMock extends PostsBaseMock {
   public readonly mockUpdatePost: Partial<PostModel> = {
     title: 'Test Update Post',
     content: 'Test Update Content',
+  };
+
+  public readonly mockUsersService: Partial<UsersService> = {
+    getUserById: jest.fn().mockResolvedValue(this.mockUser),
   };
 }
