@@ -1,21 +1,29 @@
 import { UserModel } from '../../users/entities/user.entity';
 import { BearerTokenTypeEnum } from '../constants/auth-jwt.enum.constant';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 
 export abstract class AuthJwtBaseMock {
   constructor(private readonly jwtService: JwtService) {}
-
-  public readonly mockUser: Pick<
+  public readonly mockUserRegistrationInfo: Pick<
     UserModel,
-    'id' | 'email' | 'password' | 'name'
+    'email' | 'password' | 'name'
   > = {
-    id: 1,
     email: 'test@test.com',
     password: 'testPassword',
     name: {
       first: 'Hong',
       last: 'Gil-Dong',
     },
+  };
+
+  public readonly mockUser: UserModel = {
+    ...this.mockUserRegistrationInfo,
+    id: 1,
+    password: bcrypt.hashSync(this.mockUserRegistrationInfo.password, 10),
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    posts: [],
   };
 
   public readonly mockBearerTokenPayloadWithoutType = {
