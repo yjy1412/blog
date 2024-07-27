@@ -4,11 +4,9 @@ import { UsersService } from '../../users/users.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PostModel } from '../entities/post.entity';
-import { UserModel } from '../../users/entities/user.entity';
 import { PostsServiceMock } from './posts-service.mock.spec';
 
 describe('\n🎯🎯🎯 테스트를 시작합니다 ===================================================================================================================================\n', () => {
-  let mockUser: UserModel;
   let mockPost: PostModel;
   let mockNewPost: Pick<
     PostModel,
@@ -28,7 +26,6 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
 
     const postsServiceMock = module.get<PostsServiceMock>(PostsServiceMock);
 
-    mockUser = postsServiceMock.mockUser;
     mockPost = postsServiceMock.mockPost;
     mockNewPost = postsServiceMock.mockNewPost;
     mockUpdatePost = postsServiceMock.mockUpdatePost;
@@ -76,7 +73,6 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
 
       await expect(postsService.createPost(mockNewPost)).resolves.toEqual({
         ...mockPost,
-        author: mockUser,
       });
     });
   });

@@ -33,5 +33,5 @@ export class PostModel extends BaseModel {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'authorId' })
-  author: UserModel;
+  author?: UserModel;
 }

@@ -35,5 +35,5 @@ export class UserModel extends BaseModel {
   name: Name;
 
   @OneToMany(() => PostModel, (post) => post.author)
-  posts: PostModel[];
+  posts?: PostModel[];
 }
