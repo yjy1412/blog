@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { PostsModule } from './posts/posts.module';
@@ -28,6 +28,10 @@ import { AuthJwtGuard } from './auth-jwt/guards/auth-jwt.guard';
     {
       provide: 'APP_GUARD',
       useClass: AuthJwtGuard,
+    },
+    {
+      provide: 'APP_INTERCEPTOR',
+      useClass: ClassSerializerInterceptor,
     },
   ],
 })

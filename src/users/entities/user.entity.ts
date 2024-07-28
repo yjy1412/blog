@@ -4,9 +4,10 @@ import { IsEmail, IsString, Matches, ValidateNested } from 'class-validator';
 import { BaseModel } from '../../common/entities/base.entity';
 
 import { PostModel } from '../../posts/entities/post.entity';
-import { Type } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import { generateMessageInvalidStringType } from '../../common/validator-messages/generate-message-invalid-string-type.message';
 import { generateMessageInvalidEmail } from '../../common/validator-messages/generate-validation-invalid-email.message';
+import { ExposeGroupEnum } from '../../common/constants/common.enum';
 
 class Name {
   /**
@@ -68,6 +69,9 @@ export class UserModel extends BaseModel {
         '비밀번호는 8~15자리의 영문, 숫자, 특수문자(공백제외) 조합이어야 합니다.',
     },
   )
+  @Expose({
+    groups: [ExposeGroupEnum.ADMIN],
+  })
   password: string;
 
   /**
