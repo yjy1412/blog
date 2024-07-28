@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PostsController } from '../posts.controller';
 import { PostsService } from '../posts.service';
-import { PostsControllerMock } from './posts-controller.mock.spec';
+import { PostsControllerMock } from './posts-controller.mock';
 import { CreatePostDto } from '../dtos/create-post.dto';
 import { UpdatePostDto } from '../dtos/update-post.dto';
 import { PostModel } from '../entities/post.entity';

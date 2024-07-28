@@ -4,7 +4,7 @@ import { UsersService } from '../../users/users.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PostModel } from '../entities/post.entity';
-import { PostsServiceMock } from './posts-service.mock.spec';
+import { PostsServiceMock } from './posts-service.mock';
 
 describe('\n🎯🎯🎯 테스트를 시작합니다 ===================================================================================================================================\n', () => {
   let mockPost: PostModel;

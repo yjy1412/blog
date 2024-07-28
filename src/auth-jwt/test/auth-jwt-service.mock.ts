@@ -1,7 +1,7 @@
 import { JwtService } from '@nestjs/jwt';
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../../users/users.service';
-import { BaseMock } from '../../common/test/base.mock.spec';
+import { BaseMock } from '../../common/test/base.mock';
 
 @Injectable()
 export class AuthJwtServiceMock extends BaseMock {

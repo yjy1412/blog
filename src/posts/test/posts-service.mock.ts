@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { PostModel } from '../entities/post.entity';
-import { BaseMock } from '../../common/test/base.mock.spec';
+import { BaseMock } from '../../common/test/base.mock';
 import { UsersService } from '../../users/users.service';
 
 @Injectable()

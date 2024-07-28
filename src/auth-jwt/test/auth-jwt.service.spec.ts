@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthJwtService } from '../auth-jwt.service';
-import { AuthJwtServiceMock } from './auth-jwt-service.mock.spec';
+import { AuthJwtServiceMock } from './auth-jwt-service.mock';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import { UserModel } from 'src/users/entities/user.entity';
