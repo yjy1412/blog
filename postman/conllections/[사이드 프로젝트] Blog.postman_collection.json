@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"test@test.com\",\n    \"password\": \"testPassword\",\n    \"name\": {\n        \"first\": \"Hong\",\n        \"last\": \"Gil-Dong\"\n    }\n}",
+							"raw": "{\n    \"email\": \"test@test.com\",\n    \"password\": \"testPassword12!\",\n    \"name\": {\n        \"first\": \"Hong\",\n        \"last\": \"Gil-Dong\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -61,7 +61,7 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "testPassword",
+									"value": "testPassword12!",
 									"type": "string"
 								},
 								{
@@ -338,14 +338,13 @@
 						"method": "PATCH",
 						"header": [],
 						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "comment",
-									"value": "Winter",
-									"type": "text"
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"update post content test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							]
+							}
 						},
 						"url": {
 							"raw": "{{host}}/posts/:id",
