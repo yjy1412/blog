@@ -9,7 +9,7 @@ export abstract class BaseMock {
     'email' | 'password' | 'name'
   > = {
     email: 'test@test.com',
-    password: 'testPassword',
+    password: 'testPassword12!',
     name: {
       first: 'Hong',
       last: 'Gil-Dong',
