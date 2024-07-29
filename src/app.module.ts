@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { UserModel } from './users/entities/user.entity';
 import { AuthJwtModule } from './auth-jwt/auth-jwt.module';
 import { AuthJwtGuard } from './auth-jwt/guards/auth-jwt.guard';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AuthJwtGuard } from './auth-jwt/guards/auth-jwt.guard';
     PostsModule,
     UsersModule,
     AuthJwtModule,
+    CommonModule,
   ],
   providers: [
     {
