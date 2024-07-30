@@ -6,7 +6,7 @@ import { UsersService } from '../users/users.service';
 
 import { PostModel } from './entities/post.entity';
 import { PaginatePostsDto } from './dtos/paginate-posts.dto';
-import { CommonService } from '../common/common.service';
+import { PaginationService } from '../common/services/pagination.service';
 import { PaginationResponse } from '../common/interfaces/pagination.interface';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class PostsService {
     @InjectRepository(PostModel)
     private readonly postsRepository: Repository<PostModel>,
     private readonly usersService: UsersService,
-    private readonly commonService: CommonService,
+    private readonly commonService: PaginationService,
   ) {}
 
   /**

@@ -2,8 +2,8 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { BaseModel } from './entities/base.entity';
-import { BasePaginationDto } from './dtos/base-pagination.dto';
+import { BaseModel } from '../entities/base.entity';
+import { BasePaginationDto } from '../dtos/base-pagination.dto';
 import {
   FindManyOptions,
   FindOptionsOrder,
@@ -11,13 +11,13 @@ import {
   Repository,
 } from 'typeorm';
 import * as _ from 'lodash';
-import { PAGINATION_QUERY_FILTER_MAPPER } from './constants/pagination.constant';
-import { PaginationResponse } from './interfaces/pagination.interface';
+import { PAGINATION_QUERY_FILTER_MAPPER } from '../constants/pagination.constant';
+import { PaginationResponse } from '../interfaces/pagination.interface';
 
 const { PROTOCOL, HOST, PORT } = process.env;
 
 @Injectable()
-export class CommonService {
+export class PaginationService {
   async paginate<T extends BaseModel>(
     path: string,
     queryParams: BasePaginationDto,

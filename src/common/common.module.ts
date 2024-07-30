@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { CommonService } from './common.service';
+import { PaginationService } from './services/pagination.service';
 
 @Module({
-  providers: [CommonService],
-  exports: [CommonService],
+  providers: [PaginationService],
+  exports: [PaginationService],
 })
 export class CommonModule {}
