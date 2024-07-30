@@ -1,6 +1,6 @@
 import { BaseModel } from '../entities/base.entity';
 
-export class Pagination<T extends BaseModel> {
+export class PaginationResponse<T extends BaseModel> {
   data: T[];
   page: {
     cursor: {

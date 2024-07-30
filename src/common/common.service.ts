@@ -12,7 +12,7 @@ import {
 } from 'typeorm';
 import * as _ from 'lodash';
 import { PAGINATION_QUERY_FILTER_MAPPER } from './constants/pagination.constant';
-import { Pagination } from './interfaces/pagination.interface';
+import { PaginationResponse } from './interfaces/pagination.interface';
 
 const { PROTOCOL, HOST, PORT } = process.env;
 
@@ -23,7 +23,7 @@ export class CommonService {
     queryParams: BasePaginationDto,
     repository: Repository<T>,
     overrideFindOptions: FindManyOptions<T> = {},
-  ): Promise<Pagination<T>> {
+  ): Promise<PaginationResponse<T>> {
     const findOptions = this.composeFindOptions<T>(
       queryParams,
       overrideFindOptions,
