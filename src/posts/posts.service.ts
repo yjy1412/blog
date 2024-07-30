@@ -5,6 +5,9 @@ import { Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
 
 import { PostModel } from './entities/post.entity';
+import { GetPostsQueryDto } from './dtos/get-posts-query.dto';
+import { CommonService } from '../common/common.service';
+import { Pagination } from '../common/interfaces/pagination.interface';
 
 @Injectable()
 export class PostsService {
@@ -12,6 +15,7 @@ export class PostsService {
     @InjectRepository(PostModel)
     private readonly postsRepository: Repository<PostModel>,
     private readonly usersService: UsersService,
+    private readonly commonService: CommonService,
   ) {}
 
   /**
@@ -42,8 +46,14 @@ export class PostsService {
   /**
    * 모든 게시물 조회
    */
-  getPostsAll(): Promise<PostModel[]> {
-    return this.postsRepository.find();
+  async getPosts(query: GetPostsQueryDto): Promise<Pagination<PostModel>> {
+    const path = 'posts';
+
+    return this.commonService.cursorPaginate<PostModel>(
+      path,
+      query,
+      this.postsRepository,
+    );
   }
 
   /**
@@ -91,6 +101,29 @@ export class PostsService {
    */
   async deletePostById(postId: number): Promise<boolean> {
     await this.postsRepository.delete(postId);
+
+    return true;
+  }
+
+  /**
+   * [ 테스트용 ] 랜덤 게시글 생성
+   */
+  async createRandomPosts(howMany: number): Promise<boolean> {
+    const randomPosts = [];
+
+    for (let i = 0; i < howMany; i++) {
+      randomPosts.push({
+        title: `Test Post ${i}`,
+        content: `Test Content ${i}`,
+        likeCount: Math.floor(Math.random() * howMany),
+        commentCount: Math.floor(Math.random() * howMany),
+        authorId: 1,
+      });
+    }
+
+    const randomPostsEntities = this.postsRepository.create(randomPosts);
+
+    await this.postsRepository.save(randomPostsEntities);
 
     return true;
   }
