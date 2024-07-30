@@ -3,7 +3,7 @@ import { RepositoryQueryOrderEnum } from '../../common/enums/repository.enum';
 import * as _ from 'lodash';
 import { BasePaginationDto } from '../../common/dtos/base-pagination.dto';
 
-export class GetPostsQueryDto extends BasePaginationDto {
+export class PaginatePostsDto extends BasePaginationDto {
   @IsOptional()
   @IsNumber()
   where_likeCount_moreThan?: number;
