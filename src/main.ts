@@ -9,6 +9,13 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       /**
+       * If set to true validator will strip validated object of any properties that do not have any decorators.
+       *
+       * DTO에 모든 속성이 optional로 설정되어 있는 경우, forbidNonWhitelisted 기능이 제대로 되지 않고 있음
+       * forbidNonWhitelisted를 보완하는 기능으로 사용
+       */
+      whitelist: true,
+      /**
        * If set to true, instead of stripping non-whitelisted properties validator will throw an error
        *
        * DTO에 정의되지 않은 속성이 포함된 요청을 거부할지 여부

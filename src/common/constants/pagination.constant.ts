@@ -1,4 +1,3 @@
-import { RepositoryQueryOrderEnum } from '../enums/repository.enum';
 import {
   MoreThan,
   LessThan,
@@ -21,5 +20,5 @@ export const PAGINATION_QUERY_FILTER_MAPPER = {
   between: Between,
 };
 
-export const PAGINATION_QUERY_CURSOR_DEFAULT = 0;
+export const PAGINATION_QUERY_CURSOR_DEFAULT = 1;
 export const PAGINATION_QUERY_TAKE_DEFAULT = 20;

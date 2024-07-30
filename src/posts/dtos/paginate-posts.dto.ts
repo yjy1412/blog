@@ -9,6 +9,10 @@ export class PaginatePostsDto extends BasePaginationDto {
   where_likeCount_moreThan?: number;
 
   @IsOptional()
+  @IsNumber()
+  where_likeCount_lessThan?: number;
+
+  @IsOptional()
   @IsIn(_.values(RepositoryQueryOrderEnum))
   order_createdAt?: RepositoryQueryOrderEnum;
 

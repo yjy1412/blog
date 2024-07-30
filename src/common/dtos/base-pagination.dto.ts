@@ -8,7 +8,7 @@ import {
 export class BasePaginationDto {
   @IsOptional()
   @IsNumber()
-  cursor?: number = PAGINATION_QUERY_CURSOR_DEFAULT;
+  page?: number = PAGINATION_QUERY_CURSOR_DEFAULT;
 
   @IsOptional()
   @IsNumber()

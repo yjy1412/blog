@@ -1,6 +1,3 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
-
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { BaseModel } from '../entities/base.entity';
 import { BasePaginationDto } from '../dtos/base-pagination.dto';
@@ -14,12 +11,9 @@ import * as _ from 'lodash';
 import { PAGINATION_QUERY_FILTER_MAPPER } from '../constants/pagination.constant';
 import { PaginationResponse } from '../interfaces/pagination.interface';
 
-const { PROTOCOL, HOST, PORT } = process.env;
-
 @Injectable()
 export class PaginationService {
   async paginate<T extends BaseModel>(
-    requestPath: string,
     paginateQuery: BasePaginationDto,
     repository: Repository<T>,
     overrideFindOptions: FindManyOptions<T> = {},
@@ -29,22 +23,17 @@ export class PaginationService {
       overrideFindOptions,
     );
 
-    const data = await repository.find(findOptions);
-
-    const isNextExist = data.length === paginateQuery.take;
+    /**
+     * findAndCount는 skip과 take를 적용하지 않은 상태에서의 전체 데이터 개수를 반환합니다.
+     */
+    const [data, totalCountWithoutPaginate] =
+      await repository.findAndCount(findOptions);
 
     return {
       data,
       page: {
-        cursor: {
-          after: isNextExist
-            ? paginateQuery.cursor + paginateQuery.take + 1
-            : null,
-        },
-        count: data.length,
-        nextUrl: isNextExist
-          ? this.generatePaginationNextUrl(paginateQuery, requestPath)
-          : null,
+        currentPage: paginateQuery.page,
+        totalPage: Math.ceil(totalCountWithoutPaginate / paginateQuery.take),
       },
     };
   }
@@ -112,10 +101,10 @@ export class PaginationService {
     overrideFindOptions: FindManyOptions<T> = {},
   ): FindManyOptions<T> {
     const findOptions: FindManyOptions<T> = {
-      skip: paginateQuery.cursor,
+      skip: (paginateQuery.page - 1) * paginateQuery.take,
       take: paginateQuery.take,
-      order: {},
       where: {},
+      order: {},
     };
 
     Object.entries(paginateQuery).forEach(([key, value]) => {
@@ -134,22 +123,5 @@ export class PaginationService {
       ...findOptions,
       ...overrideFindOptions,
     };
-  }
-
-  private generatePaginationNextUrl(
-    paginateQuery: BasePaginationDto,
-    requestPath: string,
-  ): string {
-    const nextUrl = new URL(`${PROTOCOL}://${HOST}:${PORT}/${requestPath}`);
-
-    Object.entries(paginateQuery).forEach(([key, value]) => {
-      if (key === 'cursor') {
-        nextUrl.searchParams.append(key, value + paginateQuery.take + 1);
-      } else {
-        nextUrl.searchParams.append(key, value);
-      }
-    });
-
-    return nextUrl.toString();
   }
 }
