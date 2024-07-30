@@ -36,7 +36,7 @@ export class PostsServiceMock extends BaseMock {
     getUserById: jest.fn().mockResolvedValue(this.mockUser),
   };
 
-  public readonly mockCommonService: Partial<PaginationService> = {
+  public readonly mockPaginationService: Partial<PaginationService> = {
     paginate: jest.fn().mockResolvedValue({
       data: [this.mockPost],
       page: {

@@ -17,7 +17,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
   >;
   let mockUpdatePost: Partial<PostModel>;
   let mockUsersService: Partial<UsersService>;
-  let mockCommonService: Partial<PaginationService>;
+  let mockPaginationService: Partial<PaginationService>;
 
   let postsService: PostsService;
   let commonService: PaginationService;
@@ -35,7 +35,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
     mockNewPost = postsServiceMock.mockNewPost;
     mockUpdatePost = postsServiceMock.mockUpdatePost;
     mockUsersService = postsServiceMock.mockUsersService;
-    mockCommonService = postsServiceMock.mockCommonService;
+    mockPaginationService = postsServiceMock.mockPaginationService;
   });
 
   beforeEach(async () => {
@@ -44,7 +44,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
         PostsService,
         {
           provide: PaginationService,
-          useValue: mockCommonService,
+          useValue: mockPaginationService,
         },
         {
           provide: UsersService,
