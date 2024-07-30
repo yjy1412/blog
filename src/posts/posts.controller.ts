@@ -35,7 +35,7 @@ export class PostsController {
   }
 
   @Public()
-  @Get()
+  @Get('page')
   paginatePosts(@Query() query: PaginatePostsDto) {
     return this.postsService.paginatePosts(query);
   }
