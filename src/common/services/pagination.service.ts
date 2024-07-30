@@ -19,29 +19,31 @@ const { PROTOCOL, HOST, PORT } = process.env;
 @Injectable()
 export class PaginationService {
   async paginate<T extends BaseModel>(
-    path: string,
-    queryParams: BasePaginationDto,
+    requestPath: string,
+    paginateQuery: BasePaginationDto,
     repository: Repository<T>,
     overrideFindOptions: FindManyOptions<T> = {},
   ): Promise<PaginationResponse<T>> {
     const findOptions = this.composeFindOptions<T>(
-      queryParams,
+      paginateQuery,
       overrideFindOptions,
     );
 
     const data = await repository.find(findOptions);
 
-    const isNextExist = data.length === queryParams.take;
+    const isNextExist = data.length === paginateQuery.take;
 
     return {
       data,
       page: {
         cursor: {
-          after: isNextExist ? queryParams.cursor + queryParams.take + 1 : null,
+          after: isNextExist
+            ? paginateQuery.cursor + paginateQuery.take + 1
+            : null,
         },
         count: data.length,
         nextUrl: isNextExist
-          ? this.generatePaginationNextUrl(queryParams, path)
+          ? this.generatePaginationNextUrl(paginateQuery, requestPath)
           : null,
       },
     };
@@ -106,17 +108,17 @@ export class PaginationService {
   }
 
   private composeFindOptions<T>(
-    queryParams: BasePaginationDto,
+    paginateQuery: BasePaginationDto,
     overrideFindOptions: FindManyOptions<T> = {},
   ): FindManyOptions<T> {
     const findOptions: FindManyOptions<T> = {
-      skip: queryParams.cursor,
-      take: queryParams.take,
+      skip: paginateQuery.cursor,
+      take: paginateQuery.take,
       order: {},
       where: {},
     };
 
-    Object.entries(queryParams).forEach(([key, value]) => {
+    Object.entries(paginateQuery).forEach(([key, value]) => {
       if (key.startsWith('where')) {
         const where = this.parseWhereOptions<T>(key, value);
 
@@ -135,14 +137,14 @@ export class PaginationService {
   }
 
   private generatePaginationNextUrl(
-    queryParams: BasePaginationDto,
-    path: string,
+    paginateQuery: BasePaginationDto,
+    requestPath: string,
   ): string {
-    const nextUrl = new URL(`${PROTOCOL}://${HOST}:${PORT}/${path}`);
+    const nextUrl = new URL(`${PROTOCOL}://${HOST}:${PORT}/${requestPath}`);
 
-    Object.entries(queryParams).forEach(([key, value]) => {
+    Object.entries(paginateQuery).forEach(([key, value]) => {
       if (key === 'cursor') {
-        nextUrl.searchParams.append(key, value + queryParams.take + 1);
+        nextUrl.searchParams.append(key, value + paginateQuery.take + 1);
       } else {
         nextUrl.searchParams.append(key, value);
       }
