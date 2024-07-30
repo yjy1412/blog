@@ -37,7 +37,9 @@ export class PostsController {
   @Public()
   @Get('page')
   paginatePosts(@Query() query: PaginatePostsDto) {
-    return this.postsService.paginatePosts(query);
+    const path = '/posts/page';
+
+    return this.postsService.paginatePosts(query, path);
   }
 
   @Get(':id')

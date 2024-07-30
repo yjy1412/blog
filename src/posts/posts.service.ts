@@ -48,9 +48,8 @@ export class PostsService {
    */
   async paginatePosts(
     query: PaginatePostsDto,
+    path: string,
   ): Promise<PaginationResponse<PostModel>> {
-    const path = 'posts';
-
     return this.commonService.paginate<PostModel>(
       path,
       query,
