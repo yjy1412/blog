@@ -89,19 +89,17 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
   });
 
   describe('✅ PostsService >> paginatePosts: 게시물 페이지네이션 목록 조회', () => {
-    test('paginate 함수에 path, paginateQuery, repository를 전달해야 합니다.', async () => {
+    test('paginate 함수에 paginateQuery, repository를 전달해야 합니다.', async () => {
       jest.spyOn(postsRepository, 'find').mockResolvedValueOnce([mockPost]);
 
-      const path = 'posts/page';
       const paginateQuery: PaginatePostsDto = {
         where_likeCount_moreThan: 50,
         order_likeCount: RepositoryQueryOrderEnum.DESC,
       };
 
-      await postsService.paginatePosts(paginateQuery, path);
+      await postsService.paginatePosts(paginateQuery);
 
       expect(commonService.paginate).toHaveBeenCalledWith(
-        path,
         paginateQuery,
         postsRepository,
       );
@@ -110,19 +108,17 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
     test('응답 결과에 페이지네이션 메타정보가 함께 포함되어야 합니다', async () => {
       jest.spyOn(postsRepository, 'find').mockResolvedValueOnce([mockPost]);
 
-      const path = 'posts/page';
       const paginateQuery: PaginatePostsDto = {
         where_likeCount_moreThan: 50,
         order_likeCount: RepositoryQueryOrderEnum.DESC,
       };
 
-      const response = await postsService.paginatePosts(paginateQuery, path);
+      const response = await postsService.paginatePosts(paginateQuery);
 
       expect(response).toHaveProperty('data');
       expect(response).toHaveProperty('page');
-      expect(response).toHaveProperty('page.cursor');
-      expect(response).toHaveProperty('page.count');
-      expect(response).toHaveProperty('page.nextUrl');
+      expect(response.page).toHaveProperty('currentPage');
+      expect(response.page).toHaveProperty('totalCount');
     });
   });
 

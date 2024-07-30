@@ -26,7 +26,7 @@ export class PostsServiceMock extends BaseMock {
   };
 
   public readonly mockPaginatePostsDto: PaginatePostsDto = {
-    cursor: 0,
+    page: 1,
     take: 10,
     where_likeCount_moreThan: 50,
     order_likeCount: RepositoryQueryOrderEnum.DESC,
@@ -40,11 +40,8 @@ export class PostsServiceMock extends BaseMock {
     paginate: jest.fn().mockResolvedValue({
       data: [this.mockPost],
       page: {
-        cursor: {
-          after: null,
-        },
-        count: 1,
-        nextUrl: null,
+        currentPage: 1,
+        totalCount: 1,
       },
     }),
   };

@@ -73,7 +73,6 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
 
       expect(mockPostsService.paginatePosts).toHaveBeenCalledWith(
         paginateQuery,
-        'posts/page',
       );
     });
 
@@ -87,9 +86,8 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
 
       expect(result).toHaveProperty('data');
       expect(result).toHaveProperty('page');
-      expect(result).toHaveProperty('page.cursor');
-      expect(result).toHaveProperty('page.count');
-      expect(result).toHaveProperty('page.nextUrl');
+      expect(result).toHaveProperty('page.currentPage');
+      expect(result).toHaveProperty('page.totalCount');
     });
   });
 

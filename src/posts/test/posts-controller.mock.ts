@@ -30,11 +30,8 @@ export class PostsControllerMock extends BaseMock {
     paginatePosts: jest.fn().mockResolvedValue({
       data: [this.mockPost],
       page: {
-        cursor: {
-          after: null,
-        },
-        count: 1,
-        nextUrl: null,
+        currentPage: 1,
+        totalCount: 1,
       },
     }),
     getPostById: jest.fn().mockResolvedValue(this.mockPost),
