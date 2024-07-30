@@ -27,7 +27,16 @@ export class PostsControllerMock extends BaseMock {
 
   public readonly mockPostsService: Partial<PostsService> = {
     createPost: jest.fn().mockResolvedValue(this.mockPost),
-    getPostsAll: jest.fn().mockResolvedValue([this.mockPost]),
+    paginatePosts: jest.fn().mockResolvedValue({
+      data: [this.mockPost],
+      page: {
+        cursor: {
+          after: null,
+        },
+        count: 1,
+        nextUrl: null,
+      },
+    }),
     getPostById: jest.fn().mockResolvedValue(this.mockPost),
     updatePostById: jest.fn().mockResolvedValue(this.mockPost),
     deletePostById: jest.fn().mockResolvedValue(true),

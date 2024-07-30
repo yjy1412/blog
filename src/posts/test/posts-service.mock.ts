@@ -3,6 +3,9 @@ import { Injectable } from '@nestjs/common';
 import { PostModel } from '../entities/post.entity';
 import { BaseMock } from '../../common/test/base.mock';
 import { UsersService } from '../../users/users.service';
+import { PaginationService } from '../../common/services/pagination.service';
+import { PaginatePostsDto } from '../dtos/paginate-posts.dto';
+import { RepositoryQueryOrderEnum } from '../../common/enums/repository.enum';
 
 @Injectable()
 export class PostsServiceMock extends BaseMock {
@@ -22,7 +25,27 @@ export class PostsServiceMock extends BaseMock {
     content: 'Test Update Content',
   };
 
+  public readonly mockPaginatePostsDto: PaginatePostsDto = {
+    cursor: 0,
+    take: 10,
+    where_likeCount_moreThan: 50,
+    order_likeCount: RepositoryQueryOrderEnum.DESC,
+  };
+
   public readonly mockUsersService: Partial<UsersService> = {
     getUserById: jest.fn().mockResolvedValue(this.mockUser),
+  };
+
+  public readonly mockCommonService: Partial<PaginationService> = {
+    paginate: jest.fn().mockResolvedValue({
+      data: [this.mockPost],
+      page: {
+        cursor: {
+          after: null,
+        },
+        count: 1,
+        nextUrl: null,
+      },
+    }),
   };
 }

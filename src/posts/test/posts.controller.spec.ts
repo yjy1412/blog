@@ -6,6 +6,8 @@ import { CreatePostDto } from '../dtos/create-post.dto';
 import { UpdatePostDto } from '../dtos/update-post.dto';
 import { PostModel } from '../entities/post.entity';
 import { UserModel } from '../../users/entities/user.entity';
+import { PaginatePostsDto } from '../dtos/paginate-posts.dto';
+import { RepositoryQueryOrderEnum } from '../../common/enums/repository.enum';
 
 describe('\n🎯🎯🎯 테스트를 시작합니다 ===================================================================================================================================\n', () => {
   let mockPost: PostModel;
@@ -60,10 +62,20 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
     });
   });
 
-  describe('✅ PostsController >> getPostsAll: 모든 게시물 조회요청', () => {
-    test('모든 게시물을 조회하고 반환합니다.', async () => {
-      const result = await postsController.getPostsAll();
-      expect(result).toEqual([mockPost]);
+  describe('✅ PostsController >> paginatePosts: 게시물 목록 페이지네이션 조회 요청', () => {
+    test('페이지 정보와 함께 게시물 목록을 반환합니다.', async () => {
+      const paginateQuery: PaginatePostsDto = {
+        where_likeCount_moreThan: 50,
+        order_likeCount: RepositoryQueryOrderEnum.DESC,
+      };
+
+      const result = await postsController.paginatePosts(paginateQuery);
+
+      expect(result).toHaveProperty('data');
+      expect(result).toHaveProperty('page');
+      expect(result).toHaveProperty('page.cursor');
+      expect(result).toHaveProperty('page.count');
+      expect(result).toHaveProperty('page.nextUrl');
     });
   });
 
