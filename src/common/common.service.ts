@@ -11,14 +11,14 @@ import {
   Repository,
 } from 'typeorm';
 import * as _ from 'lodash';
-import { FILTER_MAPPER } from './constants/filter-mapper.constant';
+import { PAGINATION_QUERY_FILTER_MAPPER } from './constants/pagination.constant';
 import { Pagination } from './interfaces/pagination.interface';
 
 const { PROTOCOL, HOST, PORT } = process.env;
 
 @Injectable()
 export class CommonService {
-  async cursorPaginate<T extends BaseModel>(
+  async paginate<T extends BaseModel>(
     path: string,
     queryParams: BasePaginationDto,
     repository: Repository<T>,
@@ -73,9 +73,12 @@ export class CommonService {
       if (operator === 'between') {
         const values = value.toString().split(',');
 
-        where[column] = FILTER_MAPPER[operator](values[0], values[1]);
+        where[column] = PAGINATION_QUERY_FILTER_MAPPER[operator](
+          values[0],
+          values[1],
+        );
       } else {
-        where[column] = FILTER_MAPPER[operator](value);
+        where[column] = PAGINATION_QUERY_FILTER_MAPPER[operator](value);
       }
     }
 

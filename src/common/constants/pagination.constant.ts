@@ -1,3 +1,4 @@
+import { RepositoryQueryOrderEnum } from '../enums/repository.enum';
 import {
   MoreThan,
   LessThan,
@@ -9,7 +10,7 @@ import {
   Between,
 } from 'typeorm';
 
-export const FILTER_MAPPER = {
+export const PAGINATION_QUERY_FILTER_MAPPER = {
   moreThan: MoreThan,
   moreThanOrEqual: MoreThanOrEqual,
   lessThan: LessThan,
@@ -19,3 +20,7 @@ export const FILTER_MAPPER = {
   in: In,
   between: Between,
 };
+
+export const PAGINATION_QUERY_CURSOR_DEFAULT = 0;
+export const PAGINATION_QUERY_TAKE_DEFAULT = 20;
+export const PAGINATION_QUERY_ORDER_DEFAULT = RepositoryQueryOrderEnum.DESC;

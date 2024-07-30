@@ -7,7 +7,7 @@ import { RegisterDto } from './dtos/register.dto';
 import {
   BasicTokenHeaderType,
   BearerTokenHeaderType,
-} from './constants/auth-jwt.type.constant';
+} from './types/auth-jwt.type';
 
 @Controller('auth/jwt')
 export class AuthJwtController {

@@ -1,5 +1,5 @@
 import { IsIn, IsNumber, IsOptional } from 'class-validator';
-import { QUERY_ORDER_ENUM } from '../../common/constants/enum.constant';
+import { RepositoryQueryOrderEnum } from '../../common/enums/repository.enum';
 import * as _ from 'lodash';
 import { BasePaginationDto } from '../../common/dtos/base-pagination.dto';
 
@@ -9,10 +9,10 @@ export class GetPostsQueryDto extends BasePaginationDto {
   where_likeCount_moreThan?: number;
 
   @IsOptional()
-  @IsIn(_.values(QUERY_ORDER_ENUM))
-  order_likeCount?: QUERY_ORDER_ENUM;
+  @IsIn(_.values(RepositoryQueryOrderEnum))
+  order_likeCount?: RepositoryQueryOrderEnum;
 
   @IsOptional()
-  @IsIn(_.values(QUERY_ORDER_ENUM))
-  order_commentCount?: QUERY_ORDER_ENUM;
+  @IsIn(_.values(RepositoryQueryOrderEnum))
+  order_commentCount?: RepositoryQueryOrderEnum;
 }

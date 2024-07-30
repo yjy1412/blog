@@ -4,19 +4,20 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ValidationPipeExposeGroupEnum } from '../enums/validation-pipe.enum';
 
 export abstract class BaseModel {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Expose({
-    groups: ['user'],
+    groups: [ValidationPipeExposeGroupEnum.PUBLIC],
   })
   @CreateDateColumn()
   createdAt: Date;
 
   @Expose({
-    groups: ['user'],
+    groups: [ValidationPipeExposeGroupEnum.PUBLIC],
   })
   @UpdateDateColumn()
   updatedAt: Date;

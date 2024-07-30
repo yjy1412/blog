@@ -49,7 +49,7 @@ export class PostsService {
   async getPosts(query: GetPostsQueryDto): Promise<Pagination<PostModel>> {
     const path = 'posts';
 
-    return this.commonService.cursorPaginate<PostModel>(
+    return this.commonService.paginate<PostModel>(
       path,
       query,
       this.postsRepository,

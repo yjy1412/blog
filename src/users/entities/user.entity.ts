@@ -7,7 +7,7 @@ import { PostModel } from '../../posts/entities/post.entity';
 import { Expose, Type } from 'class-transformer';
 import { generateMessageInvalidStringType } from '../../common/validator-messages/generate-message-invalid-string-type.message';
 import { generateMessageInvalidEmail } from '../../common/validator-messages/generate-validation-invalid-email.message';
-import { ExposeGroupEnum } from '../../common/constants/common.enum';
+import { ValidationPipeExposeGroupEnum } from '../../common/enums/validation-pipe.enum';
 
 class Name {
   /**
@@ -70,7 +70,7 @@ export class UserModel extends BaseModel {
     },
   )
   @Expose({
-    groups: [ExposeGroupEnum.ADMIN],
+    groups: [ValidationPipeExposeGroupEnum.PRIVATE],
   })
   password: string;
 

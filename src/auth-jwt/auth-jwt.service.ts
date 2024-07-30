@@ -9,8 +9,8 @@ import { UsersService } from '../users/users.service';
 import {
   BasicTokenHeaderType,
   BearerTokenHeaderType,
-} from './constants/auth-jwt.type.constant';
-import { BearerTokenTypeEnum } from './constants/auth-jwt.enum.constant';
+} from './types/auth-jwt.type';
+import { BearerTokenTypeEnum } from './enums/auth-jwt.enum';
 
 @Injectable()
 export class AuthJwtService {
