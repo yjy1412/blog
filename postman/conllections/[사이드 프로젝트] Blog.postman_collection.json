@@ -292,17 +292,36 @@
 					"response": []
 				},
 				{
-					"name": "posts",
+					"name": "posts/page",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/posts",
+							"raw": "{{host}}/posts/page?page=1&take=10&where_likeCount_lessThan=50&order_likeCount=DESC",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
-								"posts"
+								"posts",
+								"page"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "take",
+									"value": "10"
+								},
+								{
+									"key": "where_likeCount_lessThan",
+									"value": "50"
+								},
+								{
+									"key": "order_likeCount",
+									"value": "DESC"
+								}
 							]
 						}
 					},
@@ -384,6 +403,33 @@
 									"key": "id",
 									"value": "1"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[TEST] posts/random",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"howMany\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/posts/random",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"posts",
+								"random"
 							]
 						}
 					},
