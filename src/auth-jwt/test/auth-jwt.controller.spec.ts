@@ -111,11 +111,11 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
    *  1-3. 리프레쉬 토큰이 유효한 경우, 액세스 토큰 재발급
    */
   describe(`✅ AuthJwtController >> access: 액세스 토큰 재발급 요청`, () => {
-    it('액세스 토큰 재발급 요청 컨트롤러 메서드가 정의되어 있습니다.', () => {
+    test('액세스 토큰 재발급 요청 컨트롤러 메서드가 정의되어 있습니다.', () => {
       expect(authJwtController.access).toBeDefined();
     });
 
-    it('관련 서비스가 호출되어야 합니다.', async () => {
+    test('관련 서비스가 호출되어야 합니다.', async () => {
       await authJwtController.access(`Bearer ${mockRefreshToken}`);
 
       expect(
@@ -123,7 +123,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       ).toHaveBeenCalledWith(mockRefreshToken);
     });
 
-    it('인증에 실패한 경우, 401 Unauthorized가 반환되어야 합니다.', async () => {
+    test('인증에 실패한 경우, 401 Unauthorized가 반환되어야 합니다.', async () => {
       jest
         .spyOn(mockAuthJwtService, 'refreshAccessTokenUsingRefreshToken')
         .mockImplementationOnce(() => {
@@ -135,7 +135,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       ).rejects.toThrow(UnauthorizedException);
     });
 
-    it('액세스 토큰 재발급 요청 시 액세스 토큰이 반환되어야 합니다.', async () => {
+    test('액세스 토큰 재발급 요청 시 액세스 토큰이 반환되어야 합니다.', async () => {
       const response = await authJwtController.access(
         `Bearer ${mockRefreshToken}`,
       );

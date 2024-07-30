@@ -70,7 +70,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
   });
 
   describe('✅ PostsService >> createPost: 게시물 생성요청', () => {
-    it('게시물 작성자 정보가 유효하지 않은 경우 NotFoundException 에러를 반환합니다.', async () => {
+    test('게시물 작성자 정보가 유효하지 않은 경우 NotFoundException 에러를 반환합니다.', async () => {
       jest.spyOn(usersService, 'getUserById').mockResolvedValueOnce(null);
 
       await expect(postsService.createPost(mockNewPost)).rejects.toThrow(
@@ -78,7 +78,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       );
     });
 
-    it('게시물을 생성하고 반환합니다.', async () => {
+    test('게시물을 생성하고 반환합니다.', async () => {
       jest.spyOn(postsRepository, 'create').mockReturnValueOnce(mockPost);
       jest.spyOn(postsRepository, 'save').mockResolvedValueOnce(mockPost);
 
@@ -89,7 +89,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
   });
 
   describe('✅ PostsService >> paginatePosts: 게시물 페이지네이션 목록 조회', () => {
-    it('paginate 함수에 path, paginateQuery, repository를 전달해야 합니다.', async () => {
+    test('paginate 함수에 path, paginateQuery, repository를 전달해야 합니다.', async () => {
       jest.spyOn(postsRepository, 'find').mockResolvedValueOnce([mockPost]);
 
       const path = 'posts/page';
@@ -107,7 +107,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       );
     });
 
-    it('응답 결과에 페이지네이션 메타정보가 함께 포함되어야 합니다', async () => {
+    test('응답 결과에 페이지네이션 메타정보가 함께 포함되어야 합니다', async () => {
       jest.spyOn(postsRepository, 'find').mockResolvedValueOnce([mockPost]);
 
       const path = 'posts/page';
@@ -127,7 +127,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
   });
 
   describe('✅ PostsService >> getPostById: 특정 게시물 조회요청', () => {
-    it('조회하려는 게시물이 존재하지 않는 경우 NotFoundException 에러를 반환합니다.', async () => {
+    test('조회하려는 게시물이 존재하지 않는 경우 NotFoundException 에러를 반환합니다.', async () => {
       jest.spyOn(postsRepository, 'findOne').mockResolvedValueOnce(null);
 
       await expect(postsService.getPostById(1)).rejects.toThrow(
@@ -135,7 +135,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       );
     });
 
-    it('특정 게시물을 조회하고 반환합니다.', async () => {
+    test('특정 게시물을 조회하고 반환합니다.', async () => {
       jest.spyOn(postsRepository, 'findOne').mockResolvedValueOnce(mockPost);
 
       await expect(postsService.getPostById(1)).resolves.toEqual(mockPost);
@@ -143,7 +143,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
   });
 
   describe('✅ PostsService >> updatePostById: 특정 게시물 수정요청', () => {
-    it('수정하려는 게시물이 존재하지 않는 경우 NotFoundException 에러를 반환합니다.', async () => {
+    test('수정하려는 게시물이 존재하지 않는 경우 NotFoundException 에러를 반환합니다.', async () => {
       jest.spyOn(postsRepository, 'findOne').mockResolvedValueOnce(null);
 
       await expect(
@@ -151,7 +151,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       ).rejects.toThrow('Post with id 1 not found');
     });
 
-    it('특정 게시물을 수정하고 그 결과를 반환합니다.', async () => {
+    test('특정 게시물을 수정하고 그 결과를 반환합니다.', async () => {
       jest.spyOn(postsRepository, 'findOne').mockResolvedValueOnce(mockPost);
       jest.spyOn(postsRepository, 'save').mockResolvedValueOnce(mockPost);
 
@@ -162,7 +162,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
   });
 
   describe('✅ PostsService >> deletePostById: 특정 게시물 삭제요청', () => {
-    it('특정 게시물을 삭제하고 true를 반환합니다.', async () => {
+    test('특정 게시물을 삭제하고 true를 반환합니다.', async () => {
       jest
         .spyOn(postsRepository, 'delete')
         .mockResolvedValueOnce({ raw: 1, affected: 1 });
