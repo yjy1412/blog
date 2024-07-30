@@ -17,7 +17,7 @@ import { UserModel } from '../users/entities/user.entity';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dtos/create-post.dto';
 import { UpdatePostDto } from './dtos/update-post.dto';
-import { GetPostsQueryDto } from './dtos/get-posts-query.dto';
+import { PaginatePostsDto } from './dtos/paginate-posts.dto';
 import { Public } from '../common/decorators/public.decorator';
 
 @Controller('posts')
@@ -36,8 +36,8 @@ export class PostsController {
 
   @Public()
   @Get()
-  getPosts(@Query() query: GetPostsQueryDto) {
-    return this.postsService.getPosts(query);
+  paginatePosts(@Query() query: PaginatePostsDto) {
+    return this.postsService.paginatePosts(query);
   }
 
   @Get(':id')

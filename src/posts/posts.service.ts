@@ -5,9 +5,9 @@ import { Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
 
 import { PostModel } from './entities/post.entity';
-import { GetPostsQueryDto } from './dtos/get-posts-query.dto';
+import { PaginatePostsDto } from './dtos/paginate-posts.dto';
 import { CommonService } from '../common/common.service';
-import { Pagination } from '../common/interfaces/pagination.interface';
+import { PaginationResponse } from '../common/interfaces/pagination.interface';
 
 @Injectable()
 export class PostsService {
@@ -44,9 +44,11 @@ export class PostsService {
   }
 
   /**
-   * 모든 게시물 조회
+   * 게시물 목록 페이지네이션
    */
-  async getPosts(query: GetPostsQueryDto): Promise<Pagination<PostModel>> {
+  async paginatePosts(
+    query: PaginatePostsDto,
+  ): Promise<PaginationResponse<PostModel>> {
     const path = 'posts';
 
     return this.commonService.paginate<PostModel>(
