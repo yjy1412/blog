@@ -5,10 +5,13 @@ import { UsersModule } from '../users/users.module';
 
 import { AuthJwtController } from './auth-jwt.controller';
 import { AuthJwtService } from './auth-jwt.service';
-import { JWT_SECRET } from './constants/auth-jwt.constant';
+import { ENV_JWT_SECRET_KEY } from '../common/constants/env-keys.constant';
 
 @Module({
-  imports: [JwtModule.register({ secret: JWT_SECRET }), UsersModule],
+  imports: [
+    JwtModule.register({ secret: process.env[ENV_JWT_SECRET_KEY] }),
+    UsersModule,
+  ],
   controllers: [AuthJwtController],
   providers: [AuthJwtService],
   exports: [AuthJwtService],

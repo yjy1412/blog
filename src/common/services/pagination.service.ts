@@ -8,9 +8,16 @@ import {
   Repository,
 } from 'typeorm';
 import { keys, values } from 'lodash';
-import { PAGINATION_QUERY_FILTER_MAPPER } from '../constants/pagination.constant';
+import {
+  PAGINATION_QUERY_FILTER_MAPPER,
+  PAGINATION_QUERY_SEPERATOR,
+} from '../constants/pagination.constant';
 import { PaginationResponse } from '../interfaces/pagination.interface';
 import { RepositoryQueryOrderEnum } from '../enums/repository.enum';
+import {
+  PaginationQueryOperatorEnum,
+  PaginationQueryPrefixEnum,
+} from '../enums/pagination.enum';
 
 @Injectable()
 export class PaginationService {
@@ -61,11 +68,11 @@ export class PaginationService {
   ): FindOptionsWhere<T> {
     const where: FindOptionsWhere<T> = {};
 
-    const split = key.split('_');
+    const split = key.split(PAGINATION_QUERY_SEPERATOR);
 
     if (split.length !== 3) {
       throw new InternalServerErrorException(
-        `where 쿼리 요청에는 "_" 구분자를 사용하여 3개의 파라미터가 존재해야 합니다. [ 쿼리: "${key}: ${value}" ]`,
+        `where 쿼리 요청에는 "${PAGINATION_QUERY_SEPERATOR}" 구분자를 사용하여 3개의 파라미터가 존재해야 합니다. [ 쿼리: "${key}: ${value}" ]`,
       );
     }
 
@@ -80,7 +87,7 @@ export class PaginationService {
       );
     }
 
-    if (operator === 'iLike') {
+    if (operator === PaginationQueryOperatorEnum.ILIKE) {
       where[column] = PAGINATION_QUERY_FILTER_MAPPER[operator](`%${value}%`);
     } else {
       where[column] = PAGINATION_QUERY_FILTER_MAPPER[operator](value);
@@ -102,7 +109,7 @@ export class PaginationService {
     value: RepositoryQueryOrderEnum,
   ): FindOptionsOrder<T> {
     const order: FindOptionsOrder<T> = {};
-    const split = key.split('_');
+    const split = key.split(PAGINATION_QUERY_SEPERATOR);
 
     if (split.length !== 2) {
       throw new InternalServerErrorException(
@@ -142,11 +149,11 @@ export class PaginationService {
     };
 
     Object.entries(paginateQuery).forEach(([key, value]) => {
-      if (key.startsWith('where')) {
+      if (key.startsWith(PaginationQueryPrefixEnum.WHERE)) {
         const where = this.parseWhereOptions<T>(key, value);
 
         findOptions.where = { ...findOptions.where, ...where };
-      } else if (key.startsWith('order')) {
+      } else if (key.startsWith(PaginationQueryPrefixEnum.ORDER)) {
         const order = this.parseOrderOptions<T>(key, value);
 
         findOptions.order = { ...findOptions.order, ...order };

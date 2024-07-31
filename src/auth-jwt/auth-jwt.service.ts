@@ -11,12 +11,26 @@ import {
   BearerTokenHeaderType,
 } from './types/auth-jwt.type';
 import { BearerTokenTypeEnum } from './enums/auth-jwt.enum';
+import {
+  BASIC_TOKEN_HEADER_PREFIX,
+  BASIC_TOKEN_SEPERATOR,
+  BEARER_TOKEN_HEADER_PREFIX,
+  JWT_EXPIRED_TIME_FOR_ACCESS_TOKEN,
+  JWT_EXPIRED_TIME_FOR_REFRESH_TOKEN,
+} from './constants/auth-jwt.constant';
+import { ConfigService } from '@nestjs/config';
+import { ENV_JWT_HASH_ROUND_KEY } from '../common/constants/env-keys.constant';
+import {
+  ENCODING_BASE64,
+  ENCODING_UTF8,
+} from '../common/constants/encoding.constant';
 
 @Injectable()
 export class AuthJwtService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly usersService: UsersService,
+    private readonly configService: ConfigService,
   ) {}
 
   /**
@@ -35,7 +49,9 @@ export class AuthJwtService {
     };
 
     return this.jwtService.sign(payload, {
-      expiresIn: isRefreshToken ? '1d' : '1h',
+      expiresIn: isRefreshToken
+        ? JWT_EXPIRED_TIME_FOR_REFRESH_TOKEN
+        : JWT_EXPIRED_TIME_FOR_ACCESS_TOKEN,
     });
   }
 
@@ -81,7 +97,10 @@ export class AuthJwtService {
   async register(user: Pick<UserModel, 'email' | 'password' | 'name'>) {
     await this.usersService.createUser({
       ...user,
-      password: bcrypt.hashSync(user.password, 10),
+      password: bcrypt.hashSync(
+        user.password,
+        parseInt(this.configService.get<string>(ENV_JWT_HASH_ROUND_KEY)),
+      ),
     });
 
     const { accessToken, refreshToken } = await this.login(user);
@@ -115,7 +134,9 @@ export class AuthJwtService {
     }
 
     const [prefix, token] = splitValue;
-    const expectedPrefix = isBearerToken ? 'Bearer' : 'Basic';
+    const expectedPrefix = isBearerToken
+      ? BEARER_TOKEN_HEADER_PREFIX
+      : BASIC_TOKEN_HEADER_PREFIX;
 
     if (prefix !== expectedPrefix) {
       throw new UnauthorizedException('authorization 값이 올바르지 않습니다.');
@@ -128,9 +149,9 @@ export class AuthJwtService {
    * base64로 인코딩된 basicToken('email:password')에서 email과 password를 추출
    */
   decodeBasicToken(basicToken: string) {
-    const decodedToken = Buffer.from(basicToken, 'base64')
-      .toString('utf-8')
-      .split(':');
+    const decodedToken = Buffer.from(basicToken, ENCODING_BASE64)
+      .toString(ENCODING_UTF8)
+      .split(BASIC_TOKEN_SEPERATOR);
 
     if (decodedToken.length !== 2) {
       throw new UnauthorizedException('토큰 형식이 올바르지 않습니다.');
