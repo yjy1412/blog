@@ -57,16 +57,16 @@ describe('AuthJwtService', () => {
           ...mockBearerTokenPayloadWithoutType,
           type: 'access',
         },
-        { expiresIn: '1d' },
+        { expiresIn: '1h' },
       );
     });
 
-    test('Refresh 토큰의 경우, 만료시간은 1시간이어야 합니다.', async () => {
+    test('Refresh 토큰의 경우, 만료시간은 하루여야 합니다.', async () => {
       authJwtService.signBearerToken(mockBearerTokenPayloadWithoutType, true);
 
       expect(mockJwtService.sign).toHaveBeenCalledWith(
         expect.any(Object),
-        expect.objectContaining({ expiresIn: '1h' }),
+        expect.objectContaining({ expiresIn: '1d' }),
       );
     });
   });

@@ -1,1 +1,2 @@
-export const JWT_SECRET = 'jwt_secret';
+export const JWT_EXPIRED_TIME_FOR_ACCESS_TOKEN = '1h';
+export const JWT_EXPIRED_TIME_FOR_REFRESH_TOKEN = '1d';
