@@ -297,7 +297,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/posts/page?page=1&take=10&where_likeCount_lessThan=50&order_likeCount=DESC",
+							"raw": "{{host}}/posts/page?page=1&take=10&where_likeCount_lessThanOrEqual=50&order_likeCount=DESC",
 							"host": [
 								"{{host}}"
 							],
@@ -315,7 +315,7 @@
 									"value": "10"
 								},
 								{
-									"key": "where_likeCount_lessThan",
+									"key": "where_likeCount_lessThanOrEqual",
 									"value": "50"
 								},
 								{
