@@ -49,7 +49,10 @@ export class PostsService {
   async paginatePosts(
     query: PaginatePostsDto,
   ): Promise<PaginationResponse<PostModel>> {
-    return this.commonService.paginate<PostModel>(query, this.postsRepository);
+    return this.commonService.paginate<PostModel, PaginatePostsDto>(
+      query,
+      this.postsRepository,
+    );
   }
 
   /**

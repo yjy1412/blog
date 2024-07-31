@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { BaseModel } from '../entities/base.entity';
 import { BasePaginationDto } from '../dtos/base-pagination.dto';
 import {
@@ -7,18 +7,26 @@ import {
   FindOptionsWhere,
   Repository,
 } from 'typeorm';
-import * as _ from 'lodash';
+import { keys, values } from 'lodash';
 import { PAGINATION_QUERY_FILTER_MAPPER } from '../constants/pagination.constant';
 import { PaginationResponse } from '../interfaces/pagination.interface';
+import { RepositoryQueryOrderEnum } from '../enums/repository.enum';
 
 @Injectable()
 export class PaginationService {
-  async paginate<T extends BaseModel>(
-    paginateQuery: BasePaginationDto,
+  /**
+   * 전달받은 Repository를 이용하여 DB 조회를 수행하고, 페이지네이션 결과를 반환합니다.
+   *
+   * overrideFindOptions를 통해 기본적인 FindManyOptions를 덮어쓸 수 있습니다.
+   * findAndCount 메서드를 이용하여 전체 데이터 개수를 조회합니다.
+   * 결과에는 페이지 메타정보가 포함됩니다.
+   */
+  async paginate<T extends BaseModel, Dto extends BasePaginationDto>(
+    paginateQuery: Dto,
     repository: Repository<T>,
     overrideFindOptions: FindManyOptions<T> = {},
   ): Promise<PaginationResponse<T>> {
-    const findOptions = this.composeFindOptions<T>(
+    const findOptions = this.composeFindOptions<T, Dto>(
       paginateQuery,
       overrideFindOptions,
     );
@@ -38,7 +46,16 @@ export class PaginationService {
     };
   }
 
-  private parseWhereOptions<T>(
+  /**
+   * 요청 쿼리를 파싱하여 DB 조회에 필요한 조건절에 해당하는 정보를 반환합니다.
+   *
+   * key는 요청쿼리에 해당합니다.
+   * key는 ${where_컬럼명_연산자} 형태로 구성됩니다.
+   * 연산자가 따로 포함되지 않는 경우에는 ${where_컬럼명} 형태로 구성됩니다.
+   *
+   * value는 요청쿼리 값에 해당합니다.
+   */
+  private parseWhereOptions<T extends BaseModel>(
     key: string,
     value: string,
   ): FindOptionsWhere<T> {
@@ -46,46 +63,57 @@ export class PaginationService {
 
     const split = key.split('_');
 
-    if (split.length !== 2 && split.length !== 3) {
-      throw new BadRequestException(
-        `where 쿼리 요청에는 2개 또는 3개의 파라미터가 필요합니다. 문제가 있는 쿼리: ${key}`,
+    if (split.length !== 3) {
+      throw new InternalServerErrorException(
+        `where 쿼리 요청에는 "_" 구분자를 사용하여 3개의 파라미터가 존재해야 합니다. [ 쿼리: "${key}: ${value}" ]`,
       );
     }
 
-    if (split.length === 2) {
-      const [_, column] = split;
+    const [_, column, operator] = split;
 
-      where[column] = value;
+    const isOperatorAllowed = keys(PAGINATION_QUERY_FILTER_MAPPER).includes(
+      operator,
+    );
+    if (!isOperatorAllowed) {
+      throw new InternalServerErrorException(
+        `where 쿼리 요청에는 유효한 연산자를 사용해야 합니다. [ 쿼리: "${key}: ${value}" ]`,
+      );
     }
 
-    if (split.length === 3) {
-      const [_, column, operator] = split;
-
-      if (operator === 'between') {
-        const values = value.toString().split(',');
-
-        where[column] = PAGINATION_QUERY_FILTER_MAPPER[operator](
-          values[0],
-          values[1],
-        );
-      } else {
-        where[column] = PAGINATION_QUERY_FILTER_MAPPER[operator](value);
-      }
+    if (operator === 'iLike') {
+      where[column] = PAGINATION_QUERY_FILTER_MAPPER[operator](`%${value}%`);
+    } else {
+      where[column] = PAGINATION_QUERY_FILTER_MAPPER[operator](value);
     }
 
     return where;
   }
 
-  private parseOrderOptions<T>(
+  /**
+   * 요청 쿼리를 파싱하여 DB 조회에 필요한 정렬 조건에 해당하는 정보를 반환합니다.
+   *
+   * key는 요청쿼리에 해당합니다.
+   * key는 ${order_컬럼명} 형태로 구성됩니다.
+   *
+   * value는 요청쿼리 값에 해당합니다.
+   */
+  private parseOrderOptions<T extends BaseModel>(
     key: string,
-    value: string,
+    value: RepositoryQueryOrderEnum,
   ): FindOptionsOrder<T> {
     const order: FindOptionsOrder<T> = {};
     const split = key.split('_');
 
     if (split.length !== 2) {
-      throw new BadRequestException(
-        `order 쿼리 요청에는 2개의 파라미터가 필요합니다. 문제가 있는 쿼리: ${key}`,
+      throw new InternalServerErrorException(
+        `order 쿼리 요청에는 2개의 파라미터가 필요합니다. [ 쿼리: "${key}: ${value}" ]`,
+      );
+    }
+
+    const isValueAllowed = values(RepositoryQueryOrderEnum).includes(value);
+    if (!isValueAllowed) {
+      throw new InternalServerErrorException(
+        `order 쿼리 요청에는 유효한 정렬 값을 사용해야 합니다. [ 쿼리: "${key} : ${value}" ]`,
       );
     }
 
@@ -96,8 +124,14 @@ export class PaginationService {
     return order;
   }
 
-  private composeFindOptions<T>(
-    paginateQuery: BasePaginationDto,
+  /**
+   * 요청 쿼리를 파싱하여 DB 조회쿼리에 필요한 정보를 반환합니다.
+   */
+  private composeFindOptions<
+    T extends BaseModel,
+    Dto extends BasePaginationDto,
+  >(
+    paginateQuery: Dto,
     overrideFindOptions: FindManyOptions<T> = {},
   ): FindManyOptions<T> {
     const findOptions: FindManyOptions<T> = {
