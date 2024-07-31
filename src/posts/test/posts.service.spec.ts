@@ -93,7 +93,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       jest.spyOn(postsRepository, 'find').mockResolvedValueOnce([mockPost]);
 
       const paginateQuery: PaginatePostsDto = {
-        where_likeCount_moreThan: 50,
+        where_likeCount_moreThanOrEqual: 50,
         order_likeCount: RepositoryQueryOrderEnum.DESC,
       };
 
@@ -109,7 +109,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       jest.spyOn(postsRepository, 'find').mockResolvedValueOnce([mockPost]);
 
       const paginateQuery: PaginatePostsDto = {
-        where_likeCount_moreThan: 50,
+        where_likeCount_moreThanOrEqual: 50,
         order_likeCount: RepositoryQueryOrderEnum.DESC,
       };
 

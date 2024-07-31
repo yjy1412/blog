@@ -65,7 +65,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
   describe('✅ PostsController >> paginatePosts: 게시물 목록 페이지네이션 조회 요청', () => {
     test('페이지 메타정보 생성을 위해, router path 정보를 조회 서비스 로직에 전달해야 합니다.', async () => {
       const paginateQuery: PaginatePostsDto = {
-        where_likeCount_moreThan: 50,
+        where_likeCount_moreThanOrEqual: 50,
         order_likeCount: RepositoryQueryOrderEnum.DESC,
       };
 
@@ -78,7 +78,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
 
     test('페이지 정보와 함께 게시물 목록을 반환합니다.', async () => {
       const paginateQuery: PaginatePostsDto = {
-        where_likeCount_moreThan: 50,
+        where_likeCount_moreThanOrEqual: 50,
         order_likeCount: RepositoryQueryOrderEnum.DESC,
       };
 

@@ -28,7 +28,7 @@ export class PostsServiceMock extends BaseMock {
   public readonly mockPaginatePostsDto: PaginatePostsDto = {
     page: 1,
     take: 10,
-    where_likeCount_moreThan: 50,
+    where_likeCount_moreThanOrEqual: 50,
     order_likeCount: RepositoryQueryOrderEnum.DESC,
   };
 
