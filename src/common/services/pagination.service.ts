@@ -150,10 +150,6 @@ export class PaginationService {
         const order = this.parseOrderOptions<T>(key, value);
 
         findOptions.order = { ...findOptions.order, ...order };
-      } else {
-        throw new InternalServerErrorException(
-          `유효하지 않는 쿼리가 포함되어 있습니다. [ 키: "${key}" ]`,
-        );
       }
     });
 

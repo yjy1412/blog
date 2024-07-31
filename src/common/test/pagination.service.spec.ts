@@ -99,22 +99,5 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
         ),
       ).rejects.toThrow(InternalServerErrorException);
     });
-
-    test('조건절 / 정렬에 해당되지 않는 쿼리가 포함된 경우 에러를 반환합니다.', async () => {
-      class mockWrongDto extends BasePaginationDto {
-        wrongQuery: 'WRONG';
-      }
-
-      const mockWrongPaginateQuery: mockWrongDto = {
-        wrongQuery: 'WRONG',
-      };
-
-      expect(
-        paginationService.paginate<PostModel, mockWrongDto>(
-          mockWrongPaginateQuery,
-          postsRepository,
-        ),
-      ).rejects.toThrow(InternalServerErrorException);
-    });
   });
 });
