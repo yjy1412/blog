@@ -4,6 +4,7 @@ import { AuthJwtServiceMock } from './auth-jwt-service.mock';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import { UserModel } from 'src/users/entities/user.entity';
+import { ConfigService } from '@nestjs/config';
 
 describe('AuthJwtService', () => {
   let mockUser: UserModel;
@@ -34,6 +35,7 @@ describe('AuthJwtService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthJwtService,
+        ConfigService,
         {
           provide: UsersService,
           useValue: mockUsersService,
