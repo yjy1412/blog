@@ -134,6 +134,7 @@ export class AuthJwtService {
     }
 
     const [prefix, token] = splitValue;
+
     const expectedPrefix = isBearerToken
       ? BEARER_TOKEN_HEADER_PREFIX
       : BASIC_TOKEN_HEADER_PREFIX;
@@ -180,6 +181,7 @@ export class AuthJwtService {
     const expectedDecodedTokenType = isRefreshToken
       ? BearerTokenTypeEnum.REFRESH
       : BearerTokenTypeEnum.ACCESS;
+
     if (decodedToken.type !== expectedDecodedTokenType) {
       throw new UnauthorizedException('토큰의 정보가 유효하지 않습니다.');
     }

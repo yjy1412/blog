@@ -81,6 +81,7 @@ export class PaginationService {
     const isOperatorAllowed = keys(PAGINATION_QUERY_FILTER_MAPPER).includes(
       operator,
     );
+
     if (!isOperatorAllowed) {
       throw new InternalServerErrorException(
         `where 쿼리 요청에는 유효한 연산자를 사용해야 합니다. [ 쿼리: "${key}: ${value}" ]`,
@@ -109,6 +110,7 @@ export class PaginationService {
     value: RepositoryQueryOrderEnum,
   ): FindOptionsOrder<T> {
     const order: FindOptionsOrder<T> = {};
+
     const split = key.split(PAGINATION_QUERY_SEPERATOR);
 
     if (split.length !== 2) {
