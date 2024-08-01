@@ -17,6 +17,8 @@ import {
   ENV_DB_PORT_KEY,
   ENV_DB_USERNAME_KEY,
 } from './common/constants/env-keys.constant';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { PUBLIC_PATH } from './common/constants/path.constant';
 
 config();
 @Module({
@@ -34,6 +36,10 @@ config();
       database: process.env[ENV_DB_DATABASE_KEY],
       entities: [PostModel, UserModel],
       synchronize: true,
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: PUBLIC_PATH,
+      serveRoot: '/public',
     }),
     PostsModule,
     UsersModule,
