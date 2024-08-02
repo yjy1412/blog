@@ -37,5 +37,6 @@ export class PostsControllerMock extends BaseMock {
     getPostById: jest.fn().mockResolvedValue(this.mockPost),
     updatePostById: jest.fn().mockResolvedValue(this.mockPost),
     deletePostById: jest.fn().mockResolvedValue(true),
+    savePostImages: jest.fn().mockResolvedValue([]),
   };
 }

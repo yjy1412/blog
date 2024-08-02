@@ -8,6 +8,9 @@ import { PostsServiceMock } from './posts-service.mock';
 import { PaginatePostsDto } from '../dtos/paginate-posts.dto';
 import { RepositoryQueryOrderEnum } from '../../common/enums/repository.enum';
 import { PaginationService } from '../../common/services/pagination.service';
+import { promises as fs } from 'fs';
+import { BadRequestException } from '@nestjs/common';
+import { PATH_FROM_PUBLIC_TO_POST_IMAGE } from '../../common/constants/path.constant';
 
 describe('\n🎯🎯🎯 테스트를 시작합니다 ===================================================================================================================================\n', () => {
   let mockPost: PostModel;
@@ -170,6 +173,32 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
         .mockResolvedValueOnce({ raw: 1, affected: 1 });
 
       await expect(postsService.deletePostById(1)).resolves.toEqual(true);
+    });
+  });
+
+  describe('✅ PostsService >> savePostImages: 게시물 이미지 저장', () => {
+    test('이미지 파일을 찾을 수 없는 경우 에러를 반환합니다.', async () => {
+      jest
+        .spyOn(fs, 'access')
+        .mockRejectedValueOnce(new Error('File does not exist'));
+
+      const mockImages = ['image1.jpg', 'image2.png'];
+
+      await expect(postsService.savePostImages(mockImages)).rejects.toThrow(
+        BadRequestException,
+      );
+    });
+
+    test('반환되는 이미지 파일 경로가 유효해야 합니다.', async () => {
+      jest.spyOn(fs, 'access').mockResolvedValue();
+      jest.spyOn(fs, 'rename').mockResolvedValue();
+
+      const mockImages = ['image1.jpg', 'image2.png'];
+
+      await expect(postsService.savePostImages(mockImages)).resolves.toEqual([
+        `/${PATH_FROM_PUBLIC_TO_POST_IMAGE}/${mockImages[0]}`,
+        `/${PATH_FROM_PUBLIC_TO_POST_IMAGE}/${mockImages[1]}`,
+      ]);
     });
   });
 });

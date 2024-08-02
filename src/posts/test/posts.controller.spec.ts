@@ -60,6 +60,21 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
 
       expect(result).toEqual(mockPost);
     });
+
+    test('이미지 업로드가 포함된 경우, 이미지를 저장합니다.', async () => {
+      const mockImages = ['test.jpg', 'test2.jpg'];
+      const mockCreatPostDtoWithImages = {
+        ...mockCreatePostInfo,
+        images: mockImages,
+      };
+
+      await postsController.createPost(
+        mockAuthenticatedUser,
+        mockCreatPostDtoWithImages,
+      );
+
+      expect(mockPostsService.savePostImages).toHaveBeenCalledWith(mockImages);
+    });
   });
 
   describe('✅ PostsController >> paginatePosts: 게시물 목록 페이지네이션 조회 요청', () => {
