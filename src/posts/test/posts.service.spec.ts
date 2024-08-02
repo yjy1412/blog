@@ -73,16 +73,22 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
     test('게시물 작성자 정보가 유효하지 않은 경우 NotFoundException 에러를 반환합니다.', async () => {
       jest.spyOn(usersService, 'getUserById').mockResolvedValueOnce(null);
 
-      await expect(postsService.createPost(mockNewPost)).rejects.toThrow(
-        'User with id 1 not found',
-      );
+      const mockAuthorId = 1;
+
+      await expect(
+        postsService.createPost(mockAuthorId, mockNewPost),
+      ).rejects.toThrow('User with id 1 not found');
     });
 
     test('게시물을 생성하고 반환합니다.', async () => {
       jest.spyOn(postsRepository, 'create').mockReturnValueOnce(mockPost);
       jest.spyOn(postsRepository, 'save').mockResolvedValueOnce(mockPost);
 
-      await expect(postsService.createPost(mockNewPost)).resolves.toEqual({
+      const mockAuthorId = 1;
+
+      await expect(
+        postsService.createPost(mockAuthorId, mockNewPost),
+      ).resolves.toEqual({
         ...mockPost,
       });
     });
