@@ -73,6 +73,16 @@ export class PostModel extends BaseModel {
   authorId: number;
 
   /**
+   * image
+   */
+  @Column({
+    type: 'jsonb',
+    nullable: true,
+    comment: '업로드 이미지 경로 리스트',
+  })
+  images?: string[];
+
+  /**
    * author
    *
    * ManyToOne Relation with UserModel
