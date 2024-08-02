@@ -25,13 +25,17 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Post()
-  createPost(
+  async createPost(
     @AuthenticatedUser() user: Pick<UserModel, 'id' | 'email'>,
     @Body() body: CreatePostDto,
   ) {
-    const post = { ...body, authorId: user.id };
+    if (body.images && body.images.length > 0) {
+      const savedImages = await this.postsService.savePostImages(body.images);
 
-    return this.postsService.createPost(post);
+      body.images = savedImages;
+    }
+
+    return this.postsService.createPost(user.id, body);
   }
 
   @Public()

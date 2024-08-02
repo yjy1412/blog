@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -8,6 +12,15 @@ import { PostModel } from './entities/post.entity';
 import { PaginatePostsDto } from './dtos/paginate-posts.dto';
 import { PaginationService } from '../common/services/pagination.service';
 import { PaginationResponse } from '../common/interfaces/pagination.interface';
+import { CreatePostDto } from './dtos/create-post.dto';
+import { join } from 'path';
+import {
+  PATH_FROM_PUBLIC_TO_POST_IMAGE,
+  PUBLIC_IMAGE_PATH,
+  PUBLIC_POST_IMAGE_FOLDER_NAME,
+  PUBLIC_TEMP_PATH,
+} from '../common/constants/path.constant';
+import { promises as fs } from 'fs';
 
 @Injectable()
 export class PostsService {
@@ -21,22 +34,17 @@ export class PostsService {
   /**
    * 게시물 생성
    */
-  async createPost(
-    newPost: Pick<
-      PostModel,
-      'title' | 'content' | 'likeCount' | 'commentCount' | 'authorId'
-    >,
-  ): Promise<PostModel> {
-    const author = await this.usersService.getUserById(newPost.authorId);
+  async createPost(authorId: number, dto: CreatePostDto): Promise<PostModel> {
+    const author = await this.usersService.getUserById(authorId);
 
     if (!author) {
-      throw new NotFoundException(`User with id ${newPost.authorId} not found`);
+      throw new NotFoundException(`User with id ${authorId} not found`);
     }
 
     const createdPost = this.postsRepository.create({
-      ...newPost,
+      ...dto,
       author: {
-        id: newPost.authorId,
+        id: authorId,
       },
     });
 
@@ -102,6 +110,32 @@ export class PostsService {
     await this.postsRepository.delete(postId);
 
     return true;
+  }
+
+  /**
+   * 게시물 이미지 저장
+   */
+  async savePostImages(images: string[]): Promise<string[]> {
+    const saveFilePromises = images.map(async (image) => {
+      const tempSavedImagePath = join(PUBLIC_TEMP_PATH, image);
+
+      try {
+        await fs.access(tempSavedImagePath);
+      } catch (error) {
+        throw new BadRequestException(`${image} 파일을 찾을 수 없습니다.`);
+      }
+
+      await fs.rename(
+        tempSavedImagePath,
+        join(PUBLIC_IMAGE_PATH, PUBLIC_POST_IMAGE_FOLDER_NAME, image),
+      );
+
+      return `/${PATH_FROM_PUBLIC_TO_POST_IMAGE}/${image}`;
+    });
+
+    const savedImages = await Promise.all(saveFilePromises);
+
+    return savedImages;
   }
 
   /**
