@@ -18,6 +18,8 @@ interface LogComponent {
   level: LogLevelEnum;
   message: string;
   ms: string;
+  logContext: string;
+  additionalLogData?: object;
 }
 
 @Injectable()
@@ -62,8 +64,38 @@ export class CustomLoggerService implements LoggerService {
       }),
       winston.format.ms(),
       winston.format.printf(
-        ({ timestamp, level, message, ms }: LogComponent) => {
-          return `${timestamp} [${this.colorizeLogFormat(level, level.toUpperCase())}] ${message} ${this.colorizeLogFormat(LogLevelEnum.DEBUG, ms)}`;
+        ({
+          timestamp,
+          level,
+          message,
+          ms,
+          logContext,
+          additionalLogData,
+        }: LogComponent) => {
+          /**
+           * 콘솔에 출력될 로그 메시지 포맷을 결정합니다.
+           * 로그 레벨에 따라 출력될 로그 message의 색이 결정됩니다.
+           */
+          const logLevelFormat = this.colorizeLogFormat(
+            level,
+            level.toUpperCase(),
+          );
+          const logMessageFormat = this.colorizeLogFormat(level, message);
+          const logMsFormat = this.colorizeLogFormat(LogLevelEnum.DEBUG, ms);
+
+          /**
+           * 예시) 2024-08-04 22:06:48 [INFO][NestApplication] Nest application successfully started +0ms
+           */
+          let logMessage = `${timestamp} [${logLevelFormat}][${logContext}] ${logMessageFormat} ${logMsFormat}`;
+
+          if (additionalLogData) {
+            const addtionalLogDataTitle = `${this.colorizeLogFormat(LogLevelEnum.WARN, '[AdditionalLogData]')}`;
+            const addtionalLogDataBody = `${this.colorizeLogFormat(LogLevelEnum.WARN, JSON.stringify(additionalLogData, null, 2))}`;
+
+            logMessage += ` \n\n ${addtionalLogDataTitle} \n\n ${addtionalLogDataBody} \n`;
+          }
+
+          return logMessage;
         },
       ),
     );
@@ -72,28 +104,28 @@ export class CustomLoggerService implements LoggerService {
   /**
    * Write a 'log' level log.
    */
-  log(message: any, ...optionalParams: any[]) {
-    this.logger.log('info', message, ...optionalParams);
+  log(message: any, logContext: string, additionalLogData?: object) {
+    this.logger.log('info', message, { logContext, additionalLogData });
   }
 
   /**
    * Write an 'error' level log.
    */
-  error(message: any, ...optionalParams: any[]) {
-    this.logger.log('error', message, ...optionalParams);
+  error(message: any, logContext: string, additionalLogData?: object) {
+    this.logger.log('error', message, { logContext, additionalLogData });
   }
 
   /**
    * Write a 'warn' level log.
    */
-  warn(message: any, ...optionalParams: any[]) {
-    this.logger.log('warn', message, ...optionalParams);
+  warn(message: any, logContext: string, additionalLogData?: object) {
+    this.logger.log('warn', message, { logContext, additionalLogData });
   }
 
   /**
    * Write a 'debug' level log.
    */
-  debug(message: any, ...optionalParams: any[]) {
-    this.logger.log('debug', message, ...optionalParams);
+  debug(message: any, logContext: string, additionalLogData?: object) {
+    this.logger.log('debug', message, { logContext, additionalLogData });
   }
 }
