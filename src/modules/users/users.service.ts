@@ -93,10 +93,13 @@ export class UsersService {
   }
 
   /**
-   * 이메일로 유저 조회
+   * 이메일에 해당하는 비밀번호를 포함한 유저정보 조회
    */
-  getUserByEmail(user: Pick<UserModel, 'email'>): Promise<UserModel> {
+  getUserByEmailWithPassword(
+    user: Pick<UserModel, 'email'>,
+  ): Promise<UserModel> {
     return this.usersRepository.findOne({
+      select: ['id', 'email', 'password', 'name'],
       where: {
         email: user.email,
       },

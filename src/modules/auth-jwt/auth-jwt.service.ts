@@ -59,7 +59,7 @@ export class AuthJwtService {
    * 유저의 email과 password를 받아 인증
    */
   async authenticate(user: Pick<UserModel, 'email' | 'password'>) {
-    const existUser = await this.usersService.getUserByEmail(user);
+    const existUser = await this.usersService.getUserByEmailWithPassword(user);
 
     if (!existUser) {
       throw new UnauthorizedException('이메일이 일치하지 않습니다.');

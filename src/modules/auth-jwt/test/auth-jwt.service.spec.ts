@@ -76,7 +76,7 @@ describe('AuthJwtService', () => {
   describe('✅ AuthJwtService >> authenticate: 유저의 정보를 기반으로 인증을 수행합니다.', () => {
     test('유저가 존재하지 않는 경우, UnauthorizedException을 반환합니다.', async () => {
       jest
-        .spyOn(mockUsersService, 'getUserByEmail')
+        .spyOn(mockUsersService, 'getUserByEmailWithPassword')
         .mockResolvedValueOnce(null);
 
       await expect(
