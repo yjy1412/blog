@@ -6,7 +6,7 @@ import { extname } from 'path';
 import * as multer from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import { PUBLIC_TEMP_PATH } from './constants/path.constant';
-import { CustomLoggerService } from './services/logger.service';
+import { CustomLoggerService } from './services/custom-logger.service';
 
 @Module({
   imports: [
