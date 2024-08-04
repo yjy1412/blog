@@ -2,9 +2,20 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ValidationPipe } from '@nestjs/common';
+import { CustomLoggerService } from './common/services/logger.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    /**
+     * [Official] make sure all logs will be buffered until a custom logger is attached
+     * and the application initialisation process either completes or fails
+     *
+     * 커스텀 로거가 연결될 때까지 모든 로그가 버퍼링되도록 보장합니다.
+     */
+    bufferLogs: true,
+  });
+
+  app.useLogger(app.get(CustomLoggerService));
 
   app.useGlobalPipes(
     new ValidationPipe({

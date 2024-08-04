@@ -1,4 +1,9 @@
 /**
+ * Common
+ */
+export const ENV_NODE_ENV_KEY = 'NODE_ENV';
+
+/**
  * APP
  */
 export const ENV_APP_PROTOCOL_KEY = 'APP_PROTOCOL';
@@ -19,3 +24,8 @@ export const ENV_DB_DATABASE_KEY = 'DB_DATABASE';
  */
 export const ENV_JWT_SECRET_KEY = 'JWT_SECRET';
 export const ENV_JWT_HASH_ROUND_KEY = 'JWT_HASH_ROUND';
+
+/**
+ * Logger
+ */
+export const ENV_LOG_LEVEL_KEY = 'LOG_LEVEL';
