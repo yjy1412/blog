@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ValidationPipe } from '@nestjs/common';
-import { CustomLoggerService } from './common/services/custom-logger.service';
+import { CustomLoggerService } from './modules/common/services/custom-logger.service';
 import { HttpRequestResponseLoggerInterceptor } from './core/interceptors/http-reqeust-response-logger.interceptor';
 
 async function bootstrap() {

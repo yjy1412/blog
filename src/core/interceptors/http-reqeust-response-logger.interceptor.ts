@@ -1,5 +1,5 @@
 import { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
-import { CustomLoggerService } from '../../common/services/custom-logger.service';
+import { CustomLoggerService } from '../../modules/common/services/custom-logger.service';
 import { Observable, tap } from 'rxjs';
 
 export class HttpRequestResponseLoggerInterceptor implements NestInterceptor {

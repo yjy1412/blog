@@ -2,13 +2,13 @@ import { config } from 'dotenv';
 import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { PostsModule } from './posts/posts.module';
-import { PostModel } from './posts/entities/post.entity';
-import { UsersModule } from './users/users.module';
-import { UserModel } from './users/entities/user.entity';
-import { AuthJwtModule } from './auth-jwt/auth-jwt.module';
-import { AuthJwtGuard } from './auth-jwt/guards/auth-jwt.guard';
-import { CommonModule } from './common/common.module';
+import { PostsModule } from './modules/posts/posts.module';
+import { PostModel } from './modules/posts/entities/post.entity';
+import { UsersModule } from './modules/users/users.module';
+import { UserModel } from './modules/users/entities/user.entity';
+import { AuthJwtModule } from './modules/auth-jwt/auth-jwt.module';
+import { AuthJwtGuard } from './modules/auth-jwt/guards/auth-jwt.guard';
+import { CommonModule } from './modules/common/common.module';
 import { ConfigModule } from '@nestjs/config';
 import {
   ENV_DB_DATABASE_KEY,
@@ -16,9 +16,9 @@ import {
   ENV_DB_PASSWORD_KEY,
   ENV_DB_PORT_KEY,
   ENV_DB_USERNAME_KEY,
-} from './common/constants/env-keys.constant';
+} from './modules/common/constants/env-keys.constant';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { PUBLIC_PATH } from './common/constants/path.constant';
+import { PUBLIC_PATH } from './modules/common/constants/path.constant';
 
 config();
 @Module({
