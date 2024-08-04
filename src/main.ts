@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ValidationPipe } from '@nestjs/common';
 import { CustomLoggerService } from './common/services/custom-logger.service';
+import { HttpRequestResponseLoggerInterceptor } from './core/interceptors/http-reqeust-response-logger.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -15,7 +16,13 @@ async function bootstrap() {
     bufferLogs: true,
   });
 
-  app.useLogger(app.get(CustomLoggerService));
+  const customLoggerService = app.get(CustomLoggerService);
+
+  app.useLogger(customLoggerService);
+
+  app.useGlobalInterceptors(
+    new HttpRequestResponseLoggerInterceptor(customLoggerService),
+  );
 
   app.useGlobalPipes(
     new ValidationPipe({

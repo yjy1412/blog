@@ -1,11 +1,5 @@
 import { config } from 'dotenv';
-import {
-  ClassSerializerInterceptor,
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-  RequestMethod,
-} from '@nestjs/common';
+import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { PostsModule } from './posts/posts.module';
@@ -25,7 +19,6 @@ import {
 } from './common/constants/env-keys.constant';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { PUBLIC_PATH } from './common/constants/path.constant';
-import { LoggerMiddleware } from './middlewares/logger.middleware';
 
 config();
 @Module({
@@ -64,10 +57,4 @@ config();
     },
   ],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LoggerMiddleware)
-      .forRoutes({ path: '*', method: RequestMethod.ALL });
-  }
-}
+export class AppModule {}
