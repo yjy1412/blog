@@ -19,7 +19,7 @@ interface LogComponent {
   message: string;
   ms: string;
   logContext: string;
-  additionalLogData?: object;
+  additionalLogData?: string | object;
 }
 
 @Injectable()
@@ -104,28 +104,44 @@ export class CustomLoggerService implements LoggerService {
   /**
    * Write a 'log' level log.
    */
-  log(message: any, logContext: string, additionalLogData?: object) {
+  log(
+    message: LogComponent['message'],
+    logContext: LogComponent['logContext'],
+    additionalLogData?: LogComponent['additionalLogData'],
+  ) {
     this.logger.log('info', message, { logContext, additionalLogData });
   }
 
   /**
    * Write an 'error' level log.
    */
-  error(message: any, logContext: string, additionalLogData?: object) {
+  error(
+    message: LogComponent['message'],
+    logContext: LogComponent['logContext'],
+    additionalLogData?: LogComponent['additionalLogData'],
+  ) {
     this.logger.log('error', message, { logContext, additionalLogData });
   }
 
   /**
    * Write a 'warn' level log.
    */
-  warn(message: any, logContext: string, additionalLogData?: object) {
+  warn(
+    message: LogComponent['message'],
+    logContext: LogComponent['logContext'],
+    additionalLogData?: LogComponent['additionalLogData'],
+  ) {
     this.logger.log('warn', message, { logContext, additionalLogData });
   }
 
   /**
    * Write a 'debug' level log.
    */
-  debug(message: any, logContext: string, additionalLogData?: object) {
+  debug(
+    message: LogComponent['message'],
+    logContext: LogComponent['logContext'],
+    additionalLogData?: LogComponent['additionalLogData'],
+  ) {
     this.logger.log('debug', message, { logContext, additionalLogData });
   }
 }
