@@ -90,7 +90,7 @@ export class CustomLoggerService implements LoggerService {
 
           if (additionalLogData) {
             const addtionalLogDataTitle = `${this.colorizeLogFormat(LogLevelEnum.WARN, '[AdditionalLogData]')}`;
-            const addtionalLogDataBody = `${this.colorizeLogFormat(LogLevelEnum.WARN, JSON.stringify(additionalLogData, null, 2))}`;
+            const addtionalLogDataBody = `${this.colorizeLogFormat(LogLevelEnum.WARN, JSON.stringify(additionalLogData, null, 2)).replace(/\\n/g, '\n')}`;
 
             logMessage += ` \n\n ${addtionalLogDataTitle} \n\n ${addtionalLogDataBody} \n`;
           }
