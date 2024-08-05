@@ -10,10 +10,7 @@ export abstract class BaseMock {
   > = {
     email: 'test@test.com',
     password: 'testPassword12!',
-    name: {
-      first: 'Hong',
-      last: 'Gil-Dong',
-    },
+    name: '양진영',
   };
 
   public readonly mockUser: UserModel = {

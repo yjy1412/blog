@@ -1,38 +1,11 @@
 import { Column, Entity, OneToMany } from 'typeorm';
-import { IsEmail, IsString, Matches, ValidateNested } from 'class-validator';
+import { IsEmail, IsString, Matches } from 'class-validator';
 
 import { BaseModel } from '../../common/entities/base.entity';
 
 import { PostModel } from '../../posts/entities/post.entity';
-import { Type } from 'class-transformer';
 import { generateMessageInvalidStringType } from '../../common/validator-messages/generate-message-invalid-string-type.message';
 import { generateMessageInvalidEmail } from '../../common/validator-messages/generate-validation-invalid-email.message';
-
-class Name {
-  /**
-   * nameFirst
-   */
-  @Column({
-    length: 50,
-    comment: '성',
-  })
-  @IsString({
-    message: generateMessageInvalidStringType,
-  })
-  first: string;
-
-  /**
-   * nameLast
-   */
-  @Column({
-    length: 50,
-    comment: '이름',
-  })
-  @IsString({
-    message: generateMessageInvalidStringType,
-  })
-  last: string;
-}
 
 @Entity()
 export class UserModel extends BaseModel {
@@ -74,10 +47,14 @@ export class UserModel extends BaseModel {
   /**
    * name
    */
-  @Column(() => Name)
-  @ValidateNested()
-  @Type(() => Name)
-  name: Name;
+  @Column({
+    length: 50,
+    comment: '이름',
+  })
+  @IsString({
+    message: generateMessageInvalidStringType,
+  })
+  name: string;
 
   /**
    * posts
