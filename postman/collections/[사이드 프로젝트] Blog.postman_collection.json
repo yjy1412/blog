@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"test@test.com\",\n    \"password\": \"testPassword12!\",\n    \"name\": {\n        \"first\": \"Hong\",\n        \"last\": \"Gil-Dong\"\n    }\n}",
+							"raw": "{\n    \"email\": \"test@test.com\",\n    \"password\": \"testPassword12!\",\n    \"name\": \"양진영\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -201,7 +201,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"test1@blog.com\"\n}",
+							"raw": "{\n    \"name\": \"bothsides\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -272,7 +272,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Typescript NestJS\",\n    \"content\": \"This is about NestJS side project\",\n    \"likeCount\": 100,\n    \"commentCount\": 100,\n    \"authorId\": 1\n}",
+							"raw": "{\n    \"title\": \"Typescript NestJS\",\n    \"content\": \"This is about NestJS side project\",\n    \"likeCount\": 100,\n    \"commentCount\": 100\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -430,6 +430,39 @@
 							"path": [
 								"posts",
 								"random"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Common",
+			"item": [
+				{
+					"name": "public/images",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/Users/jinyeongyang/Downloads/이미지/아이콘/Node.js.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/public/images",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"public",
+								"images"
 							]
 						}
 					},
