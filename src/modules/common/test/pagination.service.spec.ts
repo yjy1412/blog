@@ -37,13 +37,13 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
         where_likeCount_commentCount_moreThan: 10;
       }
 
-      const mockWrongPaginateQuery: mockWrongDto = {
+      const mockWrongPaginationQuery: mockWrongDto = {
         where_likeCount_commentCount_moreThan: 10,
       };
 
       expect(
         paginationService.paginate<PostModel, mockWrongDto>(
-          mockWrongPaginateQuery,
+          mockWrongPaginationQuery,
           postsRepository,
         ),
       ).rejects.toThrow(InternalServerErrorException);
@@ -54,13 +54,13 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
         where_likeCount_wrongOperator: 10;
       }
 
-      const mockWrongPaginateQuery: mockWrongDto = {
+      const mockWrongPaginationQuery: mockWrongDto = {
         where_likeCount_wrongOperator: 10,
       };
 
       expect(
         paginationService.paginate<PostModel, mockWrongDto>(
-          mockWrongPaginateQuery,
+          mockWrongPaginationQuery,
           postsRepository,
         ),
       ).rejects.toThrow(InternalServerErrorException);
@@ -71,13 +71,13 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
         order_likeCount_desc: 'DESC';
       }
 
-      const mockWrongPaginateQuery: mockWrongDto = {
+      const mockWrongPaginationQuery: mockWrongDto = {
         order_likeCount_desc: 'DESC',
       };
 
       expect(
         paginationService.paginate<PostModel, mockWrongDto>(
-          mockWrongPaginateQuery,
+          mockWrongPaginationQuery,
           postsRepository,
         ),
       ).rejects.toThrow(InternalServerErrorException);
@@ -88,13 +88,13 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
         order_likeCount: 'WRONG';
       }
 
-      const mockWrongPaginateQuery: mockWrongDto = {
+      const mockWrongPaginationQuery: mockWrongDto = {
         order_likeCount: 'WRONG',
       };
 
       expect(
         paginationService.paginate<PostModel, mockWrongDto>(
-          mockWrongPaginateQuery,
+          mockWrongPaginationQuery,
           postsRepository,
         ),
       ).rejects.toThrow(InternalServerErrorException);

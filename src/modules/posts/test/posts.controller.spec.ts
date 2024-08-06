@@ -79,25 +79,25 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
 
   describe('✅ PostsController >> paginatePosts: 게시물 목록 페이지네이션 조회 요청', () => {
     test('페이지 메타정보 생성을 위해, router path 정보를 조회 서비스 로직에 전달해야 합니다.', async () => {
-      const paginateQuery: PaginatePostsDto = {
+      const paginationQuery: PaginatePostsDto = {
         where_likeCount_moreThanOrEqual: 50,
         order_likeCount: RepositoryQueryOrderEnum.DESC,
       };
 
-      await postsController.paginatePosts(paginateQuery);
+      await postsController.paginatePosts(paginationQuery);
 
       expect(mockPostsService.paginatePosts).toHaveBeenCalledWith(
-        paginateQuery,
+        paginationQuery,
       );
     });
 
     test('페이지 정보와 함께 게시물 목록을 반환합니다.', async () => {
-      const paginateQuery: PaginatePostsDto = {
+      const paginationQuery: PaginatePostsDto = {
         where_likeCount_moreThanOrEqual: 50,
         order_likeCount: RepositoryQueryOrderEnum.DESC,
       };
 
-      const result = await postsController.paginatePosts(paginateQuery);
+      const result = await postsController.paginatePosts(paginationQuery);
 
       expect(result).toHaveProperty('data');
       expect(result).toHaveProperty('page');
