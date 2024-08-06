@@ -21,13 +21,6 @@ import {
 
 @Injectable()
 export class PaginationService {
-  /**
-   * 전달받은 Repository를 이용하여 DB 조회를 수행하고, 페이지네이션 결과를 반환합니다.
-   *
-   * overrideFindOptions를 통해 기본적인 FindManyOptions를 덮어쓸 수 있습니다.
-   * findAndCount 메서드를 이용하여 전체 데이터 개수를 조회합니다.
-   * 결과에는 페이지 메타정보가 포함됩니다.
-   */
   async paginate<T extends BaseModel, Dto extends BasePaginationDto>(
     paginateQuery: Dto,
     repository: Repository<T>,
@@ -53,15 +46,6 @@ export class PaginationService {
     };
   }
 
-  /**
-   * 요청 쿼리를 파싱하여 DB 조회에 필요한 조건절에 해당하는 정보를 반환합니다.
-   *
-   * key는 요청쿼리에 해당합니다.
-   * key는 ${where_컬럼명_연산자} 형태로 구성됩니다.
-   * 연산자가 따로 포함되지 않는 경우에는 ${where_컬럼명} 형태로 구성됩니다.
-   *
-   * value는 요청쿼리 값에 해당합니다.
-   */
   private parseWhereOptions<T extends BaseModel>(
     key: string,
     value: string,
@@ -97,14 +81,6 @@ export class PaginationService {
     return where;
   }
 
-  /**
-   * 요청 쿼리를 파싱하여 DB 조회에 필요한 정렬 조건에 해당하는 정보를 반환합니다.
-   *
-   * key는 요청쿼리에 해당합니다.
-   * key는 ${order_컬럼명} 형태로 구성됩니다.
-   *
-   * value는 요청쿼리 값에 해당합니다.
-   */
   private parseOrderOptions<T extends BaseModel>(
     key: string,
     value: RepositoryQueryOrderEnum,
@@ -133,9 +109,6 @@ export class PaginationService {
     return order;
   }
 
-  /**
-   * 요청 쿼리를 파싱하여 DB 조회쿼리에 필요한 정보를 반환합니다.
-   */
   private composeFindOptions<
     T extends BaseModel,
     Dto extends BasePaginationDto,

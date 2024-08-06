@@ -17,10 +17,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus();
 
     if (status === 500) {
-      /**
-       * 1. 에러 로깅
-       * 2. 에러 메시지 변환
-       */
       this.customLoggerService.error(
         exception.message,
         HttpExceptionFilter.name,

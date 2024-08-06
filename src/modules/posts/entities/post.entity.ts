@@ -10,9 +10,6 @@ import { generateMessageInvalidNumberType } from '../../common/validator-message
 
 @Entity()
 export class PostModel extends BaseModel {
-  /**
-   * title
-   */
   @Column({
     length: 100,
     comment: '제목',
@@ -25,9 +22,6 @@ export class PostModel extends BaseModel {
   })
   title: string;
 
-  /**
-   * content
-   */
   @Column({
     length: 1000,
     comment: '내용',
@@ -40,9 +34,6 @@ export class PostModel extends BaseModel {
   })
   content: string;
 
-  /**
-   * likeCount
-   */
   @Column({
     default: 0,
     comment: '좋아요 수',
@@ -60,8 +51,6 @@ export class PostModel extends BaseModel {
   commentCount: number;
 
   /**
-   * authorId
-   *
    * Users Foreign Key
    */
   @Column({
@@ -72,9 +61,6 @@ export class PostModel extends BaseModel {
   })
   authorId: number;
 
-  /**
-   * image
-   */
   @Column({
     type: 'jsonb',
     nullable: true,
@@ -82,11 +68,6 @@ export class PostModel extends BaseModel {
   })
   images?: string[];
 
-  /**
-   * author
-   *
-   * ManyToOne Relation with UserModel
-   */
   @ManyToOne(() => UserModel, (user) => user.posts, {
     nullable: false,
     cascade: true,

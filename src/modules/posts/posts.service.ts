@@ -30,10 +30,6 @@ export class PostsService {
     private readonly usersService: UsersService,
     private readonly commonService: PaginationService,
   ) {}
-
-  /**
-   * 게시물 생성
-   */
   async createPost(authorId: number, dto: CreatePostDto): Promise<PostModel> {
     const author = await this.usersService.getUserById(authorId);
 
@@ -51,9 +47,6 @@ export class PostsService {
     return this.postsRepository.save(createdPost);
   }
 
-  /**
-   * 게시물 목록 페이지네이션
-   */
   async paginatePosts(
     query: PaginatePostsDto,
   ): Promise<PaginationResponse<PostModel>> {
@@ -62,10 +55,6 @@ export class PostsService {
       this.postsRepository,
     );
   }
-
-  /**
-   * 게시물 조회
-   */
   async getPostById(postId: number): Promise<PostModel> {
     const post = await this.postsRepository.findOne({
       where: {
@@ -80,9 +69,6 @@ export class PostsService {
     return post;
   }
 
-  /**
-   * 게시물 수정
-   */
   async updatePostById(
     postId: number,
     updatePost: Partial<PostModel>,
@@ -103,18 +89,12 @@ export class PostsService {
     });
   }
 
-  /**
-   * 게시물 삭제
-   */
   async deletePostById(postId: number): Promise<boolean> {
     await this.postsRepository.delete(postId);
 
     return true;
   }
 
-  /**
-   * 게시물 이미지 저장
-   */
   async savePostImages(images: string[]): Promise<string[]> {
     const saveFilePromises = images.map(async (image) => {
       const tempSavedImagePath = join(PUBLIC_TEMP_PATH, image);
@@ -138,9 +118,6 @@ export class PostsService {
     return savedImages;
   }
 
-  /**
-   * [ 테스트용 ] 랜덤 게시글 생성
-   */
   async createRandomPosts(howMany: number): Promise<boolean> {
     const randomPosts = [];
 

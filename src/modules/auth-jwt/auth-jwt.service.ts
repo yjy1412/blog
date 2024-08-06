@@ -33,9 +33,6 @@ export class AuthJwtService {
     private readonly configService: ConfigService,
   ) {}
 
-  /**
-   * 유저의 email과 id를 받아 Bearer token을 발급
-   */
   signBearerToken(
     user: Pick<UserModel, 'id' | 'email'>,
     isRefreshToken: boolean,
@@ -55,9 +52,6 @@ export class AuthJwtService {
     });
   }
 
-  /**
-   * 유저의 email과 password를 받아 인증
-   */
   async authenticate(user: Pick<UserModel, 'email' | 'password'>) {
     const existUser = await this.usersService.getUserByEmailWithPassword(user);
 
@@ -73,12 +67,6 @@ export class AuthJwtService {
     return existUser;
   }
 
-  /**
-   * 로그인
-   *
-   *   1. 유저의 email과 password를 받아 인증
-   *   2. 액세스 / 리프레쉬 토큰 발급
-   */
   async login(user: Pick<UserModel, 'email' | 'password'>) {
     const existUser = await this.authenticate(user);
 
@@ -88,12 +76,6 @@ export class AuthJwtService {
     };
   }
 
-  /**
-   * 회원가입
-   *
-   *  1. 유저의 email, password, name을 받아 유저정보 생성
-   *  2. 로그인 처리
-   */
   async register(user: Pick<UserModel, 'email' | 'password' | 'name'>) {
     await this.usersService.createUser({
       ...user,
@@ -111,12 +93,6 @@ export class AuthJwtService {
     };
   }
 
-  /**
-   * 요청 헤더 authorization에서 토큰 추출
-   *
-   * BasicTokenHeaderType: { "authorization": "Basic ${token}"}
-   * BearerTokenHeaderType: { "authorization": "Bearer ${token}"}
-   */
   extractTokenFromHeader(
     headerAuthorizationValue: BasicTokenHeaderType | BearerTokenHeaderType,
     isBearerToken: boolean,
@@ -146,9 +122,6 @@ export class AuthJwtService {
     return token;
   }
 
-  /**
-   * base64로 인코딩된 basicToken('email:password')에서 email과 password를 추출
-   */
   decodeBasicToken(basicToken: string) {
     const decodedToken = Buffer.from(basicToken, ENCODING_BASE64)
       .toString(ENCODING_UTF8)
@@ -163,9 +136,6 @@ export class AuthJwtService {
     return { email, password };
   }
 
-  /**
-   * Bearer 토큰을 받아 토큰 검증
-   */
   verifyBearerToken(token: string, isRefreshToken: boolean) {
     let decodedToken: any;
     try {
@@ -189,9 +159,6 @@ export class AuthJwtService {
     return decodedToken;
   }
 
-  /**
-   * 리프레쉬 토큰을 받아 액세스 토큰 재발급
-   */
   async refreshAccessTokenUsingRefreshToken(refreshToken: string) {
     const user: Pick<UserModel, 'id' | 'email'> = this.verifyBearerToken(
       refreshToken,

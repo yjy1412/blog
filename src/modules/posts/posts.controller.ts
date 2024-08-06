@@ -64,6 +64,7 @@ export class PostsController {
 
   /**
    * [ 테스트용 ] 랜덤 게시글 생성
+   * TODO: 테스트용 코드이므로 실제 서비스에서는 제거해야 합니다.
    */
   @Post('random')
   async createRandomPosts(@Body('howMany') howMany: number) {

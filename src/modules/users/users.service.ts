@@ -15,9 +15,6 @@ export class UsersService {
     private readonly usersRepository: Repository<UserModel>,
   ) {}
 
-  /**
-   * 유저 생성
-   */
   async createUser(
     newUser: Pick<UserModel, 'email' | 'password' | 'name'>,
   ): Promise<UserModel> {
@@ -36,16 +33,10 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  /**
-   * 모든 유저 조회
-   */
   getUsersAll(): Promise<UserModel[]> {
     return this.usersRepository.find();
   }
 
-  /**
-   * 유저 조회
-   */
   async getUserById(userId: number): Promise<UserModel> {
     const user = await this.usersRepository.findOne({
       where: {
@@ -60,9 +51,6 @@ export class UsersService {
     return user;
   }
 
-  /**
-   * 유저 정보 수정
-   */
   async updateUserById(
     userId: number,
     updateUser: Partial<UserModel>,
@@ -83,18 +71,12 @@ export class UsersService {
     });
   }
 
-  /**
-   * 유저 삭제
-   */
   async deleteUserById(userId: number): Promise<boolean> {
     await this.usersRepository.delete(userId);
 
     return true;
   }
 
-  /**
-   * 이메일에 해당하는 비밀번호를 포함한 유저정보 조회
-   */
   getUserByEmailWithPassword(
     user: Pick<UserModel, 'email'>,
   ): Promise<UserModel> {

@@ -72,10 +72,6 @@ export class CustomLoggerService implements LoggerService {
           logContext,
           additionalLogData,
         }: LogComponent) => {
-          /**
-           * 콘솔에 출력될 로그 메시지 포맷을 결정합니다.
-           * 로그 레벨에 따라 출력될 로그 message의 색이 결정됩니다.
-           */
           const logLevelFormat = this.colorizeLogFormat(
             level,
             level.toUpperCase(),
@@ -101,9 +97,6 @@ export class CustomLoggerService implements LoggerService {
     );
   }
 
-  /**
-   * Write a 'log' level log.
-   */
   log(
     message: LogComponent['message'],
     logContext: LogComponent['logContext'],
@@ -112,9 +105,6 @@ export class CustomLoggerService implements LoggerService {
     this.logger.log('info', message, { logContext, additionalLogData });
   }
 
-  /**
-   * Write an 'error' level log.
-   */
   error(
     message: LogComponent['message'],
     logContext: LogComponent['logContext'],
@@ -123,9 +113,6 @@ export class CustomLoggerService implements LoggerService {
     this.logger.log('error', message, { logContext, additionalLogData });
   }
 
-  /**
-   * Write a 'warn' level log.
-   */
   warn(
     message: LogComponent['message'],
     logContext: LogComponent['logContext'],
@@ -134,9 +121,6 @@ export class CustomLoggerService implements LoggerService {
     this.logger.log('warn', message, { logContext, additionalLogData });
   }
 
-  /**
-   * Write a 'debug' level log.
-   */
   debug(
     message: LogComponent['message'],
     logContext: LogComponent['logContext'],

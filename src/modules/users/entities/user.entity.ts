@@ -9,9 +9,6 @@ import { generateMessageInvalidEmail } from '../../common/validator-messages/gen
 
 @Entity()
 export class UserModel extends BaseModel {
-  /**
-   * email
-   */
   @Column({
     unique: true,
     length: 50,
@@ -23,8 +20,6 @@ export class UserModel extends BaseModel {
   email: string;
 
   /**
-   * password
-   *
    * 비밀번호 길이를 설정할 때는 암호화된 비밀번호 길이를 기준으로 설정해야 합니다.
    */
   @Column({
@@ -44,9 +39,6 @@ export class UserModel extends BaseModel {
   )
   password: string;
 
-  /**
-   * name
-   */
   @Column({
     length: 50,
     comment: '이름',
@@ -56,11 +48,6 @@ export class UserModel extends BaseModel {
   })
   name: string;
 
-  /**
-   * posts
-   *
-   * OneToMany Relation with PostModel
-   */
   @OneToMany(() => PostModel, (post) => post.author)
   posts?: PostModel[];
 }
