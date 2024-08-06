@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -16,8 +17,7 @@ import { CreatePostDto } from './dtos/create-post.dto';
 import { join } from 'path';
 import {
   PATH_FROM_PUBLIC_TO_POST_IMAGE,
-  PUBLIC_IMAGE_PATH,
-  PUBLIC_POST_IMAGE_FOLDER_NAME,
+  PUBLIC_POST_IMAGE_PATH,
   PUBLIC_TEMP_PATH,
 } from '../common/constants/path.constant';
 import { promises as fs } from 'fs';
@@ -97,18 +97,9 @@ export class PostsService {
 
   async savePostImages(images: string[]): Promise<string[]> {
     const saveFilePromises = images.map(async (image) => {
-      const tempSavedImagePath = join(PUBLIC_TEMP_PATH, image);
+      await this.isImageUploaded(image);
 
-      try {
-        await fs.access(tempSavedImagePath);
-      } catch (error) {
-        throw new BadRequestException(`${image} 파일을 찾을 수 없습니다.`);
-      }
-
-      await fs.rename(
-        tempSavedImagePath,
-        join(PUBLIC_IMAGE_PATH, PUBLIC_POST_IMAGE_FOLDER_NAME, image),
-      );
+      await this.moveUploadImageToSaveStorage(image);
 
       return `/${PATH_FROM_PUBLIC_TO_POST_IMAGE}/${image}`;
     });
@@ -116,6 +107,32 @@ export class PostsService {
     const savedImages = await Promise.all(saveFilePromises);
 
     return savedImages;
+  }
+
+  private async isImageUploaded(image: string): Promise<void> {
+    try {
+      /**
+       * 업로드 이미지는 임시로 'public/temp' 폴더에 저장됩니다.
+       */
+      const uploadedImagePath = join(PUBLIC_TEMP_PATH, image);
+
+      await fs.access(uploadedImagePath);
+    } catch (error) {
+      throw new BadRequestException(`${image} 파일을 찾을 수 없습니다.`);
+    }
+  }
+
+  private async moveUploadImageToSaveStorage(image: string): Promise<void> {
+    try {
+      const uploadedImagePath = join(PUBLIC_TEMP_PATH, image);
+      const postImageSavePath = join(PUBLIC_POST_IMAGE_PATH, image);
+
+      await fs.rename(uploadedImagePath, postImageSavePath);
+    } catch (err) {
+      throw new InternalServerErrorException(
+        `${image} 파일을 저장하는데 실패했습니다.`,
+      );
+    }
   }
 
   async createRandomPosts(howMany: number): Promise<boolean> {
