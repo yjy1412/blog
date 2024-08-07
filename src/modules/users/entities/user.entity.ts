@@ -53,4 +53,7 @@ export class UserModel extends BaseModel {
 
   @OneToMany(() => PostModel, (post) => post.author)
   posts?: PostModel[];
+
+  @ManyToMany(() => ChatModel, (chat) => chat.users)
+  chats?: ChatModel[];
 }

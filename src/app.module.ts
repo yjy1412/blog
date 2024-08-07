@@ -19,6 +19,8 @@ import {
 } from './modules/common/constants/env-keys.constant';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { PUBLIC_PATH } from './modules/common/constants/path.constant';
+import { ChatsModule } from './modules/chats/chats.module';
+import { ChatModel } from './modules/chats/entities/chat.entity';
 
 config();
 @Module({
@@ -34,7 +36,7 @@ config();
       username: process.env[ENV_DB_USERNAME_KEY],
       password: process.env[ENV_DB_PASSWORD_KEY],
       database: process.env[ENV_DB_DATABASE_KEY],
-      entities: [PostModel, UserModel],
+      entities: [PostModel, UserModel, ChatModel],
       synchronize: true,
     }),
     ServeStaticModule.forRoot({
@@ -45,6 +47,7 @@ config();
     UsersModule,
     AuthJwtModule,
     CommonModule,
+    ChatsModule,
   ],
   providers: [
     {
