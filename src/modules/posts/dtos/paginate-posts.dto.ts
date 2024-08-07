@@ -1,6 +1,6 @@
 import { IsIn, IsNumber, IsOptional, IsString } from 'class-validator';
 import { RepositoryQueryOrderEnum } from '../../common/enums/repository.enum';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { BasePaginationDto } from '../../common/dtos/base-pagination.dto';
 import {
   generateMessageInvalidNumberType,

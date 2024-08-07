@@ -16,6 +16,10 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    /**
+     * This option is important for the correct work of the CommonJS/AMD/UMD module library
+     */
+    "esModuleInterop": true
   }
 }

@@ -7,7 +7,7 @@ import {
   FindOptionsWhere,
   Repository,
 } from 'typeorm';
-import { keys, values } from 'lodash';
+import _ from 'lodash';
 import {
   PAGINATION_QUERY_FILTER_MAPPER,
   PAGINATION_QUERY_SEPERATOR,
@@ -156,7 +156,7 @@ export class PaginationService {
     paginationOrderQuery: string,
     paginationOrderQueryValue: RepositoryQueryOrderEnum,
   ) {
-    const isSortingOrder = values(RepositoryQueryOrderEnum).includes(
+    const isSortingOrder = _.values(RepositoryQueryOrderEnum).includes(
       paginationOrderQueryValue,
     );
 
@@ -195,7 +195,7 @@ export class PaginationService {
     paginationQuery: string,
     operator: string,
   ) {
-    const isOperatorAllowed = keys(PAGINATION_QUERY_FILTER_MAPPER).includes(
+    const isOperatorAllowed = _.keys(PAGINATION_QUERY_FILTER_MAPPER).includes(
       operator,
     );
 
