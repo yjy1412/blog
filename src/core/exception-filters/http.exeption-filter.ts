@@ -30,11 +30,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         error: exception.name,
       });
     } else {
-      response.status(status).json({
-        statusCode: status,
-        message: exception.message,
-        error: exception.name,
-      });
+      response.status(status).json(exception.getResponse());
     }
   }
 }
