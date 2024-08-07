@@ -3,14 +3,14 @@ import { CustomLoggerService } from '../../modules/common/services/custom-logger
 import { Observable, tap } from 'rxjs';
 
 export class HttpRequestResponseLoggerInterceptor implements NestInterceptor {
-  constructor(private readonly loggerService: CustomLoggerService) {}
+  constructor(private readonly customLoggerService: CustomLoggerService) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
     const method = request.method;
     const url = request.url;
 
-    this.loggerService.log(
+    this.customLoggerService.log(
       `[Request] ${method} ${url}`,
       HttpRequestResponseLoggerInterceptor.name,
       {
@@ -21,7 +21,7 @@ export class HttpRequestResponseLoggerInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       tap((body) =>
-        this.loggerService.log(
+        this.customLoggerService.log(
           `[Reponse] ${method} ${url}`,
           HttpRequestResponseLoggerInterceptor.name,
           {
