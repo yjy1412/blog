@@ -37,7 +37,7 @@ export class PostsController {
     return this.postsService.createPost(user.id, body);
   }
 
-  @Get('page')
+  @Get('pages')
   paginatePosts(@Query() query: PaginatePostsDto) {
     return this.postsService.paginatePosts(query);
   }
