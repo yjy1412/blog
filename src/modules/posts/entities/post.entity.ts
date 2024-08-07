@@ -4,9 +4,11 @@ import { IsNumber, IsString, Length } from 'class-validator';
 import { BaseModel } from '../../common/entities/base.entity';
 
 import { UserModel } from '../../users/entities/user.entity';
-import { generateMessageInvalidStringType } from '../../common/validator-messages/generate-message-invalid-string-type.message';
-import { generateMessageInvalidLength } from '../../common/validator-messages/generate-message-invalid-length.message';
-import { generateMessageInvalidNumberType } from '../../common/validator-messages/generate-message-invalid-number-type.message';
+import {
+  generateMessageInvalidStringType,
+  generateMessageInvalidLength,
+  generateMessageInvalidNumberType,
+} from '../../common/utils/validator/generate-invalid-message.validator.util';
 
 @Entity()
 export class PostModel extends BaseModel {
@@ -47,7 +49,9 @@ export class PostModel extends BaseModel {
     default: 0,
     comment: '댓글 수',
   })
-  @IsNumber()
+  @IsNumber(undefined, {
+    message: generateMessageInvalidNumberType,
+  })
   commentCount: number;
 
   /**

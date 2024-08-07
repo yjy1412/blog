@@ -1,11 +1,14 @@
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
 import { IsEmail, IsString, Matches } from 'class-validator';
 
 import { BaseModel } from '../../common/entities/base.entity';
 
 import { PostModel } from '../../posts/entities/post.entity';
-import { generateMessageInvalidStringType } from '../../common/validator-messages/generate-message-invalid-string-type.message';
-import { generateMessageInvalidEmail } from '../../common/validator-messages/generate-validation-invalid-email.message';
+import {
+  generateMessageInvalidStringType,
+  generateMessageInvalidEmail,
+} from '../../common/utils/validator/generate-invalid-message.validator.util';
+import { ChatModel } from '../../chats/entities/chat.entity';
 
 @Entity()
 export class UserModel extends BaseModel {
