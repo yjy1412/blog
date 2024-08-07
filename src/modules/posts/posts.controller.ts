@@ -18,7 +18,6 @@ import { PostsService } from './posts.service';
 import { CreatePostDto } from './dtos/create-post.dto';
 import { UpdatePostDto } from './dtos/update-post.dto';
 import { PaginatePostsDto } from './dtos/paginate-posts.dto';
-import { Public } from '../common/decorators/public.decorator';
 
 @Controller('posts')
 export class PostsController {
@@ -38,7 +37,6 @@ export class PostsController {
     return this.postsService.createPost(user.id, body);
   }
 
-  @Public()
   @Get('page')
   paginatePosts(@Query() query: PaginatePostsDto) {
     return this.postsService.paginatePosts(query);
