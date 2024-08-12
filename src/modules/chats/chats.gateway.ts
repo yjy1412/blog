@@ -32,11 +32,11 @@ export class ChatsGateway {
   ) {
     const roomId = body.chatId.toString();
 
-    socket.join(roomId);
-
     const joinUser = await this.usersService.getUserById(body.userId);
 
     await this.chatsService.createUserJoinChat(joinUser, body.chatId);
+
+    socket.join(roomId);
 
     this.chatsService.sendRoomMessageFromServer({
       server: this.server,
@@ -53,11 +53,11 @@ export class ChatsGateway {
   ) {
     const roomId = body.chatId.toString();
 
-    socket.leave(roomId);
-
     const leaveUser = await this.usersService.getUserById(body.userId);
 
     await this.chatsService.deleteUserLeaveChat(leaveUser, body.chatId);
+
+    socket.leave(roomId);
 
     this.chatsService.sendRoomMessageFromServer({
       server: this.server,
