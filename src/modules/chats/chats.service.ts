@@ -6,7 +6,7 @@ import { ChatsCreateChatDto } from './dtos/chats.create-chat.dto';
 import { PaginationService } from '../common/services/pagination.service';
 import { ChatsPaginateChatsDto } from './dtos/chats.paginate-chats.dto';
 import { PaginationResponse } from '../common/interfaces/pagination.interface';
-import { UserModel } from '../users/entities/user.entity';
+import { UserModel } from '../users/entities/users.entity';
 import { ChatsSocketMessageSenderEnum } from './enums/chats.socket-message-sender.enum';
 import { WsException } from '@nestjs/websockets';
 import {

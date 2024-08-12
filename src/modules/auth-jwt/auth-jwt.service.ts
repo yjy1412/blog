@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import _ from 'lodash';
 
-import { UserModel } from '../users/entities/user.entity';
+import { UserModel } from '../users/entities/users.entity';
 import { UsersService } from '../users/users.service';
 
 import {

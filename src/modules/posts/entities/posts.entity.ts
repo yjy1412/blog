@@ -3,7 +3,7 @@ import { IsNumber, IsString, Length } from 'class-validator';
 
 import { BaseModel } from '../../common/entities/base.entity';
 
-import { UserModel } from '../../users/entities/user.entity';
+import { UserModel } from '../../users/entities/users.entity';
 import {
   generateMessageInvalidStringType,
   generateMessageInvalidLength,

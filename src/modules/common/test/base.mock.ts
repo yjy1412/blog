@@ -1,5 +1,5 @@
 import { PostModel } from '../../posts/entities/posts.entity';
-import { UserModel } from '../../users/entities/user.entity';
+import { UserModel } from '../../users/entities/users.entity';
 import * as bcrypt from 'bcrypt';
 
 export abstract class BaseMock {

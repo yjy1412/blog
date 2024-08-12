@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { UserModel } from '../../users/entities/user.entity';
+import { UserModel } from '../../users/entities/users.entity';
 import { PostsService } from '../posts.service';
 import { PostsCreatePostDto } from '../dtos/posts.create-post.dto';
 import { PostsUpdatePostDto } from '../dtos/posts.update-post.dto';

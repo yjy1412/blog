@@ -5,7 +5,7 @@ import { PostsControllerMock } from './posts.controller.mock';
 import { PostsCreatePostDto } from '../dtos/posts.create-post.dto';
 import { PostsUpdatePostDto } from '../dtos/posts.update-post.dto';
 import { PostModel } from '../entities/posts.entity';
-import { UserModel } from '../../users/entities/user.entity';
+import { UserModel } from '../../users/entities/users.entity';
 import { PostsPaginatePostsDto } from '../dtos/posts.paginate-posts.dto';
 import { RepositoryQueryOrderEnum } from '../../common/enums/repository.enum';
 

@@ -1,6 +1,6 @@
 import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
 import { BaseModel } from '../../common/entities/base.entity';
-import { UserModel } from '../../users/entities/user.entity';
+import { UserModel } from '../../users/entities/users.entity';
 import { IsString, Length } from 'class-validator';
 import {
   generateMessageInvalidStringType,
