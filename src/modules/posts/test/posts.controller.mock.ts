@@ -2,20 +2,20 @@ import { Injectable } from '@nestjs/common';
 
 import { UserModel } from '../../users/entities/user.entity';
 import { PostsService } from '../posts.service';
-import { CreatePostDto } from '../dtos/create-post.dto';
-import { UpdatePostDto } from '../dtos/update-post.dto';
+import { PostsCreatePostDto } from '../dtos/posts.create-post.dto';
+import { PostsUpdatePostDto } from '../dtos/posts.update-post.dto';
 import { BaseMock } from '../../common/test/base.mock';
 
 @Injectable()
 export class PostsControllerMock extends BaseMock {
-  public readonly mockCreatePostInfo: CreatePostDto = {
+  public readonly mockCreatePostInfo: PostsCreatePostDto = {
     title: this.mockPost.title,
     content: this.mockPost.content,
     likeCount: this.mockPost.likeCount,
     commentCount: this.mockPost.commentCount,
   };
 
-  public readonly mockUpadatePostInfo: UpdatePostDto = {
+  public readonly mockUpadatePostInfo: PostsUpdatePostDto = {
     title: 'Test Update Post',
     content: 'Test Update Content',
   };

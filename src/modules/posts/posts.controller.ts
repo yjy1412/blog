@@ -15,9 +15,9 @@ import { AuthenticatedUser } from '../common/decorators/authenticate-user.decora
 import { UserModel } from '../users/entities/user.entity';
 
 import { PostsService } from './posts.service';
-import { CreatePostDto } from './dtos/create-post.dto';
-import { UpdatePostDto } from './dtos/update-post.dto';
-import { PaginatePostsDto } from './dtos/paginate-posts.dto';
+import { PostsCreatePostDto } from './dtos/posts.create-post.dto';
+import { PostsUpdatePostDto } from './dtos/posts.update-post.dto';
+import { PostsPaginatePostsDto } from './dtos/posts.paginate-posts.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -26,7 +26,7 @@ export class PostsController {
   @Post()
   async createPost(
     @AuthenticatedUser() user: Pick<UserModel, 'id' | 'email'>,
-    @Body() body: CreatePostDto,
+    @Body() body: PostsCreatePostDto,
   ) {
     if (body.images && body.images.length > 0) {
       const savedImages = await this.postsService.savePostImages(body.images);
@@ -38,7 +38,7 @@ export class PostsController {
   }
 
   @Get('pages')
-  paginatePosts(@Query() query: PaginatePostsDto) {
+  paginatePosts(@Query() query: PostsPaginatePostsDto) {
     return this.postsService.paginatePosts(query);
   }
 
@@ -50,9 +50,9 @@ export class PostsController {
   @Patch(':id')
   updatePostById(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updatePostDto: UpdatePostDto,
+    @Body() PostsUpdatePostDto: PostsUpdatePostDto,
   ) {
-    return this.postsService.updatePostById(id, updatePostDto);
+    return this.postsService.updatePostById(id, PostsUpdatePostDto);
   }
 
   @Delete(':id')

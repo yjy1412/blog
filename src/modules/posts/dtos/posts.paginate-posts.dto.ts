@@ -8,7 +8,7 @@ import {
   generateMessageNotIncludedEnumValue,
 } from '../../common/utils/validator/generate-invalid-message.validator.util';
 
-export class PaginatePostsDto extends BasePaginationDto {
+export class PostsPaginatePostsDto extends BasePaginationDto {
   @IsOptional()
   @IsNumber(undefined, {
     message: generateMessageInvalidNumberType,

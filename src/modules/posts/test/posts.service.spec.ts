@@ -3,9 +3,9 @@ import { PostsService } from '../posts.service';
 import { UsersService } from '../../users/users.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { PostModel } from '../entities/post.entity';
-import { PostsServiceMock } from './posts-service.mock';
-import { PaginatePostsDto } from '../dtos/paginate-posts.dto';
+import { PostModel } from '../entities/posts.entity';
+import { PostsServiceMock } from './posts.service.mock';
+import { PostsPaginatePostsDto } from '../dtos/posts.paginate-posts.dto';
 import { RepositoryQueryOrderEnum } from '../../common/enums/repository.enum';
 import { PaginationService } from '../../common/services/pagination.service';
 import { promises as fs } from 'fs';
@@ -101,7 +101,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
     test('paginate 함수에 paginationQuery, repository를 전달해야 합니다.', async () => {
       jest.spyOn(postsRepository, 'find').mockResolvedValueOnce([mockPost]);
 
-      const paginationQuery: PaginatePostsDto = {
+      const paginationQuery: PostsPaginatePostsDto = {
         where_likeCount_moreThanOrEqual: 50,
         order_likeCount: RepositoryQueryOrderEnum.DESC,
       };
@@ -117,7 +117,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
     test('응답 결과에 페이지네이션 메타정보가 함께 포함되어야 합니다', async () => {
       jest.spyOn(postsRepository, 'find').mockResolvedValueOnce([mockPost]);
 
-      const paginationQuery: PaginatePostsDto = {
+      const paginationQuery: PostsPaginatePostsDto = {
         where_likeCount_moreThanOrEqual: 50,
         order_likeCount: RepositoryQueryOrderEnum.DESC,
       };

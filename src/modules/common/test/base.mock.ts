@@ -1,4 +1,4 @@
-import { PostModel } from '../../posts/entities/post.entity';
+import { PostModel } from '../../posts/entities/posts.entity';
 import { UserModel } from '../../users/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PaginationService } from '../services/pagination.service';
-import { PostModel } from '../../posts/entities/post.entity';
+import { PostModel } from '../../posts/entities/posts.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { BasePaginationDto } from '../dtos/base-pagination.dto';

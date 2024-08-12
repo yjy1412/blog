@@ -3,7 +3,7 @@ import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { PostsModule } from './modules/posts/posts.module';
-import { PostModel } from './modules/posts/entities/post.entity';
+import { PostModel } from './modules/posts/entities/posts.entity';
 import { UsersModule } from './modules/users/users.module';
 import { UserModel } from './modules/users/entities/user.entity';
 import { AuthJwtModule } from './modules/auth-jwt/auth-jwt.module';

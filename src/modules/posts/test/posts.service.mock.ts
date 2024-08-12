@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 
-import { PostModel } from '../entities/post.entity';
+import { PostModel } from '../entities/posts.entity';
 import { BaseMock } from '../../common/test/base.mock';
 import { UsersService } from '../../users/users.service';
 import { PaginationService } from '../../common/services/pagination.service';
-import { PaginatePostsDto } from '../dtos/paginate-posts.dto';
+import { PostsPaginatePostsDto } from '../dtos/posts.paginate-posts.dto';
 import { RepositoryQueryOrderEnum } from '../../common/enums/repository.enum';
 
 @Injectable()
@@ -25,7 +25,7 @@ export class PostsServiceMock extends BaseMock {
     content: 'Test Update Content',
   };
 
-  public readonly mockPaginatePostsDto: PaginatePostsDto = {
+  public readonly mockPostsPaginatePostsDto: PostsPaginatePostsDto = {
     page: 1,
     take: 10,
     where_likeCount_moreThanOrEqual: 50,

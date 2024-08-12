@@ -1,9 +1,9 @@
 import { PickType } from '@nestjs/mapped-types';
 
-import { PostModel } from '../entities/post.entity';
+import { PostModel } from '../entities/posts.entity';
 import { IsOptional } from 'class-validator';
 
-export class CreatePostDto extends PickType(PostModel, [
+export class PostsCreatePostDto extends PickType(PostModel, [
   'title',
   'content',
   'likeCount',

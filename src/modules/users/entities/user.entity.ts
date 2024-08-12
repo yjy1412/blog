@@ -3,7 +3,7 @@ import { IsEmail, IsString, Matches } from 'class-validator';
 
 import { BaseModel } from '../../common/entities/base.entity';
 
-import { PostModel } from '../../posts/entities/post.entity';
+import { PostModel } from '../../posts/entities/posts.entity';
 import {
   generateMessageInvalidStringType,
   generateMessageInvalidEmail,

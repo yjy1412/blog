@@ -9,11 +9,11 @@ import { Repository } from 'typeorm';
 
 import { UsersService } from '../users/users.service';
 
-import { PostModel } from './entities/post.entity';
-import { PaginatePostsDto } from './dtos/paginate-posts.dto';
+import { PostModel } from './entities/posts.entity';
+import { PostsPaginatePostsDto } from './dtos/posts.paginate-posts.dto';
 import { PaginationService } from '../common/services/pagination.service';
 import { PaginationResponse } from '../common/interfaces/pagination.interface';
-import { CreatePostDto } from './dtos/create-post.dto';
+import { PostsCreatePostDto } from './dtos/posts.create-post.dto';
 import { join } from 'path';
 import {
   PATH_FROM_PUBLIC_TO_POST_IMAGE,
@@ -30,7 +30,10 @@ export class PostsService {
     private readonly usersService: UsersService,
     private readonly commonService: PaginationService,
   ) {}
-  async createPost(authorId: number, dto: CreatePostDto): Promise<PostModel> {
+  async createPost(
+    authorId: number,
+    dto: PostsCreatePostDto,
+  ): Promise<PostModel> {
     const author = await this.usersService.getUserById(authorId);
 
     if (!author) {
@@ -48,9 +51,9 @@ export class PostsService {
   }
 
   async paginatePosts(
-    query: PaginatePostsDto,
+    query: PostsPaginatePostsDto,
   ): Promise<PaginationResponse<PostModel>> {
-    return this.commonService.paginate<PostModel, PaginatePostsDto>(
+    return this.commonService.paginate<PostModel, PostsPaginatePostsDto>(
       query,
       this.postsRepository,
     );
