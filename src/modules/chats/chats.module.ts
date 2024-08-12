@@ -4,7 +4,7 @@ import { ChatsGateway } from './chats.gateway';
 import { CommonModule } from '../common/common.module';
 import { ChatsController } from './chats.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ChatModel } from './entities/chat.entity';
+import { ChatModel } from './entities/chats.entity';
 import { UsersModule } from '../users/users.module';
 
 @Module({

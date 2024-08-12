@@ -1,4 +1,4 @@
-export enum SocketEventEnum {
+export enum ChatsSocketEventEnum {
   JOIN_CHAT = 'join_chat',
   LEAVE_CHAT = 'leave_chat',
   SEND_MESSAGE = 'send_message',

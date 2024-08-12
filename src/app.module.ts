@@ -20,7 +20,7 @@ import {
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { PUBLIC_PATH } from './modules/common/constants/path.constant';
 import { ChatsModule } from './modules/chats/chats.module';
-import { ChatModel } from './modules/chats/entities/chat.entity';
+import { ChatModel } from './modules/chats/entities/chats.entity';
 
 config();
 @Module({

@@ -3,7 +3,7 @@ import { ChatsService } from '../chats.service';
 import { PaginationService } from '../../common/services/pagination.service';
 import { UsersService } from '../../users/users.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { ChatModel } from '../entities/chat.entity';
+import { ChatModel } from '../entities/chats.entity';
 import { Repository } from 'typeorm';
 
 describe('ChatsService', () => {

@@ -8,7 +8,7 @@ import {
   generateMessageInvalidStringType,
   generateMessageInvalidEmail,
 } from '../../common/utils/validator/generate-invalid-message.validator.util';
-import { ChatModel } from '../../chats/entities/chat.entity';
+import { ChatModel } from '../../chats/entities/chats.entity';
 
 @Entity()
 export class UserModel extends BaseModel {

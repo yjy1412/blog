@@ -6,14 +6,13 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { CustomLoggerService } from '../common/services/custom-logger.service';
-import { SocketEventEnum } from './enums/socket-event.enum';
-import { JoinChatDto } from './dtos/join-chat.dto';
+import { ChatsSocketEventEnum } from './enums/chats.socket-event.enum';
+import { ChatsJoinGatewayDto } from './dtos/gateways/chats.join.gateway.dto';
 import { ChatsService } from './chats.service';
 import { Socket, Server } from 'socket.io';
 import { UsersService } from '../users/users.service';
-import { LeaveChatDto } from './dtos/leave-chat.dto';
-import { SocketMessageSenderEnum } from './enums/socket-message-sender.enum';
-import { SendMessageDto } from './dtos/send-message.dto';
+import { ChatsLeaveGatewayDto } from './dtos/gateways/chats.leave.gateway.dto';
+import { ChatsSendMessageGatewayDto } from './dtos/gateways/chats.send-message.gateway.dto';
 
 @WebSocketGateway(80, { namespace: 'chats' })
 export class ChatsGateway {
@@ -26,10 +25,10 @@ export class ChatsGateway {
   @WebSocketServer()
   server: Server;
 
-  @SubscribeMessage(SocketEventEnum.JOIN_CHAT)
+  @SubscribeMessage(ChatsSocketEventEnum.JOIN_CHAT)
   async joinChat(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() body: JoinChatDto,
+    @MessageBody() body: ChatsJoinGatewayDto,
   ) {
     const roomId = body.chatId.toString();
 
@@ -39,20 +38,18 @@ export class ChatsGateway {
 
     await this.chatsService.createUserJoinChat(joinUser, body.chatId);
 
-    /**
-     * 주의: socket.in().emit()는 server.in().emit()와 다릅니다.
-     * server.in()는 해당 룸에 연결된 모든 소켓에 메시지를 보내지만, socket.in()는 대상이 되는 소켓을 제외합니다.
-     */
-    this.server.in(roomId).emit(SocketEventEnum.RECEIVE_MESSAGE, {
-      from: SocketMessageSenderEnum.SYSTEM,
+    this.chatsService.sendRoomMessageFromServer({
+      server: this.server,
+      chatId: body.chatId,
+      event: ChatsSocketEventEnum.RECEIVE_MESSAGE,
       message: `[${joinUser.name}] 님이 채팅방에 입장하셨습니다.`,
     });
   }
 
-  @SubscribeMessage(SocketEventEnum.LEAVE_CHAT)
+  @SubscribeMessage(ChatsSocketEventEnum.LEAVE_CHAT)
   async leaveChat(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() body: LeaveChatDto,
+    @MessageBody() body: ChatsLeaveGatewayDto,
   ) {
     const roomId = body.chatId.toString();
 
@@ -62,23 +59,24 @@ export class ChatsGateway {
 
     await this.chatsService.deleteUserLeaveChat(leaveUser, body.chatId);
 
-    /**
-     * 주의: socket.in().emit()는 server.in().emit()와 다릅니다.
-     * server.in()는 해당 룸에 연결된 모든 소켓에 메시지를 보내지만, socket.in()는 대상이 되는 소켓을 제외합니다.
-     */
-    this.server.in(roomId).emit(SocketEventEnum.RECEIVE_MESSAGE, {
-      from: SocketMessageSenderEnum.SYSTEM,
-      message: `[${leaveUser.name}] 님이 채팅방을 나가셨습니다.`,
+    this.chatsService.sendRoomMessageFromServer({
+      server: this.server,
+      chatId: body.chatId,
+      event: ChatsSocketEventEnum.RECEIVE_MESSAGE,
+      message: `[${leaveUser.name}] 님이 채팅방에서 퇴장하셨습니다.`,
     });
   }
 
-  @SubscribeMessage(SocketEventEnum.SEND_MESSAGE)
+  @SubscribeMessage(ChatsSocketEventEnum.SEND_MESSAGE)
   async sendMessage(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() body: SendMessageDto,
+    @MessageBody() body: ChatsSendMessageGatewayDto,
   ) {
-    socket.to(body.chatId.toString()).emit(SocketEventEnum.RECEIVE_MESSAGE, {
-      from: body.senderId,
+    this.chatsService.sendRoomMessageFromSocket({
+      socket,
+      chatId: body.chatId,
+      senderId: body.userId,
+      event: ChatsSocketEventEnum.RECEIVE_MESSAGE,
       message: body.message,
     });
   }

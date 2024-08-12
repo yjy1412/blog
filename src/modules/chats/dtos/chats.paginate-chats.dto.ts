@@ -8,7 +8,7 @@ import {
 } from '../../common/utils/validator/generate-invalid-message.validator.util';
 import _ from 'lodash';
 
-export class PaginateChatsDto extends BasePaginationDto {
+export class ChatsPaginateChatsDto extends BasePaginationDto {
   @IsOptional()
   @IsString({
     message: generateMessageInvalidStringType,
