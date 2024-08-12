@@ -72,6 +72,11 @@ export class ChatsGateway {
     @ConnectedSocket() socket: Socket,
     @MessageBody() body: ChatsSendMessageGatewayDto,
   ) {
+    await this.chatsService.checkIsChatExist(body.chatId);
+
+    await this.chatsService.checkIsUserInChat(body.userId, body.chatId);
+
+    await this.chatsService.checkIsUserInChat(body.userId, body.chatId);
     this.chatsService.sendRoomMessageFromSocket({
       socket,
       chatId: body.chatId,

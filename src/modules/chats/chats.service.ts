@@ -116,4 +116,34 @@ export class ChatsService {
       throw new WsException('메시지 전송에 실패했습니다.');
     }
   }
+
+  async checkIsChatExist(chatId: number): Promise<void> {
+    const result = await this.chatsRepository.exists({
+      where: {
+        id: chatId,
+      },
+    });
+
+    if (!result) {
+      throw new WsException(`채팅방 [ id: ${chatId} ]이 존재하지 않습니다.`);
+    }
+  }
+
+  async checkIsUserInChat(userId: number, chatId: number): Promise<void> {
+    const result = await this.chatsRepository.exists({
+      relations: ['users'],
+      where: {
+        id: chatId,
+        users: {
+          id: userId,
+        },
+      },
+    });
+
+    if (!result) {
+      throw new WsException(
+        `유저 [ id: ${userId} ]는 요청 채팅방 [ id: ${chatId} ]에 속해있지 않습니다.`,
+      );
+    }
+  }
 }
