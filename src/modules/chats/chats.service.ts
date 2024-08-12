@@ -47,6 +47,8 @@ export class ChatsService {
 
     chat.users.push(user);
 
+    await this.chatsRepository.save(chat);
+
     return true;
   }
 
@@ -66,6 +68,8 @@ export class ChatsService {
     }
 
     chat.users = chat.users.filter((chatUser) => chatUser.id !== user.id);
+
+    await this.chatsRepository.save(chat);
 
     return true;
   }
