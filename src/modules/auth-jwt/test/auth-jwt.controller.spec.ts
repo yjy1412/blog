@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthJwtController } from '../auth-jwt.controller';
 import { AuthJwtService } from '../auth-jwt.service';
-import { AuthJwtControllerMock } from './auth-jwt-controller.mock';
+import { AuthJwtControllerMock } from './auth-jwt.controller.mock';
 import { UserModel } from '../../users/entities/users.entity';
 import { UnauthorizedException } from '@nestjs/common';
 

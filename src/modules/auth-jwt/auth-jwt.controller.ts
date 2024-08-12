@@ -3,7 +3,7 @@ import { Body, Controller, Headers, Post } from '@nestjs/common';
 import { Public } from '../common/decorators/public.decorator';
 
 import { AuthJwtService } from './auth-jwt.service';
-import { RegisterDto } from './dtos/register.dto';
+import { AuthJwtRegisterDto } from './dtos/auth-jwt.register.dto';
 import {
   BasicTokenHeaderType,
   BearerTokenHeaderType,
@@ -15,7 +15,7 @@ export class AuthJwtController {
 
   @Public()
   @Post('register')
-  async register(@Body() body: RegisterDto) {
+  async register(@Body() body: AuthJwtRegisterDto) {
     return this.authJwtService.register(body);
   }
 
