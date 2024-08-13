@@ -17,8 +17,11 @@ import { ChatsSendMessageGatewayDto } from './dtos/gateways/chats.send-message.g
 import { AuthJwtService } from '../auth-jwt/auth-jwt.service';
 import { BearerTokenHeaderType } from '../auth-jwt/types/auth-jwt.type';
 import { UserModel } from '../users/entities/users.entity';
+import { UseFilters } from '@nestjs/common';
+import { WebSocketHttpExceptionFilter } from '../../core/exception-filters/web-socket.http.exception-filter';
 
 @WebSocketGateway(80, { namespace: 'chats' })
+@UseFilters(WebSocketHttpExceptionFilter)
 export class ChatsGateway implements OnGatewayInit, OnGatewayConnection {
   constructor(
     private readonly chatsService: ChatsService,
@@ -102,7 +105,7 @@ export class ChatsGateway implements OnGatewayInit, OnGatewayConnection {
     @ConnectedSocket() socket: Socket & { user: UserModel },
     @MessageBody() body: ChatsSendMessageGatewayDto,
   ) {
-    this.chatsService.sendRoomMessageFromSocket({
+    await this.chatsService.sendRoomMessageFromSocket({
       socket,
       chatId: body.chatId,
       senderId: socket.user.id,

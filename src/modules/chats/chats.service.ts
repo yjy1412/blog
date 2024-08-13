@@ -8,7 +8,6 @@ import { ChatsPaginateChatsDto } from './dtos/chats.paginate-chats.dto';
 import { PaginationResponse } from '../common/interfaces/pagination.interface';
 import { UserModel } from '../users/entities/users.entity';
 import { ChatsSocketMessageSenderEnum } from './enums/chats.socket-message-sender.enum';
-import { WsException } from '@nestjs/websockets';
 import {
   ChatsSendRoomMessageFromServerInterface,
   ChatsSendRoomMessageFromSocketInterface,
@@ -84,14 +83,10 @@ export class ChatsService {
     event,
     message,
   }: ChatsSendRoomMessageFromServerInterface): void {
-    try {
-      server.in(chatId.toString()).emit(event, {
-        from: ChatsSocketMessageSenderEnum.SYSTEM,
-        message: message,
-      });
-    } catch (err) {
-      throw new WsException('메시지 전송에 실패했습니다.');
-    }
+    server.in(chatId.toString()).emit(event, {
+      from: ChatsSocketMessageSenderEnum.SYSTEM,
+      message: message,
+    });
   }
 
   async sendRoomMessageFromSocket({
@@ -103,20 +98,16 @@ export class ChatsService {
   }: ChatsSendRoomMessageFromSocketInterface): Promise<void> {
     await this.checkIsUserInChat(senderId, chatId);
 
-    try {
-      /**
-       * 주의: socket.in().emit()는 server.in().emit()와 다릅니다.
-       * server.in()는 해당 룸에 연결된 모든 소켓에 메시지를 보내지만, socket.in()는 대상이 되는 소켓을 제외합니다.
-       * socket.in()과 socket.to()는 동일한 동작을 합니다.
-       */
-      socket.in(chatId.toString()).emit(event, {
-        from: ChatsSocketMessageSenderEnum.USER,
-        senderId,
-        message,
-      });
-    } catch (err) {
-      throw new WsException('메시지 전송에 실패했습니다.');
-    }
+    /**
+     * 주의: socket.in().emit()는 server.in().emit()와 다릅니다.
+     * server.in()는 해당 룸에 연결된 모든 소켓에 메시지를 보내지만, socket.in()는 대상이 되는 소켓을 제외합니다.
+     * socket.in()과 socket.to()는 동일한 동작을 합니다.
+     */
+    socket.in(chatId.toString()).emit(event, {
+      from: ChatsSocketMessageSenderEnum.USER,
+      senderId,
+      message,
+    });
   }
 
   async checkIsUserInChat(userId: number, chatId: number): Promise<void> {
@@ -131,7 +122,7 @@ export class ChatsService {
     });
 
     if (!result) {
-      throw new WsException(
+      throw new BadRequestException(
         `유저 [ id: ${userId} ]는 요청 채팅방 [ id: ${chatId} ]에 속해있지 않습니다.`,
       );
     }
