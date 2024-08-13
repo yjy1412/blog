@@ -5,7 +5,6 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { CustomLoggerService } from '../common/services/custom-logger.service';
 import { ChatsSocketEventEnum } from './enums/chats.socket-event.enum';
 import { ChatsJoinGatewayDto } from './dtos/gateways/chats.join.gateway.dto';
 import { ChatsService } from './chats.service';
@@ -17,7 +16,6 @@ import { ChatsSendMessageGatewayDto } from './dtos/gateways/chats.send-message.g
 @WebSocketGateway(80, { namespace: 'chats' })
 export class ChatsGateway {
   constructor(
-    private readonly customLoggerService: CustomLoggerService,
     private readonly chatsService: ChatsService,
     private readonly usersService: UsersService,
   ) {}
@@ -30,13 +28,11 @@ export class ChatsGateway {
     @ConnectedSocket() socket: Socket,
     @MessageBody() body: ChatsJoinGatewayDto,
   ) {
-    const roomId = body.chatId.toString();
-
     const joinUser = await this.usersService.getUserById(body.userId);
 
     await this.chatsService.createUserJoinChat(joinUser, body.chatId);
 
-    socket.join(roomId);
+    socket.join(body.chatId.toString());
 
     this.chatsService.sendRoomMessageFromServer({
       server: this.server,
@@ -51,13 +47,11 @@ export class ChatsGateway {
     @ConnectedSocket() socket: Socket,
     @MessageBody() body: ChatsLeaveGatewayDto,
   ) {
-    const roomId = body.chatId.toString();
-
     const leaveUser = await this.usersService.getUserById(body.userId);
 
     await this.chatsService.deleteUserLeaveChat(leaveUser, body.chatId);
 
-    socket.leave(roomId);
+    socket.leave(body.chatId.toString());
 
     this.chatsService.sendRoomMessageFromServer({
       server: this.server,
@@ -76,7 +70,6 @@ export class ChatsGateway {
 
     await this.chatsService.checkIsUserInChat(body.userId, body.chatId);
 
-    await this.chatsService.checkIsUserInChat(body.userId, body.chatId);
     this.chatsService.sendRoomMessageFromSocket({
       socket,
       chatId: body.chatId,
