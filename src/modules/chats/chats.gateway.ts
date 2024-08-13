@@ -1,6 +1,8 @@
 import {
   ConnectedSocket,
   MessageBody,
+  OnGatewayConnection,
+  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -12,16 +14,52 @@ import { Socket, Server } from 'socket.io';
 import { UsersService } from '../users/users.service';
 import { ChatsLeaveGatewayDto } from './dtos/gateways/chats.leave.gateway.dto';
 import { ChatsSendMessageGatewayDto } from './dtos/gateways/chats.send-message.gateway.dto';
+import { AuthJwtService } from '../auth-jwt/auth-jwt.service';
+import { BearerTokenHeaderType } from '../auth-jwt/types/auth-jwt.type';
+import { UserModel } from '../users/entities/users.entity';
 
 @WebSocketGateway(80, { namespace: 'chats' })
-export class ChatsGateway {
+export class ChatsGateway implements OnGatewayInit, OnGatewayConnection {
   constructor(
     private readonly chatsService: ChatsService,
     private readonly usersService: UsersService,
+    private readonly authJwtService: AuthJwtService,
   ) {}
 
   @WebSocketServer()
   server: Server;
+
+  afterInit(server: Server) {
+    /**
+     * 소켓 서버가 처음 시작했을 때 필요한 로직을 작성합니다.
+     */
+    this.server = server;
+  }
+
+  handleConnection(socket: Socket & { user: UserModel }) {
+    /**
+     * 소켓이 연결되었을 때 필요한 로직을 작성합니다.
+     */
+    try {
+      const accessToken = this.authJwtService.extractTokenFromHeader(
+        socket.handshake.headers.authorization as BearerTokenHeaderType,
+        true,
+      );
+
+      const payload = this.authJwtService.verifyBearerToken(accessToken, false);
+
+      socket.user = payload;
+
+      return true;
+    } catch (err) {
+      socket.emit(
+        ChatsSocketEventEnum.EXCEPTION,
+        '인증에 실패했습니다. 재로그인이 필요합니다.',
+      );
+
+      socket.disconnect(true);
+    }
+  }
 
   @SubscribeMessage(ChatsSocketEventEnum.JOIN_CHAT)
   async joinChat(

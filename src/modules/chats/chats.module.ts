@@ -6,9 +6,15 @@ import { ChatsController } from './chats.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ChatModel } from './entities/chats.entity';
 import { UsersModule } from '../users/users.module';
+import { AuthJwtModule } from '../auth-jwt/auth-jwt.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ChatModel]), CommonModule, UsersModule],
+  imports: [
+    TypeOrmModule.forFeature([ChatModel]),
+    CommonModule,
+    UsersModule,
+    AuthJwtModule,
+  ],
   controllers: [ChatsController],
   providers: [ChatsGateway, ChatsService],
 })
