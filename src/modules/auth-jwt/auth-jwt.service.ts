@@ -24,6 +24,7 @@ import {
   ENCODING_BASE64,
   ENCODING_UTF8,
 } from '../common/constants/encoding.constant';
+import { DecodedBearerToken } from './interfaces/auth-jwt.interface';
 
 @Injectable()
 export class AuthJwtService {
@@ -136,7 +137,10 @@ export class AuthJwtService {
     return { email, password };
   }
 
-  verifyBearerToken(token: string, isRefreshToken: boolean) {
+  verifyBearerToken(
+    token: string,
+    isRefreshToken: boolean,
+  ): DecodedBearerToken {
     let decodedToken: any;
     try {
       decodedToken = this.jwtService.verify(token);

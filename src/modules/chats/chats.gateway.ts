@@ -36,7 +36,7 @@ export class ChatsGateway implements OnGatewayInit, OnGatewayConnection {
     this.server = server;
   }
 
-  handleConnection(socket: Socket & { user: UserModel }) {
+  async handleConnection(socket: Socket & { user: any }) {
     /**
      * 소켓이 연결되었을 때 필요한 로직을 작성합니다.
      */
@@ -48,7 +48,9 @@ export class ChatsGateway implements OnGatewayInit, OnGatewayConnection {
 
       const payload = this.authJwtService.verifyBearerToken(accessToken, false);
 
-      socket.user = payload;
+      const user = await this.usersService.getUserById(payload.id);
+
+      socket.user = user;
 
       return true;
     } catch (err) {
@@ -63,12 +65,10 @@ export class ChatsGateway implements OnGatewayInit, OnGatewayConnection {
 
   @SubscribeMessage(ChatsSocketEventEnum.JOIN_CHAT)
   async joinChat(
-    @ConnectedSocket() socket: Socket,
+    @ConnectedSocket() socket: Socket & { user: UserModel },
     @MessageBody() body: ChatsJoinGatewayDto,
   ) {
-    const joinUser = await this.usersService.getUserById(body.userId);
-
-    await this.chatsService.createUserJoinChat(joinUser, body.chatId);
+    await this.chatsService.createUserJoinChat(socket.user, body.chatId);
 
     socket.join(body.chatId.toString());
 
@@ -76,18 +76,16 @@ export class ChatsGateway implements OnGatewayInit, OnGatewayConnection {
       server: this.server,
       chatId: body.chatId,
       event: ChatsSocketEventEnum.RECEIVE_MESSAGE,
-      message: `[${joinUser.name}] 님이 채팅방에 입장하셨습니다.`,
+      message: `[${socket.user.name}] 님이 채팅방에 입장하셨습니다.`,
     });
   }
 
   @SubscribeMessage(ChatsSocketEventEnum.LEAVE_CHAT)
   async leaveChat(
-    @ConnectedSocket() socket: Socket,
+    @ConnectedSocket() socket: Socket & { user: UserModel },
     @MessageBody() body: ChatsLeaveGatewayDto,
   ) {
-    const leaveUser = await this.usersService.getUserById(body.userId);
-
-    await this.chatsService.deleteUserLeaveChat(leaveUser, body.chatId);
+    await this.chatsService.deleteUserLeaveChat(socket.user, body.chatId);
 
     socket.leave(body.chatId.toString());
 
@@ -95,23 +93,23 @@ export class ChatsGateway implements OnGatewayInit, OnGatewayConnection {
       server: this.server,
       chatId: body.chatId,
       event: ChatsSocketEventEnum.RECEIVE_MESSAGE,
-      message: `[${leaveUser.name}] 님이 채팅방에서 퇴장하셨습니다.`,
+      message: `[${socket.user.name}] 님이 채팅방에서 퇴장하셨습니다.`,
     });
   }
 
   @SubscribeMessage(ChatsSocketEventEnum.SEND_MESSAGE)
   async sendMessage(
-    @ConnectedSocket() socket: Socket,
+    @ConnectedSocket() socket: Socket & { user: UserModel },
     @MessageBody() body: ChatsSendMessageGatewayDto,
   ) {
-    await this.chatsService.checkIsChatExist(body.chatId);
+    await this.chatsService.checkIsChatExist(socket.user.id);
 
-    await this.chatsService.checkIsUserInChat(body.userId, body.chatId);
+    await this.chatsService.checkIsUserInChat(socket.user.id, body.chatId);
 
     this.chatsService.sendRoomMessageFromSocket({
       socket,
       chatId: body.chatId,
-      senderId: body.userId,
+      senderId: socket.user.id,
       event: ChatsSocketEventEnum.RECEIVE_MESSAGE,
       message: body.message,
     });

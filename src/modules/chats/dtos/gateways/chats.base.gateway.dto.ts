@@ -5,10 +5,5 @@ export class ChatsBaseGatewayDto {
   @IsNumber(undefined, {
     message: generateMessageInvalidNumberType,
   })
-  userId: number;
-
-  @IsNumber(undefined, {
-    message: generateMessageInvalidNumberType,
-  })
   chatId: number;
 }
