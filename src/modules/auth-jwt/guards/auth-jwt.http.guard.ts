@@ -9,7 +9,7 @@ import { AuthJwtService } from '../auth-jwt.service';
 export class AuthJwtGuard implements CanActivate {
   constructor(
     private readonly authJwtService: AuthJwtService,
-    private reflector: Reflector,
+    private readonly reflector: Reflector,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
