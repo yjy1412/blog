@@ -4,6 +4,7 @@ import { ChatsService } from '../chats.service';
 import { CustomLoggerService } from '../../common/services/custom-logger.service';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from '../../users/users.service';
+import { AuthJwtService } from '../../auth-jwt/auth-jwt.service';
 
 describe('ChatsGateway', () => {
   let gateway: ChatsGateway;
@@ -16,6 +17,11 @@ describe('ChatsGateway', () => {
 
   const mockUsersService: Partial<UsersService> = {
     getUserById: jest.fn(),
+  };
+
+  const mockAuthJwtService: Partial<AuthJwtService> = {
+    extractTokenFromHeader: jest.fn(),
+    verifyBearerToken: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -31,6 +37,10 @@ describe('ChatsGateway', () => {
         {
           provide: UsersService,
           useValue: mockUsersService,
+        },
+        {
+          provide: AuthJwtService,
+          useValue: mockAuthJwtService,
         },
       ],
     }).compile();
