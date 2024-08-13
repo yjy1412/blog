@@ -4,7 +4,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { ValidationPipe } from '@nestjs/common';
 import { CustomLoggerService } from './modules/common/services/custom-logger.service';
 import { HttpRequestResponseLoggerInterceptor } from './core/interceptors/http-reqeust-response-logger.interceptor';
-import { HttpExceptionFilter } from './core/exception-filters/http.exeption-filter';
+import { HttpExceptionFilter } from './core/exception-filters/http.exception-filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
