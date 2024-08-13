@@ -102,10 +102,6 @@ export class ChatsGateway implements OnGatewayInit, OnGatewayConnection {
     @ConnectedSocket() socket: Socket & { user: UserModel },
     @MessageBody() body: ChatsSendMessageGatewayDto,
   ) {
-    await this.chatsService.checkIsChatExist(socket.user.id);
-
-    await this.chatsService.checkIsUserInChat(socket.user.id, body.chatId);
-
     this.chatsService.sendRoomMessageFromSocket({
       socket,
       chatId: body.chatId,

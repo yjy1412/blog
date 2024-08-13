@@ -94,13 +94,15 @@ export class ChatsService {
     }
   }
 
-  sendRoomMessageFromSocket({
+  async sendRoomMessageFromSocket({
     socket,
     chatId,
     senderId,
     event,
     message,
-  }: ChatsSendRoomMessageFromSocketInterface): void {
+  }: ChatsSendRoomMessageFromSocketInterface): Promise<void> {
+    await this.checkIsUserInChat(senderId, chatId);
+
     try {
       /**
        * 주의: socket.in().emit()는 server.in().emit()와 다릅니다.
@@ -114,18 +116,6 @@ export class ChatsService {
       });
     } catch (err) {
       throw new WsException('메시지 전송에 실패했습니다.');
-    }
-  }
-
-  async checkIsChatExist(chatId: number): Promise<void> {
-    const result = await this.chatsRepository.exists({
-      where: {
-        id: chatId,
-      },
-    });
-
-    if (!result) {
-      throw new WsException(`채팅방 [ id: ${chatId} ]이 존재하지 않습니다.`);
     }
   }
 
