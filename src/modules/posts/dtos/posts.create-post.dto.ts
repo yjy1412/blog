@@ -1,7 +1,7 @@
 import { PickType } from '@nestjs/mapped-types';
 
 import { PostModel } from '../entities/posts.entity';
-import { IsOptional } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
 export class PostsCreatePostDto extends PickType(PostModel, [
   'title',
@@ -10,5 +10,7 @@ export class PostsCreatePostDto extends PickType(PostModel, [
   'commentCount',
 ]) {
   @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
   images?: string[];
 }
