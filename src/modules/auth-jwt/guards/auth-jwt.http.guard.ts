@@ -6,7 +6,7 @@ import { METADATA_IS_PUBLIC_KEY } from '../../common/constants/metadata.constant
 import { AuthJwtService } from '../auth-jwt.service';
 
 @Injectable()
-export class AuthJwtGuard implements CanActivate {
+export class AuthJwtHttpGuard implements CanActivate {
   constructor(
     private readonly authJwtService: AuthJwtService,
     private readonly reflector: Reflector,

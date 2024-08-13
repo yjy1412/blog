@@ -7,7 +7,7 @@ import { PostModel } from './modules/posts/entities/posts.entity';
 import { UsersModule } from './modules/users/users.module';
 import { UserModel } from './modules/users/entities/users.entity';
 import { AuthJwtModule } from './modules/auth-jwt/auth-jwt.module';
-import { AuthJwtGuard } from './modules/auth-jwt/guards/auth-jwt.http.guard';
+import { AuthJwtHttpGuard } from './modules/auth-jwt/guards/auth-jwt.http.guard';
 import { CommonModule } from './modules/common/common.module';
 import { ConfigModule } from '@nestjs/config';
 import {
@@ -52,7 +52,7 @@ config();
   providers: [
     {
       provide: 'APP_GUARD',
-      useClass: AuthJwtGuard,
+      useClass: AuthJwtHttpGuard,
     },
     {
       provide: 'APP_INTERCEPTOR',
