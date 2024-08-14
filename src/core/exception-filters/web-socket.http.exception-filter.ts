@@ -6,7 +6,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { CustomLoggerService } from '../../modules/common/services/custom-logger.service';
-import { ChatsSocketEventEnum } from '../../modules/chats/enums/chats.socket-event.enum';
+import { SocketEventEnum } from '../../modules/common/enums/socket-event.enum';
 
 @Injectable()
 @Catch(HttpException)
@@ -33,14 +33,14 @@ export class WebSocketHttpExceptionFilter implements ExceptionFilter {
         exception.stack,
       );
 
-      socket.emit(ChatsSocketEventEnum.EXCEPTION, {
+      socket.emit(SocketEventEnum.EXCEPTION, {
         statusCode: status,
         message:
           '서버 장애가 발생했습니다. 장애가 지속되는 경우 관리자에게 문의해주세요.',
         error: exception.name,
       });
     } else {
-      socket.emit(ChatsSocketEventEnum.EXCEPTION, exception.getResponse());
+      socket.emit(SocketEventEnum.EXCEPTION, exception.getResponse());
     }
   }
 }

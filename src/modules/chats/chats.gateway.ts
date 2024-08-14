@@ -19,6 +19,7 @@ import { BearerTokenHeaderType } from '../auth-jwt/types/auth-jwt.type';
 import { UserModel } from '../users/entities/users.entity';
 import { UseFilters } from '@nestjs/common';
 import { WebSocketHttpExceptionFilter } from '../../core/exception-filters/web-socket.http.exception-filter';
+import { SocketEventEnum } from '../common/enums/socket-event.enum';
 
 @WebSocketGateway(80, { namespace: 'chats' })
 @UseFilters(WebSocketHttpExceptionFilter)
@@ -58,7 +59,7 @@ export class ChatsGateway implements OnGatewayInit, OnGatewayConnection {
       return true;
     } catch (err) {
       socket.emit(
-        ChatsSocketEventEnum.EXCEPTION,
+        SocketEventEnum.EXCEPTION,
         '인증에 실패했습니다. 재로그인이 필요합니다.',
       );
 
