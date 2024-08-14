@@ -9,8 +9,8 @@ import { PaginationResponse } from '../common/interfaces/pagination.interface';
 import { UserModel } from '../users/entities/users.entity';
 import { ChatsSocketMessageSenderEnum } from './enums/chats.socket-message-sender.enum';
 import {
-  ChatsSendRoomMessageFromServerInterface,
-  ChatsSendRoomMessageFromSocketInterface,
+  ChatsSocketMessageFromServerInRoom,
+  ChatSocketMessageFromClientToRoom,
 } from './interfaces/chats.send-message.interface';
 
 @Injectable()
@@ -82,7 +82,7 @@ export class ChatsService {
     chatId,
     event,
     message,
-  }: ChatsSendRoomMessageFromServerInterface): void {
+  }: ChatsSocketMessageFromServerInRoom): void {
     server.in(chatId.toString()).emit(event, {
       from: ChatsSocketMessageSenderEnum.SYSTEM,
       message: message,
@@ -95,7 +95,7 @@ export class ChatsService {
     senderId,
     event,
     message,
-  }: ChatsSendRoomMessageFromSocketInterface): Promise<void> {
+  }: ChatSocketMessageFromClientToRoom): Promise<void> {
     await this.checkIsUserInChat(senderId, chatId);
 
     /**
