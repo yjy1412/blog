@@ -15,6 +15,9 @@ export class WebSocketHttpExceptionFilter implements ExceptionFilter {
    * [ 주의 ]
    * HttpExceptionFilter와 동일한 응답형식을 갖추고 있습니다.
    * 수정 시 관련하여 같이 확인이 필요합니다.
+   *
+   * 해당 프로젝트는 모든 Exception을 HttpException으로 처리하고 해당 필터를 통해 exception 메시지를 전달합니다.
+   * 그렇게 한 의도는, 서비스 로직에서 처리하는 Exception을 동일하게 하여 프로젝트의 복잡성을 줄이기 위함 입니다.
    */
   constructor(private readonly customLoggerService: CustomLoggerService) {}
 
