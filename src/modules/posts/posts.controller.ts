@@ -50,9 +50,9 @@ export class PostsController {
   @Patch(':id')
   updatePostById(
     @Param('id', ParseIntPipe) id: number,
-    @Body() PostsUpdatePostDto: PostsUpdatePostDto,
+    @Body() body: PostsUpdatePostDto,
   ) {
-    return this.postsService.updatePostById(id, PostsUpdatePostDto);
+    return this.postsService.updatePostById(id, body);
   }
 
   @Delete(':id')

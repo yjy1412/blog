@@ -10,6 +10,10 @@ import {
   BasicTokenHeaderType,
   BearerTokenHeaderType,
 } from './types/auth-jwt.type';
+import {
+  BasicTokenPayload,
+  BearerTokenResponse,
+} from './interfaces/auth-jwt.interface';
 import { BearerTokenTypeEnum } from './enums/auth-jwt.enum';
 import {
   BASIC_TOKEN_HEADER_PREFIX,
@@ -24,7 +28,7 @@ import {
   ENCODING_BASE64,
   ENCODING_UTF8,
 } from '../common/constants/encoding.constant';
-import { DecodedBearerToken } from './interfaces/auth-jwt.interface';
+import { BearerTokenPayload } from './interfaces/auth-jwt.interface';
 
 @Injectable()
 export class AuthJwtService {
@@ -37,7 +41,7 @@ export class AuthJwtService {
   signBearerToken(
     user: Pick<UserModel, 'id' | 'email'>,
     isRefreshToken: boolean,
-  ) {
+  ): string {
     const payload = {
       id: user.id,
       email: user.email,
@@ -53,7 +57,9 @@ export class AuthJwtService {
     });
   }
 
-  async authenticate(user: Pick<UserModel, 'email' | 'password'>) {
+  async authenticate(
+    user: Pick<UserModel, 'email' | 'password'>,
+  ): Promise<UserModel> {
     const existUser = await this.usersService.getUserByEmailWithPassword(user);
 
     if (!existUser) {
@@ -68,7 +74,9 @@ export class AuthJwtService {
     return existUser;
   }
 
-  async login(user: Pick<UserModel, 'email' | 'password'>) {
+  async login(
+    user: Pick<UserModel, 'email' | 'password'>,
+  ): Promise<BearerTokenResponse> {
     const existUser = await this.authenticate(user);
 
     return {
@@ -77,7 +85,9 @@ export class AuthJwtService {
     };
   }
 
-  async register(user: Pick<UserModel, 'email' | 'password' | 'name'>) {
+  async register(
+    user: Pick<UserModel, 'email' | 'password' | 'name'>,
+  ): Promise<BearerTokenResponse> {
     await this.usersService.createUser({
       ...user,
       password: bcrypt.hashSync(
@@ -97,7 +107,7 @@ export class AuthJwtService {
   extractTokenFromHeader(
     headerAuthorizationValue: BasicTokenHeaderType | BearerTokenHeaderType,
     isBearerToken: boolean,
-  ) {
+  ): string {
     if (!headerAuthorizationValue) {
       throw new UnauthorizedException('authrorization 값이 누락되었습니다.');
     }
@@ -123,7 +133,7 @@ export class AuthJwtService {
     return token;
   }
 
-  decodeBasicToken(basicToken: string) {
+  decodeBasicToken(basicToken: string): BasicTokenPayload {
     const decodedToken = Buffer.from(basicToken, ENCODING_BASE64)
       .toString(ENCODING_UTF8)
       .split(BASIC_TOKEN_SEPERATOR);
@@ -140,7 +150,7 @@ export class AuthJwtService {
   verifyBearerToken(
     token: string,
     isRefreshToken: boolean,
-  ): DecodedBearerToken {
+  ): BearerTokenPayload {
     let decodedToken: any;
     try {
       decodedToken = this.jwtService.verify(token);
@@ -163,7 +173,9 @@ export class AuthJwtService {
     return decodedToken;
   }
 
-  async refreshAccessTokenUsingRefreshToken(refreshToken: string) {
+  async refreshAccessTokenUsingRefreshToken(
+    refreshToken: string,
+  ): Promise<{ accessToken: string }> {
     const user: Pick<UserModel, 'id' | 'email'> = this.verifyBearerToken(
       refreshToken,
       true,

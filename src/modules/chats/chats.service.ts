@@ -21,19 +21,19 @@ export class ChatsService {
     private readonly paginationService: PaginationService,
   ) {}
 
-  async createChat(dto: ChatsCreateChatDto): Promise<ChatModel> {
-    const createdChat = this.chatsRepository.create(dto);
+  async createChat(newChat: ChatsCreateChatDto): Promise<ChatModel> {
+    const createdChat = this.chatsRepository.create(newChat);
 
     return this.chatsRepository.save(createdChat);
   }
 
   async paginateChats(
-    dto: ChatsPaginateChatsDto,
+    paginateQuery: ChatsPaginateChatsDto,
   ): Promise<PaginationResponse<ChatModel>> {
     return await this.paginationService.paginate<
       ChatModel,
       ChatsPaginateChatsDto
-    >(dto, this.chatsRepository);
+    >(paginateQuery, this.chatsRepository);
   }
 
   async createUserJoinChat(user: UserModel, chatId: number): Promise<boolean> {

@@ -30,9 +30,10 @@ export class PostsService {
     private readonly usersService: UsersService,
     private readonly commonService: PaginationService,
   ) {}
+
   async createPost(
     authorId: number,
-    dto: PostsCreatePostDto,
+    newPost: PostsCreatePostDto,
   ): Promise<PostModel> {
     const author = await this.usersService.getUserById(authorId);
 
@@ -41,7 +42,7 @@ export class PostsService {
     }
 
     const createdPost = this.postsRepository.create({
-      ...dto,
+      ...newPost,
       author: {
         id: authorId,
       },
@@ -51,10 +52,10 @@ export class PostsService {
   }
 
   async paginatePosts(
-    query: PostsPaginatePostsDto,
+    paginateQuery: PostsPaginatePostsDto,
   ): Promise<PaginationResponse<PostModel>> {
     return this.commonService.paginate<PostModel, PostsPaginatePostsDto>(
-      query,
+      paginateQuery,
       this.postsRepository,
     );
   }
