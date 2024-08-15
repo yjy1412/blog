@@ -17,7 +17,7 @@ export interface ChatsSocketMessageFromServerInRoom
   chatId: number;
 }
 
-export interface ChatSocketMessageFromClientToRoom
+export interface ChatsSocketMessageFromClientToRoom
   extends ChatsBaseSocketMessage {
   socket: Socket;
   chatId: number;

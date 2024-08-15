@@ -10,7 +10,7 @@ import { UserModel } from '../users/entities/users.entity';
 import { ChatsSocketMessageSenderEnum } from './enums/chats.socket-message-sender.enum';
 import {
   ChatsSocketMessageFromServerInRoom,
-  ChatSocketMessageFromClientToRoom,
+  ChatsSocketMessageFromClientToRoom,
 } from './interfaces/chats.send-message.interface';
 
 @Injectable()
@@ -95,15 +95,17 @@ export class ChatsService {
     senderId,
     event,
     message,
-  }: ChatSocketMessageFromClientToRoom): Promise<void> {
+  }: ChatsSocketMessageFromClientToRoom): Promise<void> {
     await this.checkIsUserInChat(senderId, chatId);
 
     /**
-     * 주의: socket.in().emit()는 server.in().emit()와 다릅니다.
-     * server.in()는 해당 룸에 연결된 모든 소켓에 메시지를 보내지만, socket.in()는 대상이 되는 소켓을 제외합니다.
-     * socket.in()과 socket.to()는 동일한 동작을 합니다.
+     * 주의
+     * socket.to().emit()은 대상이 되는 소켓을 제외하고, 해당 룸에 연결된 모든 소켓에 메시지를 전송합니다.
+     * socket.to()와 socket.in()은 동일한 기능을 수행합니다.
+     *
+     * 참고로, server.in().emit()은 해당 룸에 연결된 모든 소켓에 메시지를 전송합니다. (마찬가지로 server.to()와 동일합니다.)
      */
-    socket.in(chatId.toString()).emit(event, {
+    socket.to(chatId.toString()).emit(event, {
       from: ChatsSocketMessageSenderEnum.USER,
       senderId,
       message,
