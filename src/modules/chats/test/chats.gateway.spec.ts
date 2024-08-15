@@ -7,43 +7,30 @@ import { UsersService } from '../../users/users.service';
 import { AuthJwtService } from '../../auth-jwt/auth-jwt.service';
 import { BadRequestException } from '@nestjs/common';
 import { SocketEventEnum } from '../../common/enums/socket-event.enum';
-import { Server } from 'socket.io';
 import { ChatsSocketEventEnum } from '../enums/chats.socket-event.enum';
+import { ChatsGatewayMock } from './chats.gateway.mock';
 
 describe('\n🎯🎯🎯 테스트를 시작합니다 ===================================================================================================================================\n', () => {
   let chatsGateway: ChatsGateway;
-  let socketServer: Server;
+  let mockSocketServer: any;
+  let mockSocket: any;
+  let mockChatsService: Partial<ChatsService>;
+  let mockUsersService: Partial<UsersService>;
+  let mockAuthJwtService: Partial<AuthJwtService>;
 
-  const mockSocket = {
-    handshake: {
-      headers: {
-        authorization: null,
-      },
-    },
-    user: { id: 1, name: '테스터' },
-    disconnect: jest.fn(),
-    emit: jest.fn(),
-    join: jest.fn(),
-    leave: jest.fn(),
-  };
+  beforeAll(async () => {
+    const mockModule = await Test.createTestingModule({
+      providers: [ChatsGatewayMock],
+    }).compile();
 
-  const mockChatsService: Partial<ChatsService> = {
-    createChat: jest.fn(),
-    createUserJoinChat: jest.fn(),
-    paginateChats: jest.fn(),
-    sendRoomMessageFromServer: jest.fn(),
-    sendRoomMessageFromSocket: jest.fn(),
-    deleteUserLeaveChat: jest.fn(),
-  };
+    const chatsGatewayMock = mockModule.get<ChatsGatewayMock>(ChatsGatewayMock);
 
-  const mockUsersService: Partial<UsersService> = {
-    getUserById: jest.fn(),
-  };
-
-  const mockAuthJwtService: Partial<AuthJwtService> = {
-    extractTokenFromHeader: jest.fn(),
-    verifyBearerToken: jest.fn(),
-  };
+    mockSocketServer = chatsGatewayMock.mockSocketServer;
+    mockSocket = chatsGatewayMock.mockSocket;
+    mockChatsService = chatsGatewayMock.mockChatsService;
+    mockUsersService = chatsGatewayMock.mockUsersService;
+    mockAuthJwtService = chatsGatewayMock.mockAuthJwtService;
+  });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -67,7 +54,12 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
     }).compile();
 
     chatsGateway = module.get<ChatsGateway>(ChatsGateway);
-    chatsGateway.afterInit(socketServer);
+
+    chatsGateway.afterInit(mockSocketServer);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   describe('✅ ChatsGateway >> handelConnection: 소켓 연결 시 처리로직을 테스트합니다.', () => {
@@ -152,7 +144,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       await chatsGateway.joinChat(mockSocket as any, mockBody);
 
       expect(mockChatsService.sendRoomMessageFromServer).toHaveBeenCalledWith({
-        server: socketServer,
+        server: mockSocketServer,
         chatId: mockBody.chatId,
         event: ChatsSocketEventEnum.RECEIVE_MESSAGE,
         message: `[${mockSocket.user.name}] 님이 채팅방에 입장하셨습니다.`,
@@ -190,7 +182,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       await chatsGateway.leaveChat(mockSocket as any, mockBody);
 
       expect(mockChatsService.sendRoomMessageFromServer).toHaveBeenCalledWith({
-        server: socketServer,
+        server: mockSocketServer,
         chatId: mockBody.chatId,
         event: ChatsSocketEventEnum.RECEIVE_MESSAGE,
         message: `[${mockSocket.user.name}] 님이 채팅방에서 퇴장하셨습니다.`,

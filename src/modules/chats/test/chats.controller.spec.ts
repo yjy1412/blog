@@ -2,14 +2,26 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ChatsController } from '../chats.controller';
 import { ChatsService } from '../chats.service';
 import { RepositoryQueryOrderEnum } from '../../common/enums/repository.enum';
+import { ChatsControllerMock } from './chats.controller.mock';
+import { ChatModel } from '../entities/chats.entity';
+import { PaginationResponse } from '../../common/interfaces/pagination.interface';
 
 describe('\n🎯🎯🎯 테스트를 시작합니다 ===================================================================================================================================\n', () => {
   let chatsController: ChatsController;
+  let mockChat: ChatModel;
+  let mockChatsService: Partial<ChatsService>;
 
-  const mockChatsService: Partial<ChatsService> = {
-    createChat: jest.fn(),
-    paginateChats: jest.fn(),
-  };
+  beforeAll(async () => {
+    const mockModule: TestingModule = await Test.createTestingModule({
+      providers: [ChatsControllerMock],
+    }).compile();
+
+    const chatsControllerMock =
+      mockModule.get<ChatsControllerMock>(ChatsControllerMock);
+
+    mockChat = chatsControllerMock.mockChat;
+    mockChatsService = chatsControllerMock.mockChatsService;
+  });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -18,6 +30,10 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
     }).compile();
 
     chatsController = module.get<ChatsController>(ChatsController);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   describe('✅ ChatsController >> createChat: 채팅방 생성 컨트롤러를 테스트합니다.', () => {
@@ -42,14 +58,6 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       const mockCreateChatDto = {
         name: 'test room',
         description: 'test용 채팅방입니다.',
-      };
-
-      const mockChat = {
-        id: 1,
-        name: 'test room',
-        description: 'test용 채팅방입니다.',
-        createdAt: new Date(),
-        updatedAt: new Date(),
       };
 
       jest
@@ -86,18 +94,8 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
         order_updatedAt: RepositoryQueryOrderEnum.DESC,
       };
 
-      const mockChats = [
-        {
-          id: 1,
-          name: 'test room',
-          description: 'test용 채팅방입니다.',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ];
-
-      const mockPaginationResponse = {
-        data: mockChats,
+      const mockPaginationResponse: PaginationResponse<ChatModel> = {
+        data: [mockChat],
         page: {
           currentPage: 1,
           totalPage: 1,
