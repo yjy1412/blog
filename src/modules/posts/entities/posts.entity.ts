@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { IsNumber, IsString, Length } from 'class-validator';
 
 import { BaseModel } from '../../common/entities/base.entity';
@@ -9,6 +9,7 @@ import {
   generateMessageInvalidLength,
   generateMessageInvalidNumberType,
 } from '../../common/utils/validator/generate-invalid-message.validator.util';
+import { PostCommentModel } from '../sub-modules/post-comments/entities/post-comments.entity';
 
 @Entity()
 export class PostModel extends BaseModel {
@@ -79,4 +80,7 @@ export class PostModel extends BaseModel {
   })
   @JoinColumn({ name: 'authorId' })
   author?: UserModel;
+
+  @OneToMany(() => PostCommentModel, (comment) => comment.post)
+  comments?: PostCommentModel[];
 }

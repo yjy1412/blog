@@ -9,6 +9,7 @@ import {
   generateMessageInvalidEmail,
 } from '../../common/utils/validator/generate-invalid-message.validator.util';
 import { ChatModel } from '../../chats/entities/chats.entity';
+import { PostCommentModel } from '../../posts/sub-modules/post-comments/entities/post-comments.entity';
 
 @Entity()
 export class UserModel extends BaseModel {
@@ -56,4 +57,7 @@ export class UserModel extends BaseModel {
 
   @ManyToMany(() => ChatModel, (chat) => chat.users)
   chats?: ChatModel[];
+
+  @OneToMany(() => PostCommentModel, (comment) => comment.author)
+  comments?: PostCommentModel[];
 }

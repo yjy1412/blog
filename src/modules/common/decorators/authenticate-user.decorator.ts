@@ -3,9 +3,10 @@ import {
   InternalServerErrorException,
   createParamDecorator,
 } from '@nestjs/common';
+import { BearerTokenPayload } from '../../auth-jwt/interfaces/auth-jwt.interface';
 
 export const AuthenticatedUser = createParamDecorator(
-  (data, context: ExecutionContext) => {
+  (data, context: ExecutionContext): BearerTokenPayload => {
     const request = context.switchToHttp().getRequest();
 
     if (!request.user) {
