@@ -61,6 +61,7 @@ export class PostsService {
   }
   async getPostById(postId: number): Promise<PostModel> {
     const post = await this.postsRepository.findOne({
+      relations: ['comments'],
       where: {
         id: postId,
       },
