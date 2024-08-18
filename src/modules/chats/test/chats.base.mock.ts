@@ -30,6 +30,7 @@ export class ChatsBaseMock extends BaseMock {
     description: 'test용 채팅방입니다.',
     createdAt: new Date(),
     updatedAt: new Date(),
+    deletedAt: null,
     users: [],
   };
 }

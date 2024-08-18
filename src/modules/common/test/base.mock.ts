@@ -19,6 +19,7 @@ export abstract class BaseMock {
     password: bcrypt.hashSync(this.mockUserRegistrationInfo.password, 10),
     createdAt: new Date(),
     updatedAt: new Date(),
+    deletedAt: null,
   };
 
   public readonly mockPost: PostModel = {
@@ -29,6 +30,7 @@ export abstract class BaseMock {
     commentCount: 0,
     createdAt: new Date(),
     updatedAt: new Date(),
+    deletedAt: null,
     authorId: 1,
   };
 }
