@@ -138,24 +138,4 @@ export class PostsService {
       );
     }
   }
-
-  async createRandomPosts(howMany: number): Promise<boolean> {
-    const randomPosts = [];
-
-    for (let i = 0; i < howMany; i++) {
-      randomPosts.push({
-        title: `Test Post ${i}`,
-        content: `Test Content ${i}`,
-        likeCount: Math.floor(Math.random() * howMany),
-        commentCount: Math.floor(Math.random() * howMany),
-        authorId: 1,
-      });
-    }
-
-    const randomPostsEntities = this.postsRepository.create(randomPosts);
-
-    await this.postsRepository.save(randomPostsEntities);
-
-    return true;
-  }
 }
