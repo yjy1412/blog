@@ -1,6 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
 import _ from 'lodash';
 
 import { UserModel } from '../users/entities/users.entity';
@@ -22,8 +21,6 @@ import {
   JWT_EXPIRED_TIME_FOR_ACCESS_TOKEN,
   JWT_EXPIRED_TIME_FOR_REFRESH_TOKEN,
 } from './constants/auth-jwt.constant';
-import { ConfigService } from '@nestjs/config';
-import { ENV_JWT_HASH_ROUND_KEY } from '../common/constants/env-keys.constant';
 import {
   ENCODING_BASE64,
   ENCODING_UTF8,
@@ -35,7 +32,6 @@ export class AuthJwtService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly usersService: UsersService,
-    private readonly configService: ConfigService,
   ) {}
 
   signBearerToken(
@@ -66,7 +62,7 @@ export class AuthJwtService {
       throw new UnauthorizedException('이메일이 일치하지 않습니다.');
     }
 
-    const passOk = bcrypt.compareSync(user.password, existUser.password);
+    const passOk = existUser.validatePassword(user.password);
     if (!passOk) {
       throw new UnauthorizedException('비밀번호가 일치하지 않습니다.');
     }
@@ -90,10 +86,6 @@ export class AuthJwtService {
   ): Promise<BearerTokenResponse> {
     await this.usersService.createUser({
       ...user,
-      password: bcrypt.hashSync(
-        user.password,
-        parseInt(this.configService.get<string>(ENV_JWT_HASH_ROUND_KEY)),
-      ),
     });
 
     const { accessToken, refreshToken } = await this.login(user);

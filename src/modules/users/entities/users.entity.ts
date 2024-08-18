@@ -1,4 +1,12 @@
-import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
+import { config } from 'dotenv';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  ManyToMany,
+  OneToMany,
+} from 'typeorm';
 import { IsEmail, IsString, Matches } from 'class-validator';
 
 import { BaseModel } from '../../common/entities/base.entity';
@@ -10,6 +18,10 @@ import {
 } from '../../common/utils/validator/generate-invalid-message.validator.util';
 import { ChatModel } from '../../chats/entities/chats.entity';
 import { PostCommentModel } from '../../posts/sub-modules/post-comments/entities/post-comments.entity';
+import * as bcrypt from 'bcrypt';
+import { ENV_JWT_HASH_ROUND_KEY } from '../../common/constants/env-keys.constant';
+
+config();
 
 @Entity()
 export class UserModel extends BaseModel {
@@ -60,4 +72,19 @@ export class UserModel extends BaseModel {
 
   @OneToMany(() => PostCommentModel, (comment) => comment.author)
   comments?: PostCommentModel[];
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  hashPassword() {
+    if (this.password) {
+      this.password = bcrypt.hashSync(
+        this.password,
+        parseInt(process.env[ENV_JWT_HASH_ROUND_KEY], 10),
+      );
+    }
+  }
+
+  validatePassword(password: string): boolean {
+    return bcrypt.compareSync(password, this.password);
+  }
 }

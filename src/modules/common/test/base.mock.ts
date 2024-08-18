@@ -1,6 +1,10 @@
+import { config } from 'dotenv';
 import { PostModel } from '../../posts/entities/posts.entity';
 import { UserModel } from '../../users/entities/users.entity';
 import * as bcrypt from 'bcrypt';
+import { ENV_JWT_HASH_ROUND_KEY } from '../constants/env-keys.constant';
+
+config();
 
 export abstract class BaseMock {
   constructor() {}
@@ -16,10 +20,17 @@ export abstract class BaseMock {
   public readonly mockUser: UserModel = {
     ...this.mockUserRegistrationInfo,
     id: 1,
-    password: bcrypt.hashSync(this.mockUserRegistrationInfo.password, 10),
+    password: bcrypt.hashSync(
+      this.mockUserRegistrationInfo.password,
+      parseInt(process.env[ENV_JWT_HASH_ROUND_KEY], 10),
+    ),
     createdAt: new Date(),
     updatedAt: new Date(),
     deletedAt: null,
+    hashPassword: jest.fn(),
+    validatePassword: (password) => {
+      return bcrypt.compareSync(password, this.mockUser.password);
+    },
   };
 
   public readonly mockPost: PostModel = {
