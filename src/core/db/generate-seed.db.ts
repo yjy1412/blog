@@ -28,7 +28,5 @@ export const generateSeed = async (loggerService: CustomLoggerService) => {
     } finally {
       await queryRunner.release();
     }
-
-    await dataSource.destroy();
   });
 };
