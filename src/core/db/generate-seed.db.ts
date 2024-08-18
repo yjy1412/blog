@@ -23,7 +23,7 @@ export const generateSeed = async (loggerService: CustomLoggerService) => {
       loggerService.error(
         '데이터 시드 생성 과정 중 에러가 발생했습니다.',
         generateSeed.name,
-        error,
+        error.stack,
       );
     } finally {
       await queryRunner.release();

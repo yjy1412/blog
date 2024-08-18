@@ -9,15 +9,15 @@ export const usersSeed = async (dataSource: DataSource) => {
 
   const users = [];
 
-  for (let i = 0; i < 100; i += 1) {
-    users.push({
-      email: `tester${i}@blog.com`,
-      password: 'testPassword12!',
-      name: `테스터${i}`,
-    });
+  for (let i = 1; i <= 100; i += 1) {
+    users.push(
+      usersRepository.create({
+        email: `tester${i}@blog.com`,
+        password: 'testPassword12!',
+        name: `테스터${i}`,
+      }),
+    );
   }
 
-  const created = usersRepository.create(users);
-
-  await usersRepository.save(created);
+  await usersRepository.save(users);
 };
