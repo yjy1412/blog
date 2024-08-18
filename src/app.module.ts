@@ -1,5 +1,9 @@
 import { config } from 'dotenv';
-import { ClassSerializerInterceptor, Module } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  Module,
+  OnModuleInit,
+} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { PostsModule } from './modules/posts/posts.module';
@@ -7,11 +11,13 @@ import { UsersModule } from './modules/users/users.module';
 import { AuthJwtModule } from './modules/auth-jwt/auth-jwt.module';
 import { AuthJwtHttpGuard } from './modules/auth-jwt/guards/auth-jwt.http.guard';
 import { CommonModule } from './modules/common/common.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { PUBLIC_PATH } from './modules/common/constants/path.constant';
 import { ChatsModule } from './modules/chats/chats.module';
 import { dataSource } from './core/db/data-source.db';
+import { CustomLoggerService } from './modules/common/services/custom-logger.service';
+import { generateSeed } from './core/db/generate-seed.db';
 
 config();
 @Module({
@@ -46,4 +52,17 @@ config();
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements OnModuleInit {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly customLoggerService: CustomLoggerService,
+  ) {}
+
+  async onModuleInit() {
+    const isProduction = this.configService.get('NODE_ENV') === 'production';
+
+    if (!isProduction) {
+      await generateSeed(this.customLoggerService);
+    }
+  }
+}
