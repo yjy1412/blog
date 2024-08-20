@@ -11,12 +11,35 @@ export class PostCommentsService {
     private readonly postCommentsRepository: Repository<PostCommentModel>,
   ) {}
 
-  createComment(authorId: number, newComment: PostCommentsCreateCommentDto) {
+  async createPostComment(
+    authorId: number,
+    newComment: PostCommentsCreateCommentDto,
+  ): Promise<PostCommentModel> {
     const created = this.postCommentsRepository.create({
       authorId,
       ...newComment,
     });
 
     return this.postCommentsRepository.save(created);
+  }
+
+  async deleteMyPostComment(
+    userId: number,
+    commentId: number,
+  ): Promise<boolean> {
+    const comment = await this.postCommentsRepository.findOne({
+      where: {
+        id: commentId,
+        authorId: userId,
+      },
+    });
+
+    if (!comment) {
+      return true;
+    }
+
+    await this.postCommentsRepository.softRemove(comment);
+
+    return true;
   }
 }

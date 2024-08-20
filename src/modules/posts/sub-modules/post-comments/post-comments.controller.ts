@@ -1,18 +1,51 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
 import { PostCommentsService } from './post-comments.service';
 import { PostCommentsCreateCommentDto } from './dtos/post-comments.create-comment.dto';
 import { AuthenticatedUser } from '../../../common/decorators/authenticate-user.decorator';
 import { BearerTokenPayload } from '../../../auth-jwt/interfaces/auth-jwt.interface';
+import { PostCommentsGateway } from './post-comments.gateway';
 
 @Controller('posts/:postId/comments')
 export class PostCommentsController {
-  constructor(private readonly postCommentsService: PostCommentsService) {}
+  constructor(
+    private readonly postCommentsService: PostCommentsService,
+    private readonly postCommentsGateway: PostCommentsGateway,
+  ) {}
 
   @Post()
-  createComment(
+  async createPostComment(
     @Body() body: PostCommentsCreateCommentDto,
     @AuthenticatedUser() user: BearerTokenPayload,
   ) {
-    return this.postCommentsService.createComment(user.id, body);
+    const newPostComment = await this.postCommentsService.createPostComment(
+      user.id,
+      body,
+    );
+
+    this.postCommentsGateway.sendMessageForPostCommentCreated(
+      newPostComment.postId,
+      newPostComment.id,
+    );
+
+    return newPostComment;
+  }
+
+  @Delete(':id')
+  async deleteMyPostComment(
+    @Param('id', ParseIntPipe) id: number,
+    @AuthenticatedUser() user: BearerTokenPayload,
+  ) {
+    await this.postCommentsService.deleteMyPostComment(user.id, id);
+
+    this.postCommentsGateway.sendMessageForPostCommentDeleted(user.id, id);
+
+    return true;
   }
 }
