@@ -69,7 +69,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
 
     test('헤더에서 토큰을 추출합니다. 만약 토큰이 존재하지 않으면 관련 예외 메시지와 함께 연결해제 됩니다.', async () => {
       jest
-        .spyOn(mockAuthJwtService, 'extractTokenFromHeader')
+        .spyOn(mockAuthJwtService, 'authorizeUserForSocket')
         .mockImplementationOnce(() => {
           throw new BadRequestException('토큰이 유효하지 않습니다');
         });
@@ -85,7 +85,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
 
     test('토큰 검증에 실패하면 관련 예외 메시지와 함께 연결해제 됩니다.', async () => {
       jest
-        .spyOn(mockAuthJwtService, 'verifyBearerToken')
+        .spyOn(mockAuthJwtService, 'authorizeUserForSocket')
         .mockImplementationOnce(() => {
           throw new BadRequestException('토큰이 만료되었습니다');
         });
@@ -100,9 +100,11 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
     });
 
     test('토큰 검증을 통해 얻은 유저 정보가 유효하지 않으면 관련 예외 메시지와 함께 연결해제 됩니다.', async () => {
-      jest.spyOn(mockUsersService, 'getUserById').mockImplementationOnce(() => {
-        throw new BadRequestException('유저 정보를 찾을 수 없습니다');
-      });
+      jest
+        .spyOn(mockAuthJwtService, 'authorizeUserForSocket')
+        .mockImplementationOnce(() => {
+          throw new BadRequestException('유저 정보를 찾을 수 없습니다');
+        });
 
       await chatsGateway.handleConnection(mockSocket as any);
 

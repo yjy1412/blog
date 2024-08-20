@@ -23,5 +23,6 @@ export class AuthJwtServiceMock extends BaseMock {
   public readonly mockUsersService: Partial<UsersService> = {
     getUserByEmailWithPassword: jest.fn().mockReturnValue(this.mockUser),
     createUser: jest.fn().mockReturnValue(this.mockUser),
+    getUserById: jest.fn().mockReturnValue(this.mockUser),
   };
 }

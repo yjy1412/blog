@@ -18,7 +18,6 @@ export class ChatsGatewayMock extends ChatsBaseMock {
   };
 
   public readonly mockAuthJwtService: Partial<AuthJwtService> = {
-    extractTokenFromHeader: jest.fn(),
-    verifyBearerToken: jest.fn(),
+    authorizeUserForSocket: jest.fn(),
   };
 }

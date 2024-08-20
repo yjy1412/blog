@@ -5,6 +5,12 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../../users/users.service';
 import { UserModel } from '../../users/entities/users.entity';
 import { ConfigService } from '@nestjs/config';
+import {
+  BadRequestException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { BearerTokenTypeEnum } from '../enums/auth-jwt.enum';
 
 describe('AuthJwtService', () => {
   let mockUser: UserModel;
@@ -12,6 +18,7 @@ describe('AuthJwtService', () => {
   let mockUsersService: Partial<UsersService>;
   let mockUserRegistrationInfo: Pick<UserModel, 'email' | 'password' | 'name'>;
   let mockBearerTokenPayloadWithoutType: Pick<UserModel, 'id' | 'email'>;
+  let mockSocket: any;
 
   let authJwtService: AuthJwtService;
 
@@ -29,6 +36,7 @@ describe('AuthJwtService', () => {
     mockUserRegistrationInfo = authJwtServiceMock.mockUserRegistrationInfo;
     mockBearerTokenPayloadWithoutType =
       authJwtServiceMock.mockBearerTokenPayloadWithoutType;
+    mockSocket = authJwtServiceMock.mockSocket;
   });
 
   beforeEach(async () => {
@@ -123,6 +131,57 @@ describe('AuthJwtService', () => {
 
       expect(result).toHaveProperty('accessToken');
       expect(result).toHaveProperty('refreshToken');
+    });
+  });
+
+  describe('✅ AuthJwtService >> authorizeUserForSocket: socket 연결 시 필요한 인증절차를 진행합니다.', () => {
+    test('헤더에 토큰이 없는 경우, BadRequestException을 반환합니다.', async () => {
+      jest
+        .spyOn(authJwtService, 'extractTokenFromHeader')
+        .mockImplementationOnce(() => {
+          throw new BadRequestException('authrorization 값이 누락되었습니다.');
+        });
+
+      expect(authJwtService.authorizeUserForSocket(mockSocket)).rejects.toThrow(
+        'authrorization 값이 누락되었습니다.',
+      );
+    });
+
+    test('토큰 검증에 실패한 경우, UnauthorizedException 반환합니다.', async () => {
+      jest
+        .spyOn(authJwtService, 'extractTokenFromHeader')
+        .mockReturnValueOnce('Bearer accessToken');
+
+      jest
+        .spyOn(authJwtService, 'verifyBearerToken')
+        .mockImplementationOnce(() => {
+          throw new UnauthorizedException('토큰이 유효하지 않습니다.');
+        });
+
+      expect(authJwtService.authorizeUserForSocket(mockSocket)).rejects.toThrow(
+        '토큰이 유효하지 않습니다.',
+      );
+    });
+
+    test('토큰 payload에 해당하는 유저 정보를 찾을 수 없는 경우, UnauthorizedException 반환합니다.', async () => {
+      jest
+        .spyOn(authJwtService, 'extractTokenFromHeader')
+        .mockReturnValueOnce('Bearer accessToken');
+
+      jest.spyOn(authJwtService, 'verifyBearerToken').mockReturnValueOnce({
+        ...mockBearerTokenPayloadWithoutType,
+        type: BearerTokenTypeEnum.ACCESS,
+      });
+
+      jest.spyOn(mockUsersService, 'getUserById').mockImplementationOnce(() => {
+        throw new NotFoundException(
+          `유저(id: ${mockUser.id})를 찾을 수 없습니다.`,
+        );
+      });
+
+      expect(authJwtService.authorizeUserForSocket(mockSocket)).rejects.toThrow(
+        `토큰 갱신이 필요합니다. 재로그인 해주세요.`,
+      );
     });
   });
 });
