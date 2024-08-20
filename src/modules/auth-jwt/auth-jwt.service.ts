@@ -26,6 +26,7 @@ import {
   ENCODING_UTF8,
 } from '../common/constants/encoding.constant';
 import { BearerTokenPayload } from './interfaces/auth-jwt.interface';
+import { Socket } from 'socket.io';
 
 @Injectable()
 export class AuthJwtService {
@@ -176,5 +177,26 @@ export class AuthJwtService {
     return {
       accessToken: this.signBearerToken(user, false),
     };
+  }
+
+  async authorizeUserForSocket(socket: Socket & { user: any }) {
+    const accessToken = this.extractTokenFromHeader(
+      socket.handshake.headers.authorization as BearerTokenHeaderType,
+      true,
+    );
+
+    const payload = this.verifyBearerToken(accessToken, false);
+
+    try {
+      const user = await this.usersService.getUserById(payload.id);
+
+      socket.user = user;
+    } catch (err) {
+      throw new UnauthorizedException(
+        `토큰 갱신이 필요합니다. 재로그인 해주세요.`,
+      );
+    }
+
+    return true;
   }
 }
