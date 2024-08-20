@@ -3,5 +3,4 @@ export enum ChatsSocketEventEnum {
   LEAVE_CHAT = 'leave_chat',
   SEND_MESSAGE = 'send_message',
   RECEIVE_MESSAGE = 'receive_message',
-  EXCEPTION = 'exception',
 }
