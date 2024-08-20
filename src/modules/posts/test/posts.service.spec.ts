@@ -80,7 +80,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
 
       await expect(
         postsService.createPost(mockAuthorId, mockNewPost),
-      ).rejects.toThrow('User with id 1 not found');
+      ).rejects.toThrow(`작성자(id: ${mockAuthorId})를 찾을 수 없습니다.`);
     });
 
     test('게시물을 생성하고 반환합니다.', async () => {
@@ -136,7 +136,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
       jest.spyOn(postsRepository, 'findOne').mockResolvedValueOnce(null);
 
       await expect(postsService.getPostById(1)).rejects.toThrow(
-        'Post with id 1 not found',
+        '게시물(id: 1)를 찾을 수 없습니다.',
       );
     });
 
@@ -153,7 +153,7 @@ describe('\n🎯🎯🎯 테스트를 시작합니다 ==========================
 
       await expect(
         postsService.updatePostById(1, mockUpdatePost),
-      ).rejects.toThrow('Post with id 1 not found');
+      ).rejects.toThrow('게시물(id: 1)를 찾을 수 없습니다.');
     });
 
     test('특정 게시물을 수정하고 그 결과를 반환합니다.', async () => {

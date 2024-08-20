@@ -45,7 +45,7 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new NotFoundException(`User with id ${userId} not found`);
+      throw new NotFoundException(`유저(id: ${userId})를 찾을 수 없습니다.`);
     }
 
     return user;
@@ -62,7 +62,7 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new NotFoundException(`User with id ${userId} not found`);
+      throw new NotFoundException(`유저(id: ${userId})를 찾을 수 없습니다.`);
     }
 
     return this.usersRepository.save({

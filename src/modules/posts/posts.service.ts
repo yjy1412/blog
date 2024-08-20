@@ -38,7 +38,9 @@ export class PostsService {
     const author = await this.usersService.getUserById(authorId);
 
     if (!author) {
-      throw new NotFoundException(`User with id ${authorId} not found`);
+      throw new NotFoundException(
+        `작성자(id: ${authorId})를 찾을 수 없습니다.`,
+      );
     }
 
     const createdPost = this.postsRepository.create({
@@ -68,7 +70,7 @@ export class PostsService {
     });
 
     if (!post) {
-      throw new NotFoundException(`Post with id ${postId} not found`);
+      throw new NotFoundException(`게시물(id: ${postId})를 찾을 수 없습니다.`);
     }
 
     return post;
@@ -85,7 +87,7 @@ export class PostsService {
     });
 
     if (!post) {
-      throw new NotFoundException(`Post with id ${postId} not found`);
+      throw new NotFoundException(`게시물(id: ${postId})를 찾을 수 없습니다.`);
     }
 
     return this.postsRepository.save({
