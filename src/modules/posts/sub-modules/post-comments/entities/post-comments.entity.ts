@@ -1,7 +1,16 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import {
+  AfterInsert,
+  AfterRemove,
+  AfterSoftRemove,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+} from 'typeorm';
 import { BaseModel } from '../../../../common/entities/base.entity';
 import { PostModel } from '../../../entities/posts.entity';
 import { UserModel } from '../../../../users/entities/users.entity';
+import { dataSource } from '../../../../../core/db/data-source.db';
 
 @Entity()
 export class PostCommentModel extends BaseModel {
@@ -28,4 +37,27 @@ export class PostCommentModel extends BaseModel {
   @ManyToOne(() => UserModel, (user) => user.comments)
   @JoinColumn({ name: 'authorId' })
   author?: UserModel;
+
+  @AfterInsert()
+  async increasePostCommentsCount() {
+    const postsRepository = dataSource.getRepository(PostModel);
+
+    const post = await postsRepository.findOne({ where: { id: this.postId } });
+
+    post.commentCount += 1;
+
+    await postsRepository.save(post);
+  }
+
+  @AfterRemove()
+  @AfterSoftRemove()
+  async decreasePostCommentsCount() {
+    const postsRepository = dataSource.getRepository(PostModel);
+
+    const post = await postsRepository.findOne({ where: { id: this.postId } });
+
+    post.commentCount -= 1;
+
+    await postsRepository.save(post);
+  }
 }
