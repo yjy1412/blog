@@ -42,9 +42,12 @@ export class PostCommentsController {
     @Param('id', ParseIntPipe) id: number,
     @AuthenticatedUser() user: BearerTokenPayload,
   ) {
-    await this.postCommentsService.deleteMyPostComment(user.id, id);
+    const deletedPostComment =
+      await this.postCommentsService.deleteMyPostComment(user.id, id);
 
-    this.postCommentsGateway.sendMessageForPostCommentDeleted(user.id, id);
+    if (deletedPostComment) {
+      this.postCommentsGateway.sendMessageForPostCommentDeleted(user.id, id);
+    }
 
     return true;
   }

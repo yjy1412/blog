@@ -6,10 +6,11 @@ import { PostCommentModel } from './entities/post-comments.entity';
 import { AuthJwtModule } from '../../../auth-jwt/auth-jwt.module';
 import { PostCommentsGateway } from './post-comments.gateway';
 import { CommonModule } from '../../../common/common.module';
+import { PostModel } from '../../entities/posts.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([PostCommentModel]),
+    TypeOrmModule.forFeature([PostCommentModel, PostModel]),
     AuthJwtModule,
     CommonModule,
   ],

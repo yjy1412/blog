@@ -6,7 +6,6 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { WebSocketHttpExceptionFilter } from '../../../../core/exception-filters/web-socket.http.exception-filter';
-import { PostCommentsService } from './post-comments.service';
 import { Server, Socket } from 'socket.io';
 import { AuthJwtService } from '../../../auth-jwt/auth-jwt.service';
 import { PostCommentsSocketEventEnum } from './enums/post-comments.socket-event.enum';
@@ -16,10 +15,7 @@ import { SocketEventEnum } from '../../../common/enums/socket-event.enum';
 @WebSocketGateway(80, { namespace: 'post-comments' })
 @UseFilters(WebSocketHttpExceptionFilter)
 export class PostCommentsGateway implements OnGatewayInit, OnGatewayConnection {
-  constructor(
-    private readonly postCommentsService: PostCommentsService,
-    private readonly authJwtService: AuthJwtService,
-  ) {}
+  constructor(private readonly authJwtService: AuthJwtService) {}
 
   @WebSocketServer()
   server: Server;

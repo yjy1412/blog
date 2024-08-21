@@ -3,6 +3,7 @@ import { PostCommentsService } from '../post-comments.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { PostCommentModel } from '../entities/post-comments.entity';
 import { Repository } from 'typeorm';
+import { PostModel } from '../../../entities/posts.entity';
 
 describe('PostCommentsService', () => {
   let service: PostCommentsService;
@@ -13,6 +14,10 @@ describe('PostCommentsService', () => {
         PostCommentsService,
         {
           provide: getRepositoryToken(PostCommentModel),
+          useClass: Repository,
+        },
+        {
+          provide: getRepositoryToken(PostModel),
           useClass: Repository,
         },
       ],
