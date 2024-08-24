@@ -62,7 +62,7 @@ describe('AuthJwtService', () => {
     test('Bearer Token에는 유저의 id, email, type 정보가 포함되어야 합니다.', async () => {
       authJwtService.signBearerToken(mockBearerTokenPayloadWithoutType, false);
 
-      expect(mockJwtService.sign).toHaveBeenCalledWith(
+      expect(mockJwtService.signAsync).toHaveBeenCalledWith(
         {
           ...mockBearerTokenPayloadWithoutType,
           type: 'access',
@@ -74,7 +74,7 @@ describe('AuthJwtService', () => {
     test('Refresh 토큰의 경우, 만료시간은 하루여야 합니다.', async () => {
       authJwtService.signBearerToken(mockBearerTokenPayloadWithoutType, true);
 
-      expect(mockJwtService.sign).toHaveBeenCalledWith(
+      expect(mockJwtService.signAsync).toHaveBeenCalledWith(
         expect.any(Object),
         expect.objectContaining({ expiresIn: '1d' }),
       );
@@ -168,7 +168,7 @@ describe('AuthJwtService', () => {
         .spyOn(authJwtService, 'extractTokenFromHeader')
         .mockReturnValueOnce('Bearer accessToken');
 
-      jest.spyOn(authJwtService, 'verifyBearerToken').mockReturnValueOnce({
+      jest.spyOn(authJwtService, 'verifyBearerToken').mockResolvedValueOnce({
         ...mockBearerTokenPayloadWithoutType,
         type: BearerTokenTypeEnum.ACCESS,
       });

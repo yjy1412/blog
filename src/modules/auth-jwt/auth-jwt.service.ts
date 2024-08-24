@@ -35,10 +35,10 @@ export class AuthJwtService {
     private readonly usersService: UsersService,
   ) {}
 
-  signBearerToken(
+  async signBearerToken(
     user: Pick<UserModel, 'id' | 'email'>,
     isRefreshToken: boolean,
-  ): string {
+  ): Promise<string> {
     const payload = {
       id: user.id,
       email: user.email,
@@ -47,7 +47,7 @@ export class AuthJwtService {
         : BearerTokenTypeEnum.ACCESS,
     };
 
-    return this.jwtService.sign(payload, {
+    return this.jwtService.signAsync(payload, {
       expiresIn: isRefreshToken
         ? JWT_EXPIRED_TIME_FOR_REFRESH_TOKEN
         : JWT_EXPIRED_TIME_FOR_ACCESS_TOKEN,
@@ -77,8 +77,8 @@ export class AuthJwtService {
     const existUser = await this.authenticate(user);
 
     return {
-      accessToken: this.signBearerToken(existUser, false),
-      refreshToken: this.signBearerToken(existUser, true),
+      accessToken: await this.signBearerToken(existUser, false),
+      refreshToken: await this.signBearerToken(existUser, true),
     };
   }
 
@@ -140,13 +140,13 @@ export class AuthJwtService {
     return { email, password };
   }
 
-  verifyBearerToken(
+  async verifyBearerToken(
     token: string,
     isRefreshToken: boolean,
-  ): BearerTokenPayload {
+  ): Promise<BearerTokenPayload> {
     let decodedToken: any;
     try {
-      decodedToken = this.jwtService.verify(token);
+      decodedToken = await this.jwtService.verifyAsync(token);
     } catch (error) {
       throw new UnauthorizedException('토큰이 유효하지 않습니다.');
     }
@@ -169,13 +169,13 @@ export class AuthJwtService {
   async refreshAccessTokenUsingRefreshToken(
     refreshToken: string,
   ): Promise<{ accessToken: string }> {
-    const user: Pick<UserModel, 'id' | 'email'> = this.verifyBearerToken(
+    const user: Pick<UserModel, 'id' | 'email'> = await this.verifyBearerToken(
       refreshToken,
       true,
     );
 
     return {
-      accessToken: this.signBearerToken(user, false),
+      accessToken: await this.signBearerToken(user, false),
     };
   }
 
@@ -185,7 +185,7 @@ export class AuthJwtService {
       true,
     );
 
-    const payload = this.verifyBearerToken(accessToken, false);
+    const payload = await this.verifyBearerToken(accessToken, false);
 
     try {
       const user = await this.usersService.getUserById(payload.id);

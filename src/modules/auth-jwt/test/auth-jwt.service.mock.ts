@@ -13,7 +13,7 @@ export class AuthJwtServiceMock extends BaseMock {
   };
 
   public readonly mockJwtService: Partial<JwtService> = {
-    sign: jest.fn().mockImplementation((payload) => {
+    signAsync: jest.fn().mockImplementation((payload) => {
       const isRefreshToken = payload.type === 'refresh';
 
       return isRefreshToken ? this.mockRefreshToken : this.mockAccessToken;
