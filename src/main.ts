@@ -5,6 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { CustomLoggerService } from './modules/common/services/custom-logger.service';
 import { HttpRequestResponseLoggerInterceptor } from './core/interceptors/http-reqeust-response-logger.interceptor';
 import { HttpExceptionFilter } from './core/exception-filters/http.exception-filter';
+import { HttpResponseFormatterInterceptor } from './core/interceptors/http-response-formatter.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -23,6 +24,7 @@ async function bootstrap() {
 
   app.useGlobalInterceptors(
     new HttpRequestResponseLoggerInterceptor(customLoggerService),
+    new HttpResponseFormatterInterceptor(),
   );
 
   app.useGlobalPipes(

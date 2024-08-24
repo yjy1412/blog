@@ -44,6 +44,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
       errorResponse = this.internalServerErrorResponse;
     }
 
-    response.status(status).json(errorResponse);
+    response.status(status).json({
+      isSuccess: false,
+      error: errorResponse,
+    });
   }
 }
