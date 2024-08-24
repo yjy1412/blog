@@ -60,13 +60,13 @@
 							"type": "basic",
 							"basic": [
 								{
-									"key": "password",
-									"value": "testPassword12!",
+									"key": "username",
+									"value": "test@test.com",
 									"type": "string"
 								},
 								{
-									"key": "username",
-									"value": "test@test.com",
+									"key": "password",
+									"value": "testPassword12!",
 									"type": "string"
 								}
 							]
@@ -266,6 +266,75 @@
 			"name": "Posts",
 			"item": [
 				{
+					"name": "Post-comments",
+					"item": [
+						{
+							"name": "posts/:postId/comments/:commentId",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/posts/:postId/comments/:commentId",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"posts",
+										":postId",
+										"comments",
+										":commentId"
+									],
+									"variable": [
+										{
+											"key": "postId",
+											"value": "1"
+										},
+										{
+											"key": "commentId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "posts/:postId/comments",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"postId\": 1,\n    \"comment\": \"테스트\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/posts/:postId/comments",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"posts",
+										":postId",
+										"comments"
+									],
+									"variable": [
+										{
+											"key": "postId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "posts",
 					"request": {
 						"method": "POST",
@@ -292,18 +361,18 @@
 					"response": []
 				},
 				{
-					"name": "posts/page",
+					"name": "posts/pages",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/posts/page?page=1&take=10&where_likeCount_lessThanOrEqual=50&order_likeCount=DESC",
+							"raw": "{{host}}/posts/pages?page=1&take=10&where_likeCount_lessThanOrEqual=50&order_likeCount=DESC",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"posts",
-								"page"
+								"pages"
 							],
 							"query": [
 								{
@@ -463,6 +532,61 @@
 							"path": [
 								"public",
 								"images"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Chats",
+			"item": [
+				{
+					"name": "chats",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"테스트 채팅방\",\n    \"description\": \"테스트 채팅방 설명\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/chats",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"chats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "chats/pages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/chats/pages?where_name_iLike=테스트",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"chats",
+								"pages"
+							],
+							"query": [
+								{
+									"key": "where_name_iLike",
+									"value": "테스트"
+								}
 							]
 						}
 					},
