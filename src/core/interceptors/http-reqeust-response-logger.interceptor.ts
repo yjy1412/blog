@@ -1,6 +1,6 @@
 import { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
 import { CustomLoggerService } from '../../modules/common/services/custom-logger.service';
-import { Observable, tap } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 export class HttpRequestResponseLoggerInterceptor implements NestInterceptor {
   constructor(private readonly customLoggerService: CustomLoggerService) {}
@@ -20,15 +20,15 @@ export class HttpRequestResponseLoggerInterceptor implements NestInterceptor {
     );
 
     return next.handle().pipe(
-      tap((body) =>
+      map((response) => {
         this.customLoggerService.log(
           `[Reponse] ${method} ${url}`,
           HttpRequestResponseLoggerInterceptor.name,
-          {
-            body,
-          },
-        ),
-      ),
+          response,
+        );
+
+        return response;
+      }),
     );
   }
 }
