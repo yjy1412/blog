@@ -45,6 +45,19 @@ $ yarn run start:dev
 $ yarn run start:prod
 ```
 
+## DB Migration
+
+```bash
+# CREATE
+$ npm run migration:create --name=${MIGRATION_FILE_NAME}
+
+# RUN
+$ npm run migraiton
+
+# REVERT
+$ npm run migration:revert
+```
+
 ## Test
 
 ```bash

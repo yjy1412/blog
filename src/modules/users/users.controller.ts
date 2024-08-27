@@ -4,7 +4,6 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   ParseIntPipe,
 } from '@nestjs/common';
 
@@ -31,10 +30,5 @@ export class UsersController {
     @Body() body: UsersUpdateUserDto,
   ) {
     return this.usersService.updateUserById(id, body);
-  }
-
-  @Delete(':id')
-  deleteUserById(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.deleteUserById(id);
   }
 }

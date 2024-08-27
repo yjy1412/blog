@@ -71,12 +71,6 @@ export class UsersService {
     });
   }
 
-  async deleteUserById(userId: number): Promise<boolean> {
-    await this.usersRepository.delete(userId);
-
-    return true;
-  }
-
   getUserByEmailWithPassword(
     user: Pick<UserModel, 'email'>,
   ): Promise<UserModel> {

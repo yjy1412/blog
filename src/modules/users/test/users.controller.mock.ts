@@ -7,6 +7,5 @@ export class UsersControllerMock extends BaseMock {
     getUsersAll: jest.fn(),
     getUserById: jest.fn(),
     updateUserById: jest.fn(),
-    deleteUserById: jest.fn(),
   };
 }
