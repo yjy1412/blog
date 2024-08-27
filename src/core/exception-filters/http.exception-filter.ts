@@ -21,6 +21,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
   catch(exception: Error | HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
+    const request = ctx.getRequest<Request>();
     const response = ctx.getResponse<Response>();
     const isHttpException = exception instanceof HttpException;
 
@@ -44,9 +45,17 @@ export class HttpExceptionFilter implements ExceptionFilter {
       errorResponse = this.internalServerErrorResponse;
     }
 
-    response.status(status).json({
+    const responseBody = {
       isSuccess: false,
       error: errorResponse,
-    });
+    };
+
+    this.customLoggerService.log(
+      `[Reponse] ${request.method} ${request.url}`,
+      HttpExceptionFilter.name,
+      responseBody,
+    );
+
+    response.status(status).json(responseBody);
   }
 }

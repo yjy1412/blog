@@ -23,6 +23,11 @@ async function bootstrap() {
   app.useLogger(customLoggerService);
 
   app.useGlobalInterceptors(
+    /**
+     * next 핸들러를 타는 경우, 인터셉터의 순서는 아래와 같이 진행됩니다.
+     * ex) 1번, 2번 글로벌 인터셉터가 순서대로 설정되어 있는 경우
+     * 1 -> 2 -> next -> 2 -> 1 순으로 실행됩니다.
+     */
     new HttpRequestResponseLoggerInterceptor(customLoggerService),
     new HttpResponseFormatterInterceptor(),
   );
