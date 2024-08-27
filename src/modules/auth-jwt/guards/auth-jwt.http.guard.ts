@@ -29,7 +29,10 @@ export class AuthJwtHttpGuard implements CanActivate {
       true,
     );
 
-    const payload = this.authJwtService.verifyBearerToken(accessToken, false);
+    const payload = await this.authJwtService.verifyBearerToken(
+      accessToken,
+      false,
+    );
 
     request.user = payload;
 
