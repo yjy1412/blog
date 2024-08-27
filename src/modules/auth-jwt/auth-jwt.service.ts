@@ -123,6 +123,12 @@ export class AuthJwtService {
       throw new UnauthorizedException('authorization 값이 올바르지 않습니다.');
     }
 
+    if (!token || token === 'null') {
+      throw new UnauthorizedException(
+        'authorization 헤더에 토큰 값이 누락되었습니다.',
+      );
+    }
+
     return token;
   }
 
