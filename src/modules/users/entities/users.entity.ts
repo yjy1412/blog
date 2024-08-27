@@ -20,10 +20,11 @@ import { ChatModel } from '../../chats/entities/chats.entity';
 import { PostCommentModel } from '../../posts/sub-modules/post-comments/entities/post-comments.entity';
 import * as bcrypt from 'bcrypt';
 import { ENV_JWT_HASH_ROUND_KEY } from '../../common/constants/env-keys.constant';
+import { DB_TABLE_NAME } from '../../common/constants/db-table-name.constant';
 
 config();
 
-@Entity()
+@Entity(DB_TABLE_NAME.USERS)
 export class UserModel extends BaseModel {
   @Column({
     unique: true,

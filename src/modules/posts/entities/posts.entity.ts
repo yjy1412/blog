@@ -10,8 +10,9 @@ import {
   generateMessageInvalidNumberType,
 } from '../../common/utils/validator/generate-invalid-message.validator.util';
 import { PostCommentModel } from '../sub-modules/post-comments/entities/post-comments.entity';
+import { DB_TABLE_NAME } from '../../common/constants/db-table-name.constant';
 
-@Entity()
+@Entity(DB_TABLE_NAME.POSTS)
 export class PostModel extends BaseModel {
   @Column({
     length: 100,
@@ -38,6 +39,7 @@ export class PostModel extends BaseModel {
   content: string;
 
   @Column({
+    name: 'like_count',
     default: 0,
     comment: '좋아요 수',
   })
@@ -47,6 +49,7 @@ export class PostModel extends BaseModel {
   likeCount: number;
 
   @Column({
+    name: 'comment_count',
     default: 0,
     comment: '댓글 수',
   })
@@ -59,6 +62,7 @@ export class PostModel extends BaseModel {
    * Users Foreign Key
    */
   @Column({
+    name: 'author_id',
     comment: '작성자 ID',
   })
   @IsNumber(undefined, {
@@ -78,7 +82,7 @@ export class PostModel extends BaseModel {
     cascade: true,
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'authorId' })
+  @JoinColumn({ name: 'author_id' })
   author?: UserModel;
 
   @OneToMany(() => PostCommentModel, (comment) => comment.post)

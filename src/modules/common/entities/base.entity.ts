@@ -6,23 +6,28 @@ import {
 } from 'typeorm';
 
 export abstract class BaseModel {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({
+    type: 'bigint',
+  })
   id: number;
 
   @CreateDateColumn({
-    type: 'timestamptz',
+    name: 'created_at',
+    type: 'timestamp with time zone',
     select: false,
   })
   createdAt: Date;
 
   @UpdateDateColumn({
-    type: 'timestamptz',
+    name: 'updated_at',
+    type: 'timestamp with time zone',
     select: false,
   })
   updatedAt: Date;
 
   @DeleteDateColumn({
-    type: 'timestamptz',
+    name: 'deleted_at',
+    type: 'timestamp with time zone',
     select: false,
     nullable: true,
   })
