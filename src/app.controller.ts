@@ -5,9 +5,9 @@ import { Public } from './modules/common/decorators/public.decorator';
 export class AppController {
   constructor() {}
 
-  @Get('ping')
+  @Get()
   @Public()
   ping(): string {
-    return 'ok';
+    return 'pong';
   }
 }
