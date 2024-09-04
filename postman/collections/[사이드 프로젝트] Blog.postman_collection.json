@@ -45,13 +45,20 @@
 							"script": {
 								"exec": [
 									"pm.test(\"Set bearer token to environment variable\", function () {",
-									"    pm.environment.set(\"accessToken\", pm.response.json().accessToken);",
-									"    pm.environment.set(\"refreshToken\", pm.response.json().refreshToken);",
+									"    pm.environment.set(\"accessToken\", pm.response.json().data.accessToken);",
+									"    pm.environment.set(\"refreshToken\", pm.response.json().data.refreshToken);",
 									"});",
 									""
 								],
 								"type": "text/javascript",
 								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -60,13 +67,13 @@
 							"type": "basic",
 							"basic": [
 								{
-									"key": "username",
-									"value": "test@test.com",
+									"key": "password",
+									"value": "testPassword12!",
 									"type": "string"
 								},
 								{
-									"key": "password",
-									"value": "testPassword12!",
+									"key": "username",
+									"value": "test@test.com",
 									"type": "string"
 								}
 							]
@@ -104,7 +111,7 @@
 							"script": {
 								"exec": [
 									"pm.test(\"Refresh access token\", function () {",
-									"    pm.environment.set(\"accessToken\", pm.response.json().accessToken);",
+									"    pm.environment.set(\"accessToken\", pm.response.json().data.accessToken);",
 									"});"
 								],
 								"type": "text/javascript",
@@ -593,6 +600,42 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "heath",
+			"item": [
+				{
+					"name": "health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/health",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ping",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}",
+					"host": [
+						"{{host}}"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {
