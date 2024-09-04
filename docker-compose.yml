@@ -23,9 +23,11 @@ services:
     # 로컬서버 포트와 다르게 설정
     ports:
       - '3001:3001'
+    env_file:
+      - .env
     environment:
-      - APP_PORT=3001
-      - DB_HOST=db
+      APP_PORT: 3001
+      DB_HOST: db
 
 volumes:
   postgres_data:

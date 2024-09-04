@@ -51,7 +51,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     };
 
     this.customLoggerService.log(
-      `[Reponse] ${request.method} ${request.url}`,
+      `[Response] ${request.method} ${request.url}`,
       HttpExceptionFilter.name,
       responseBody,
     );

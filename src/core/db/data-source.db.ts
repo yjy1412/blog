@@ -8,7 +8,13 @@ import {
   ENV_DB_USERNAME_KEY,
 } from '../../modules/common/constants/env-keys.constant';
 
-config();
+/**
+ * 로컬에서 각 환경 마이그레이션을 위해 사용되는 환경 변수 파일을 설정합니다.
+ * 마이그레이션 CLI: `$ NODE_ENV=production npm run migration:run`
+ */
+const ENV_PATH = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env';
+
+config({ path: ENV_PATH });
 
 export const dataSource = new DataSource({
   type: 'postgres',
@@ -22,4 +28,8 @@ export const dataSource = new DataSource({
   migrations: ['dist/core/db/migrations/*{.ts,.js}'],
   migrationsTableName: 'migrations',
   logging: process.env.NODE_ENV !== 'production',
+  ssl:
+    process.env.NODE_ENV === 'production'
+      ? { rejectUnauthorized: false }
+      : false,
 });

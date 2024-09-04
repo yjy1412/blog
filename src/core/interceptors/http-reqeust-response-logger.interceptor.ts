@@ -22,7 +22,7 @@ export class HttpRequestResponseLoggerInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map((response) => {
         this.customLoggerService.log(
-          `[Reponse] ${method} ${url}`,
+          `[Response] ${method} ${url}`,
           HttpRequestResponseLoggerInterceptor.name,
           response,
         );

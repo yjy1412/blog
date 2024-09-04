@@ -52,7 +52,7 @@ $ yarn run start:prod
 $ npm run migration:create --name=${MIGRATION_FILE_NAME}
 
 # RUN
-$ npm run migraiton
+$ npm run migraiton:run
 
 # REVERT
 $ npm run migration:revert

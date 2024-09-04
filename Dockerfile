@@ -1,16 +1,26 @@
-FROM node:18-alpine
+# 빌드 스테이지
+FROM node:18-alpine as builder
 
-# docker 내부에 생성될 작업 디렉터리 경로
 WORKDIR /usr/src/app
 
-# 복사대상: 대상 / 작업 디렉터리 순으로 지정
-COPY package*.json .
-# npm 모듈 우선 설치
+COPY package*.json ./
+
 RUN yarn install
 
-# 소스코드 복사: 대상 / 작업 디렉터리 순으로 지정
 COPY . .
 
 RUN yarn build
+
+# 프로덕션 스테이지
+FROM node:18-alpine
+
+WORKDIR /usr/src/app
+
+COPY --from=builder /usr/src/app/package*.json ./
+
+# 프로덕션 의존성만 설치
+RUN yarn install --production
+
+COPY --from=builder /usr/src/app/dist ./dist
 
 CMD ["yarn", "start:prod"]

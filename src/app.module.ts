@@ -18,12 +18,13 @@ import { ChatsModule } from './modules/chats/chats.module';
 import { dataSource } from './core/db/data-source.db';
 import { CustomLoggerService } from './modules/common/services/custom-logger.service';
 import { generateSeed } from './core/db/generate-seed.db';
+import { HealthModule } from './modules/health/health.module';
+import { AppController } from './app.controller';
 
 config();
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env',
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
@@ -40,7 +41,9 @@ config();
     AuthJwtModule,
     CommonModule,
     ChatsModule,
+    HealthModule,
   ],
+  controllers: [AppController],
   providers: [
     {
       provide: 'APP_GUARD',
