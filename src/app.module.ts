@@ -1,4 +1,3 @@
-import { config } from 'dotenv';
 import {
   ClassSerializerInterceptor,
   Module,
@@ -20,8 +19,7 @@ import { CustomLoggerService } from './modules/common/services/custom-logger.ser
 import { generateSeed } from './core/db/generate-seed.db';
 import { HealthModule } from './modules/health/health.module';
 import { AppController } from './app.controller';
-
-config();
+import { ENV_NODE_ENV_KEY } from './modules/common/constants/env-keys.constant';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -62,7 +60,8 @@ export class AppModule implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    const isProduction = this.configService.get('NODE_ENV') === 'production';
+    const isProduction =
+      this.configService.get(ENV_NODE_ENV_KEY) === 'production';
 
     if (!isProduction) {
       await generateSeed(this.customLoggerService);

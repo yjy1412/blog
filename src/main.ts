@@ -1,3 +1,4 @@
+import { config } from 'dotenv';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -6,6 +7,9 @@ import { CustomLoggerService } from './modules/common/services/custom-logger.ser
 import { HttpRequestResponseLoggerInterceptor } from './core/interceptors/http-reqeust-response-logger.interceptor';
 import { HttpExceptionFilter } from './core/exception-filters/http.exception-filter';
 import { HttpResponseFormatterInterceptor } from './core/interceptors/http-response-formatter.interceptor';
+import { ENV_APP_PORT_KEY } from './modules/common/constants/env-keys.constant';
+
+config();
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -73,6 +77,11 @@ async function bootstrap() {
 
   app.useGlobalFilters(new HttpExceptionFilter(customLoggerService));
 
-  await app.listen(3000);
+  await app.listen(process.env[ENV_APP_PORT_KEY]);
+
+  customLoggerService.log(
+    `Application is running on: ${await app.getUrl()}`,
+    'Bootstrap',
+  );
 }
 bootstrap();
