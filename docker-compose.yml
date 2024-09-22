@@ -22,11 +22,11 @@ services:
     restart: always
     # 로컬서버 포트와 다르게 설정
     ports:
-      - '3001:3001'
+      - '5001:5001'
     env_file:
       - .env
     environment:
-      APP_PORT: 3001
+      APP_PORT: 5001
       DB_HOST: db
 
 volumes:
