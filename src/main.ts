@@ -49,6 +49,7 @@ async function bootstrap() {
        * If set to true, instead of stripping non-whitelisted properties validator will throw an error
        *
        * DTO에 정의되지 않은 속성이 포함된 요청을 거부할지 여부
+       * 단순히 DTO에 정의된다고 허용되는 것이 아니라, class-validator 데코레이터로 정의된 속성만 허용합니다.
        */
       forbidNonWhitelisted: true,
       /**
